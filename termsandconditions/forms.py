@@ -1,10 +1,13 @@
 """Django forms for the termsandconditions application"""
+
+# pylint: disable=W0613
+
 from django import forms
 from termsandconditions.models import TermsAndConditions
 
 import logging
 
-logger = logging.getLogger(name='termsandconditions')
+LOGGER = logging.getLogger(name='termsandconditions')
 
 class TermsAndConditionsForm(forms.Form):
     """Master form for displaying and accepting Terms and Conditions"""
@@ -15,6 +18,9 @@ class TermsAndConditionsForm(forms.Form):
 
     def __init__(self, data=None, slug='default', initial=None, *args, **kwargs):
         """Lets you pass in a user= to bind this form from"""
+
+        LOGGER.debug("termsandconditions.form")
+
         if initial is None:
             terms = TermsAndConditions.get_active(slug)
             text = terms.text

@@ -1,6 +1,6 @@
 """Unit Tests for the termsandconditions module"""
 
-# pylint: disable=R0904
+# pylint: disable=R0904, C0103
 
 from django.test.client import Client
 from django.test import TestCase
@@ -38,6 +38,7 @@ class TermsAndConditionsTests(TestCase):
         UserTermsAndConditions.objects.all().delete()
 
     def test_get_active_list(self):
+        """Test get list of active T&Cs"""
         active_list = TermsAndConditions.get_active_list()
         LOGGER.debug('Active Terms: ' + str(active_list))
         self.assertEqual(2, len(active_list))

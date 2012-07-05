@@ -1,4 +1,7 @@
 """Django Views for the termsandconditions module"""
+
+# pylint: disable=E1120
+
 from django.shortcuts import render_to_response
 from django.db import IntegrityError
 from django.template import RequestContext
@@ -41,10 +44,12 @@ class ViewTerms(TemplateView):
         return context
 
     def get_urls(self):
+        """Return a list of urls to include in urls.py"""
         from django.conf.urls import patterns, url
 
         urlpatterns = patterns('',
             url(r'^$', ViewTerms.as_view(), name='terms_index'),
+            url(r'^mine/$', MyView.as_view(), name='my-view'),
             url(r'^view/$', ViewTerms.as_view(), name='terms_view'),
         )
         return urlpatterns

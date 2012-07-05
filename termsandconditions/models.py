@@ -5,7 +5,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.conf import settings
-from django.db.models import Count
 from django.http import Http404
 import datetime
 import logging
@@ -25,6 +24,7 @@ class UserTermsAndConditions(models.Model):
     date_accepted = models.DateTimeField(auto_now_add=True, verbose_name='Date Accepted')
 
     class Meta:
+        """Model Meta Information"""
         get_latest_by = 'date_accepted'
         verbose_name = 'User Terms and Conditions'
         verbose_name_plural = 'User Terms and Conditions'
@@ -43,6 +43,7 @@ class TermsAndConditions(models.Model):
     date_created = models.DateTimeField(blank=True, auto_now_add=True)
 
     class Meta:
+        """Model Meta Information"""
         ordering = ['-date_active', ]
         get_latest_by = 'date_active'
         verbose_name = 'Terms and Conditions'
@@ -53,6 +54,7 @@ class TermsAndConditions(models.Model):
 
     @staticmethod
     def create_default_terms():
+        """Create a default TermsAndConditions Object"""
         default_terms = TermsAndConditions.objects.create(
             slug=DEFAULT_TERMS_SLUG,
             name=DEFAULT_TERMS_SLUG,
@@ -82,7 +84,7 @@ class TermsAndConditions(models.Model):
 
     @staticmethod
     def get_active_list():
-        """Finds the latest of a particular terms and conditions"""
+        """Finds the latest of all terms and conditions"""
         terms_list = {}
         try:
             all_terms_list = TermsAndConditions.objects.filter(

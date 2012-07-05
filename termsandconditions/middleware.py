@@ -1,5 +1,5 @@
+"""Terms and Conditions Middleware"""
 import urlparse
-from django.http import HttpResponseRedirect, QueryDict
 from models import TermsAndConditions
 from django.conf import settings
 import logging
@@ -18,6 +18,7 @@ class TermsAndConditionsRedirectMiddleware:
     """
 
     def process_request(self, request):
+        """Process each request to app to ensure terms & conditions have been accepted"""
 
         LOGGER.debug('termsandconditions.middleware')
 

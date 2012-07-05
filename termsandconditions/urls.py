@@ -12,11 +12,11 @@ from views import ViewTerms
 admin.autodiscover()
 
 # Instantiate TermsView class-based-view in order to pull the urls property off of it.
-terms_view = ViewTerms()
+TERMS_VIEW = ViewTerms()
 
 urlpatterns = patterns('termsandconditions.views',
     # View Terms
-    url(r'', include(terms_view.urls), name="tc_view_page"),
+    url(r'', include(TERMS_VIEW.urls), name="tc_view_page"),
 
     # Accept Terms
     url(r'^accept/$', 'accept_view', name="tc_accept_page"),

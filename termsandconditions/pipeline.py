@@ -1,4 +1,7 @@
 """This file contains functions used as part of a user creation pipeline, such as the one provided by django-social-auth."""
+
+# pylint: disable=W0613
+
 import urlparse
 from models import TermsAndConditions
 from django.http import HttpResponseRedirect, QueryDict
@@ -12,7 +15,7 @@ TERMS_RETURNTO_PARAM = getattr(settings, 'TERMS_RETURNTO_PARAM', 'returnTo')
 LOGGER = logging.getLogger(name='termsandconditions')
 
 def user_accept_terms(backend, user, uid, social_user=None, *args, **kwargs):
-    """Show the user the terms and conditions accept page."""
+    """Check the user has accepted the terms and conditions after creation."""
 
     LOGGER.debug('user_accept_terms')
 
@@ -24,6 +27,7 @@ def user_accept_terms(backend, user, uid, social_user=None, *args, **kwargs):
 
 
 def redirect_to_terms_accept(currentPath='/', slug='default'):
+    """Redirect the user to the terms and conditions accept page."""
     redirect_url_parts = list(urlparse.urlparse(ACCEPT_TERMS_PATH))
     if slug != 'default':
         redirect_url_parts[2] += slug
