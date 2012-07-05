@@ -15,6 +15,7 @@
 .settings
 .tmp_*
 .tox
+build/*
 coverage.xml
 css-*_.css
 js-*_.js
