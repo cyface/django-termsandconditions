@@ -1,5 +1,4 @@
 """Terms and Conditions Middleware"""
-import urlparse
 from models import TermsAndConditions
 from django.conf import settings
 import logging

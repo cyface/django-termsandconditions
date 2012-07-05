@@ -26,12 +26,12 @@ def user_accept_terms(backend, user, uid, social_user=None, *args, **kwargs):
         return {'social_user': social_user, 'user': user}
 
 
-def redirect_to_terms_accept(currentPath='/', slug='default'):
+def redirect_to_terms_accept(current_path='/', slug='default'):
     """Redirect the user to the terms and conditions accept page."""
     redirect_url_parts = list(urlparse.urlparse(ACCEPT_TERMS_PATH))
     if slug != 'default':
         redirect_url_parts[2] += slug
     querystring = QueryDict(redirect_url_parts[4], mutable=True)
-    querystring[TERMS_RETURNTO_PARAM] = currentPath
+    querystring[TERMS_RETURNTO_PARAM] = current_path
     redirect_url_parts[4] = querystring.urlencode(safe='/')
     return HttpResponseRedirect(urlparse.urlunparse(redirect_url_parts))

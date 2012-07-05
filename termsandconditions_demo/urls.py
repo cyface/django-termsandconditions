@@ -6,7 +6,6 @@
 # pylint: disable=W0401, W0614
 from django.conf.urls import *  #@UnusedWildImport
 from django.contrib import admin
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 
 admin.autodiscover()
