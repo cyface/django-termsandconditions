@@ -84,7 +84,7 @@ class TermsAndConditionsTests(TestCase):
 
         LOGGER.debug('Test /terms/required/ pre login')
         not_logged_in_response = self.c.get('/terms/required/', follow=True)
-        self.assertRedirects(not_logged_in_response, "http://testserver/socialprofile/select/?next=/terms/required/")
+        self.assertRedirects(not_logged_in_response, "http://testserver/accounts/login/?next=/terms/required/")
 
         LOGGER.debug('Test user1 login')
         login_response = self.c.login(username='user1', password='user1password')

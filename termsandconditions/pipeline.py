@@ -9,7 +9,7 @@ import logging
 ACCEPT_TERMS_PATH = getattr(settings, 'ACCEPT_TERMS_PATH', '/terms/accept/')
 TERMS_RETURNTO_PARAM = getattr(settings, 'TERMS_RETURNTO_PARAM', 'returnTo')
 
-LOGGER = logging.getLogger(name='termsandconditions.pipeline')
+LOGGER = logging.getLogger(name='termsandconditions')
 
 def user_accept_terms(backend, user, uid, social_user=None, *args, **kwargs):
     """Show the user the terms and conditions accept page."""

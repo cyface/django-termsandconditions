@@ -116,42 +116,9 @@ SERVER_EMAIL = 'a real email address'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend', # Leave Enabled for Admin Access
-    'social_auth.backends.twitter.TwitterBackend',
-    'social_auth.backends.facebook.FacebookBackend',
-    'social_auth.backends.google.GoogleOAuth2Backend',
     )
 
 ##### Custom Variables Below Here #######
-
-# Django Socialauth Settings
-SOCIAL_AUTH_ENABLED_BACKENDS = ('facebook', 'google-oauth2', 'twitter')
-
-TWITTER_CONSUMER_KEY         = ''
-TWITTER_CONSUMER_SECRET      = ''
-#Below is localhost facebook key
-FACEBOOK_APP_ID              = ''
-FACEBOOK_API_SECRET          = ''
-FACEBOOK_EXTENDED_PERMISSIONS = ['email',]
-GOOGLE_OAUTH2_CLIENT_ID      = 'xxxxxx.apps.googleusercontent.com'
-GOOGLE_OAUTH2_CLIENT_SECRET  = ''
-GOOGLE_OAUTH_EXTRA_SCOPE     = ['https://www.googleapis.com/auth/userinfo.profile',] # Note that this extra scope is not the same as the API URL we use
-
-SOCIAL_AUTH_PIPELINE = (
-    'social_auth.backends.pipeline.social.social_auth_user',
-    'social_auth.backends.pipeline.associate.associate_by_email',
-    'social_auth.backends.pipeline.user.get_username',
-    'social_auth.backends.pipeline.user.create_user',
-    'social_auth.backends.pipeline.social.associate_user',
-    'social_auth.backends.pipeline.social.load_extra_data',
-    'social_auth.backends.pipeline.user.update_user_details',
-    'social_auth.backends.pipeline.misc.save_status_to_session',
-    'termsandconditions.pipeline.user_accept_terms',
-)
-
-# Core Authentication Settings
-LOGIN_URL          = '/login/'
-LOGIN_REDIRECT_URL = '/secure/'
-LOGIN_ERROR_URL    = '/login/'
 
 # Terms & Conditions (termsandconditions) Settings
 DEFAULT_TERMS_SLUG = 'site-terms'
@@ -226,11 +193,6 @@ LOGGING = {
         'django.request': {
             'handlers': ['mail_admins', 'console'],
             'level': 'ERROR',
-            'propagate': True,
-            },
-        'SocialAuth': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
             'propagate': True,
             },
         'termsandconditions': {

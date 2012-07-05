@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block headtitle %}Django Social Profiles Demo - Home{% endblock %}
+{% block headtitle %}Django Terms and Conditions Demo - Home{% endblock %}
 
 {% block body_class %}{% endblock %}
 
@@ -13,15 +13,12 @@
         <section title="Welcome" data-role="content">
             <h3>Click the button below to get started.</h3>
 
-            <p>You'll be asked to sign in using your Google, Twitter, or Facebook credentials.</p>
+            <p>You'll be asked to accept the site terms and conditions.</p>
 
-            <p>If you don't have an account yet, signing in with one of those methods will create one for you.</p>
-
-            <p>You can edit your profile or delete your account at any time.</p>
-            <a href="{% url sp_demo_secure_page %}" data-role="button" data-ajax="false">Get Started</a>
+            <a href="{% url tc_demo_secure_page %}" data-role="button" data-ajax="false">Get Started</a>
         </section>
     {% else %}
         <h2>Thank you for signing in, {{ user.username }}.</h2>
-        <a href="{% url sp_demo_secure_page %}" data-role="button" data-ajax="false">Return to Secure Area</a>
+        <a href="{% url tc_demo_secure_page %}" data-role="button" data-ajax="false">Return to Secure Area</a>
     {% endif %}
 {% endblock %}

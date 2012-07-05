@@ -2,7 +2,10 @@ import urlparse
 from django.http import HttpResponseRedirect, QueryDict
 from models import TermsAndConditions
 from django.conf import settings
+import logging
 from pipeline import redirect_to_terms_accept
+
+LOGGER = logging.getLogger(name='termsandconditions')
 
 ACCEPT_TERMS_PATH = getattr(settings, 'ACCEPT_TERMS_PATH', '/terms/accept/')
 TERMS_EXCLUDE_URL_PREFIX_LIST = getattr(settings, 'TERMS_EXCLUDE_URL_PREFIX_LIST', {'/admin/', })
@@ -15,6 +18,9 @@ class TermsAndConditionsRedirectMiddleware:
     """
 
     def process_request(self, request):
+
+        LOGGER.debug('termsandconditions.middleware')
+
         current_path = request.META['PATH_INFO']
         protected_path = True
 

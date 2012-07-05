@@ -24,6 +24,9 @@ urlpatterns = patterns('',
 
     # Terms and Conditions
     url(r'^terms/', include('termsandconditions.urls')),
+
+    # Auth Urls:
+    (r'^accounts/', include('django.contrib.auth.urls')),
     
     # Admin documentation:
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
