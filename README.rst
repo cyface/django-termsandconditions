@@ -2,7 +2,7 @@
 Django Terms and Conditions
 ===========================
 
-Django Social Profile gives you an out-of-the-box way to enable you to send users to a T&C acceptance page before they
+Django Terms and Conditions gives you an out-of-the-box way to enable you to send users to a T&C acceptance page before they
 can access the site if you wish.
 
 .. contents:: Table of Contents
