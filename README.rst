@@ -67,7 +67,6 @@ Add termsandconditions to installed applications::
 
     INSTALLED_APPS = (
         ...
-        'social_auth',
         'termsandconditions',
     )
 
