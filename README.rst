@@ -13,14 +13,6 @@ Features
 This module is meant to be as quick to integrate as possible, and thus extensive customization will likely benefit from
 a fork. That said, a number of options are available.
 
-Dependencies
-============
-
-Dependencies that **must** be meet to use the application:
-
-- `django-social-auth: <https://github.com/omab/django-social-auth>`_
-
-
 Installation
 ============
 
