@@ -49,7 +49,6 @@ class ViewTerms(TemplateView):
 
         urlpatterns = patterns('',
             url(r'^$', ViewTerms.as_view(), name='terms_index'),
-            url(r'^mine/$', MyView.as_view(), name='my-view'),
             url(r'^view/$', ViewTerms.as_view(), name='terms_view'),
         )
         return urlpatterns
