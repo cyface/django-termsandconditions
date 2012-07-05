@@ -11,7 +11,7 @@ setup(
     author = 'Tim White',
     author_email = 'tim@cyface.com',
     
-    packages = find_packages(exclude=('termsandconditions_demo', 'tests', )),
+    packages = find_packages(exclude=('termsandconditions_demo', 'tests', 'devscripts')),
     include_package_data = True,
     zip_safe = False,
 
