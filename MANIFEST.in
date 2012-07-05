@@ -1,6 +1,2 @@
 include README.rst
 recursive-include termsandconditions/templates *
-recursive-include termsandconditions_demo/templates *
-recursive-include termsandconditions_demo/static *
-recursive-include termsandconditions_demo/staticroot *
-recursive-include termsandconditions_demo/mediaroot *
