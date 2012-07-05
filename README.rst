@@ -28,7 +28,7 @@ or clone from `github <http://github.com>`_::
 
     $ git clone git://github.com/cyface/django-termsandconditions.git
 
-and add django-socialprofile to the ``PYTHONPATH``::
+and add django-termsandconditions to the ``PYTHONPATH``::
 
     $ export PYTHONPATH=$PYTHONPATH:$(pwd)/django-termsandconditions/
 
@@ -74,7 +74,7 @@ Add termsandconditions to installed applications::
 Add urls to urls.py
 --------------------
 
-In your urls.py, you need to pull in the socialprofile and/or termsandconditions urls::
+In your urls.py, you need to pull in the termsandconditions and/or termsandconditions urls::
 
     # Terms and Conditions
     url(r'^terms/', include('termsandconditions.urls')),
@@ -111,7 +111,7 @@ By default, some pages are excluded from the middleware, you can configure exclu
 
     ACCEPT_TERMS_PATH = '/terms/accept/'
     TERMS_EXCLUDE_URL_PREFIX_LIST = {'/admin/',})
-    TERMS_EXCLUDE_URL_LIST = {'/', '/terms/required/', '/socialprofile/logout/', '/securetoo/'}
+    TERMS_EXCLUDE_URL_LIST = {'/', '/terms/required/', '/logout/', '/securetoo/'}
 
 TERMS_EXCLUDE_URL_PREFIX_LIST is a list of 'starts with' strings to exclude, while TERMS_EXCLUDE_URL_LIST is a list of
 explicit full paths to exclude.

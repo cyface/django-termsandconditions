@@ -4,7 +4,7 @@ setup(
     name = "django-termsandconditions",
     version = ".1",
     url = 'http://timlwhite.com',
-    license = 'GPL',
+    license = 'BSD',
     description = "django-termsandconditions enables customers to accept terms and conditions before using a site.",
     long_description = open('README.rst').read(),
 
