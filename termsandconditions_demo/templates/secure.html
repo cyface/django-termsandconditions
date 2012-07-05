@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block headtitle %}Secure Area{% endblock %}
+
+{% block body_class %}{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+    <section title="Welcome" data-role="content">
+        <h2>Welcome to the secure area, {{ user.username }}.</h2>
+
+        <p>This is the area of the web site where the exciting stuff happens.</p>
+
+        <p>Click the "Profile" button above to view and edit your profile.</p>
+
+        <p>There is <a href="{% url sp_demo_secure_page_too %}">another secure page</a> you can visit as well.</p>
+    </section>
+{% endblock %}

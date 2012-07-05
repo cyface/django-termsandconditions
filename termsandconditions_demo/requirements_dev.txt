@@ -1,0 +1,8 @@
+-r requirements.txt
+coverage
+django-nose
+gondor
+nose
+nosexcover
+pylint
+sphinx

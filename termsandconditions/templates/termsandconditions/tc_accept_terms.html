@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block headtitle %}Accept Terms and Conditions{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+    <section title="termsandconditions">
+        <h1>Please Accept the Site Terms and Conditions</h1>
+        {{ form.errors }}
+        <div id="tc-terms-html">
+            {{ form.text.value|safe }}
+        </div>
+        <form action="{%  url tc_accept_page %}" method="post" id="tc-terms-form">
+            {% csrf_token %}
+            {{ form.slug }}
+            {{ form.version_number }}
+            {{ form.returnTo }}
+            <p><input type="submit" value="Accept" data-role="button" data-ajax="false"></p>
+        </form>
+    <p><a href="{%  url terms_view %}" target="_blank">Print Terms & Conditions</a></p>
+    </section>
+{% endblock %}
+{% block footer %}{% endblock %}

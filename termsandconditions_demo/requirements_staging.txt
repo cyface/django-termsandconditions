@@ -1,0 +1,4 @@
+-r requirements.txt
+psycopg2==2.4.5
+gunicorn==0.14.3
+eventlet==0.9.16

@@ -1,0 +1,14 @@
+<header data-role="header" data-theme="b" data-position="fixed">
+    <div data-role="navbar">
+        <ul>
+            {% if user.is_authenticated %}
+                <li><a href="{% url sp_demo_home_page %}" data-icon="home">Home</a></li>
+                <li><a href="{% url sp_profile_view_page %}?returnTo={{ request.path }}" data-icon="gear">Profile</a></li>
+                <li><a href="{% url sp_logout_page %}" data-icon="delete">Sign Out</a></li>
+            {% else %}
+                <li><a href="{% url sp_demo_home_page %}" data-icon="home">Home</a></li>
+                <li><a href="{% url sp_select_page %}" data-icon="save">Sign In</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</header>

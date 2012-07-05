@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block headtitle %}Server Error{% endblock %}
+
+{% block content %}
+    <section title="Error" data-role="content" data-theme="e">
+        <h2><span class="ui-icon ui-icon-alert ui-icon-shadow" style="display:inline-block;margin-right:20px;">&nbsp;</span>I'm sorry, an error has occurred with the application.</h2>
+        {% if messages %}
+            {% for msg in messages %}
+                <p class="error">{{ msg.message }} ({{ msg.extra_tags }})</p>
+            {% endfor %}
+        {% endif %}
+        {% if error_msg %}
+            <p>Details:</p>
+            <p class="error">{{ error_msg }}</p>
+        {% endif %}
+    </section>
+{% endblock %}
