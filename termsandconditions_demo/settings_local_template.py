@@ -60,8 +60,8 @@ ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 DATABASES = {
     #    'default': {
     #        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #        'NAME': 'socialprofile',
-    #        'USER': 'socialprofile',
+    #        'NAME': 'termsandconditions',
+    #        'USER': 'termsandconditions',
     #        'PASSWORD': '',
     #        'HOST': '127.0.0.1',
     #        'PORT': '', # Set to empty string for default.
@@ -69,7 +69,7 @@ DATABASES = {
     #    },
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': PROJECT_ROOT + '/socialprofile.db',
+        'NAME': PROJECT_ROOT + '/termsandconditions.db',
         'SUPPORTS_TRANSACTIONS': 'false',
         }
 }
@@ -149,15 +149,15 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 # Core Authentication Settings
-LOGIN_URL          = '/socialprofile/select/'
+LOGIN_URL          = '/login/'
 LOGIN_REDIRECT_URL = '/secure/'
-LOGIN_ERROR_URL    = '/socialprofile/select/'
+LOGIN_ERROR_URL    = '/login/'
 
 # Terms & Conditions (termsandconditions) Settings
 DEFAULT_TERMS_SLUG = 'site-terms'
 ACCEPT_TERMS_PATH = '/terms/accept/'
 TERMS_EXCLUDE_URL_PREFIX_LIST =  {'/admin/',}
-TERMS_EXCLUDE_URL_LIST = {'/', '/terms/required/', '/socialprofile/logout/', '/securetoo/'}
+TERMS_EXCLUDE_URL_LIST = {'/', '/terms/required/', '/logout/', '/securetoo/'}
 MULTIPLE_ACTIVE_TERMS = True # Multiple kinds of T&Cs active at once (like site-terms, and contributor-terms).
 
 ### DEBUG TOOLBAR

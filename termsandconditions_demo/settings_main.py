@@ -30,10 +30,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
-ROOT_URLCONF = 'socialprofile_demo.urls'
+ROOT_URLCONF = 'termsandconditions_demo.urls'
 
-INSTALLED_APPS = (   
-    'socialprofile',
+INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.auth',

@@ -1,4 +1,4 @@
-"""Django Views for the socialprofile-demo module"""
+"""Django Views for the termsandconditions-demo module"""
 from django.shortcuts import render_to_response
 from django.views.decorators.cache import never_cache
 from django.template import RequestContext

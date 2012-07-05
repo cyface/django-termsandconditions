@@ -1,4 +1,4 @@
-"""Django Admin Site configuration for socialprofiles"""
+"""Django Admin Site configuration"""
 
 # pylint: disable=R0904
 

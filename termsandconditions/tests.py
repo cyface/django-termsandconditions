@@ -1,4 +1,4 @@
-"""Unit Tests for the socialprofile module"""
+"""Unit Tests for the termsandconditions module"""
 
 # pylint: disable=R0904
 
