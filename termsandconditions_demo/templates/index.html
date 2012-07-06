@@ -9,16 +9,16 @@
 {% block header %}{% endblock %}
 
 {% block content %}
-    {% if not user.is_authenticated %}
-        <section title="Welcome" data-role="content">
+    <section title="Welcome" data-role="content">
+        {% if not user.is_authenticated %}
             <h3>Click the button below to get started.</h3>
 
             <p>You'll be asked to accept the site terms and conditions.</p>
 
             <a href="{% url tc_demo_secure_page %}" data-role="button" data-ajax="false">Get Started</a>
-        </section>
-    {% else %}
-        <h2>Thank you for signing in, {{ user.username }}.</h2>
-        <a href="{% url tc_demo_secure_page %}" data-role="button" data-ajax="false">Return to Secure Area</a>
-    {% endif %}
+        {% else %}
+            <h2>Thank you for signing in, {{ user.username }}.</h2>
+            <a href="{% url tc_demo_secure_page %}" data-role="button" data-ajax="false">Return to Secure Area</a>
+        {% endif %}
+    </section>
 {% endblock %}
