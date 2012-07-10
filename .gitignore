@@ -5,6 +5,7 @@
 *.log
 *.py[co]
 *-env
+*.env
 *_build
 .coverage
 .DS_Store
