@@ -154,7 +154,10 @@ MULTIPLE_ACTIVE_TERMS = True # Multiple kinds of T&Cs active at once (like site-
 # more details on how to customize your logging configuration.
 
 # Catch Python warnings (e.g. deprecation warnings) into the logger
-logging.captureWarnings(True)
+try:
+    logging.captureWarnings(True)
+except AttributeError: #python 2.6 does not do this
+    pass
 
 LOGGING = {
     'version': 1,
