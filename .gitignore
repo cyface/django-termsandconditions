@@ -22,6 +22,7 @@ css-*_.css
 js-*_.js
 local_settings.py
 nosetests.xml
+pylint.txt
 settings_local.py
 settings_local_test.py
 settings_test_local.py
