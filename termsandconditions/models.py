@@ -52,6 +52,10 @@ class TermsAndConditions(models.Model):
     def __unicode__(self):
         return "{0}-{1:.2f}".format(self.slug, self.version_number)
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('sw_weave_detail', [self.slug]) # pylint: disable=E1101
+
     @staticmethod
     def create_default_terms():
         """Create a default TermsAndConditions Object"""

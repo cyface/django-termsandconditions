@@ -21,6 +21,9 @@ urlpatterns = patterns('',
     # Secure Page Too
     url(r'^securetoo/$', 'termsandconditions_demo.views.secure_view_too', name="tc_demo_secure_page_too"),
 
+    # Terms Required
+    url(r'^termsrequired/$', 'terms_required_view', name="tc_demo_required_page"),
+
     # Terms and Conditions
     url(r'^terms/', include('termsandconditions.urls')),
 

@@ -180,8 +180,8 @@ class TermsAndConditionsTests(TestCase):
         response1 = self.c.get('/terms/', follow=True)
         self.assertContains(response1, '<h1>Terms and Conditions</h1>')
 
-        LOGGER.debug('Test /terms/view/')
-        response2 = self.c.get('/terms/view/', follow=True)
+        LOGGER.debug('Test /terms/view/site-terms')
+        response2 = self.c.get('/terms/view/site-terms', follow=True)
         self.assertContains(response2, '<h1>Terms and Conditions</h1>')
 
 

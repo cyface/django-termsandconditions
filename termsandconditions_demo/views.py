@@ -2,6 +2,7 @@
 from django.shortcuts import render_to_response
 from django.views.decorators.cache import never_cache
 from django.template import RequestContext
+from termsandconditions.decorators import terms_required
 from django.contrib.auth.decorators import login_required
 import logging
 
@@ -56,3 +57,23 @@ def secure_view_too(request):
     response_data = {}
 
     return render_to_response('securetoo.html', response_data, context_instance=RequestContext(request))
+
+
+
+@login_required
+@terms_required
+@never_cache
+def terms_required_view(request):
+    """
+    Terms Required testing page.
+
+    url: /terms_required
+
+    template : termsandconditions/terms_required.html
+    """
+
+    LOGGER.debug('termsandconditions.views.terms_required_view')
+
+    response_data = {}
+
+    return render_to_response('termsandconditions_demo/terms_required.html', response_data, context_instance=RequestContext(request))
