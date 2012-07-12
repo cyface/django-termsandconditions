@@ -93,14 +93,14 @@ class TermsAndConditionsTests(TestCase):
 
         LOGGER.debug('Test /termsrequired/ after login')
         logged_in_response = self.c.get('/termsrequired/', follow=True)
-        self.assertRedirects(logged_in_response, "http://testserver/terms/accept/site-terms?returnTo=/termsrequired/")
+        self.assertRedirects(logged_in_response, "http://testserver/terms/accept/?returnTo=/termsrequired/")
 
         LOGGER.debug('Test no redirect for /termsrequired/ after accept')
         accepted_response = self.c.post('/terms/accept/', {'terms': 2, 'returnTo': '/termsrequired/'}, follow=True)
         LOGGER.debug('Test response after termsrequired accept')
         LOGGER.debug(accepted_response)
         termsrequired_response = self.c.get('/termsrequired/', follow=True)
-        self.assertContains(termsrequired_response, "required")
+        self.assertContains(termsrequired_response, "Terms and Conditions Acceptance Required")
 
     def test_accept(self):
         """Validate that accepting terms works"""

@@ -4,25 +4,30 @@
 """
 
 # pylint: disable=W0401, W0614
-from django.conf.urls import *  #@UnusedWildImport
+
+from django.conf.urls import patterns, url, include
 from django.contrib import admin
 from django.conf import settings
+from views import TermsRequiredView, SecureView, IndexView
+from django.views.decorators.cache import never_cache
+from termsandconditions.decorators import terms_required
+from django.contrib.auth.decorators import login_required
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
 
     # Home Page
-    url(r'^$', 'termsandconditions_demo.views.index', name="tc_demo_home_page"),
+    url(r'^$', never_cache(IndexView.as_view()), name="tc_demo_home_page"),
 
     # Secure Page
-    url(r'^secure/$', 'termsandconditions_demo.views.secure_view', name="tc_demo_secure_page"),
+    url(r'^secure/$', never_cache((login_required(SecureView.as_view()))), name="tc_demo_secure_page"),
 
     # Secure Page Too
-    url(r'^securetoo/$', 'termsandconditions_demo.views.secure_view_too', name="tc_demo_secure_page_too"),
+    url(r'^securetoo/$', never_cache(login_required(SecureView.as_view(template_name="securetoo.html"))), name="tc_demo_secure_page_too"),
 
     # Terms Required
-    url(r'^termsrequired/$', 'termsandconditions_demo.views.terms_required_view', name="tc_demo_required_page"),
+    url(r'^termsrequired/$', never_cache(terms_required(login_required(TermsRequiredView.as_view()))), name="tc_demo_required_page"),
 
     # Terms and Conditions
     url(r'^terms/', include('termsandconditions.urls')),
