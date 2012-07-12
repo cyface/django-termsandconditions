@@ -83,17 +83,17 @@ class TermsAndConditionsTests(TestCase):
     def test_terms_required_redirect(self):
         """Validate that a user is redirected to the terms accept page if they are logged in, and decorator is on method"""
 
-        LOGGER.debug('Test /terms/required/ pre login')
-        not_logged_in_response = self.c.get('/terms/required/', follow=True)
-        self.assertRedirects(not_logged_in_response, "http://testserver/accounts/login/?next=/terms/required/")
+        LOGGER.debug('Test /termsrequired/ pre login')
+        not_logged_in_response = self.c.get('/termsrequired/', follow=True)
+        self.assertRedirects(not_logged_in_response, "http://testserver/accounts/login/?next=/termsrequired/")
 
         LOGGER.debug('Test user1 login')
         login_response = self.c.login(username='user1', password='user1password')
         self.assertTrue(login_response)
 
-        LOGGER.debug('Test /terms/required/ after login')
-        logged_in_response = self.c.get('/terms/required/', follow=True)
-        self.assertRedirects(logged_in_response, "http://testserver/terms/accept/?returnTo=/terms/required/")
+        LOGGER.debug('Test /termsrequired/ after login')
+        logged_in_response = self.c.get('/termsrequired/', follow=True)
+        self.assertRedirects(logged_in_response, "http://testserver/terms/accept/site-terms?returnTo=/termsrequired/")
 
     def test_accept(self):
         """Validate that accepting terms works"""
@@ -107,8 +107,7 @@ class TermsAndConditionsTests(TestCase):
         self.assertContains(logged_in_response, "Accept")
 
         LOGGER.debug('Test /terms/accept/ post')
-        logged_in_response = self.c.post('/terms/accept/',
-                {'slug': 'site-terms', 'version_number': '2.00', 'returnTo': '/secure/'}, follow=True)
+        logged_in_response = self.c.post('/terms/accept/', {'terms': 2, 'returnTo': '/secure/'}, follow=True)
         LOGGER.debug(logged_in_response)
         self.assertContains(logged_in_response, "Contributor")
 
@@ -127,9 +126,9 @@ class TermsAndConditionsTests(TestCase):
         login_response = self.c.login(username='user1', password='user1password')
         self.assertTrue(login_response)
 
-        LOGGER.debug('Test /terms/required/ after login with no TermsAndConditions')
-        logged_in_response = self.c.get('/terms/required/', follow=True)
-        self.assertRedirects(logged_in_response, "http://testserver/terms/accept/?returnTo=/terms/required/")
+        LOGGER.debug('Test /termsrequired/ after login with no TermsAndConditions')
+        logged_in_response = self.c.get('/termsrequired/', follow=True)
+        self.assertRedirects(logged_in_response, "http://testserver/terms/accept/?returnTo=/termsrequired/")
 
         LOGGER.debug('Test TermsAndConditions Object Was Created')
         numTerms = TermsAndConditions.objects.count()
@@ -178,10 +177,14 @@ class TermsAndConditionsTests(TestCase):
 
         LOGGER.debug('Test /terms/')
         response1 = self.c.get('/terms/', follow=True)
-        self.assertContains(response1, '<h1>Terms and Conditions</h1>')
+        self.assertContains(response1, 'Terms and Conditions')
 
-        LOGGER.debug('Test /terms/view/')
-        response2 = self.c.get('/terms/view/', follow=True)
-        self.assertContains(response2, '<h1>Terms and Conditions</h1>')
+        LOGGER.debug('Test /terms/view/site-terms')
+        response2 = self.c.get('/terms/view/site-terms', follow=True)
+        self.assertContains(response2, 'Terms and Conditions')
+
+        LOGGER.debug('Test /terms/view/site-terms/1.0')
+        response2 = self.c.get('/terms/view/site-terms/1.0', follow=True)
+        self.assertContains(response2, 'Terms and Conditions')
 
 

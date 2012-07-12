@@ -7,27 +7,28 @@
 
 from django.conf.urls import *  #@UnusedWildImport
 from django.contrib import admin
-from views import ViewTerms
+from views import TermsView, AcceptView
+from models import DEFAULT_TERMS_SLUG
 
 admin.autodiscover()
 
-# Instantiate TermsView class-based-view in order to pull the urls property off of it.
-TERMS_VIEW = ViewTerms()
-
 urlpatterns = patterns('termsandconditions.views',
-    # View Terms
-    url(r'', include(TERMS_VIEW.urls), name="tc_view_page"),
+    # View Default Terms
+    url(r'^$', TermsView.as_view(), {"slug": DEFAULT_TERMS_SLUG}, name="tc_view_page"),
+
+    # View Specific Active Terms
+    url(r'^view/(?P<slug>[a-zA-Z0-9_.-]+)/$', TermsView.as_view(), name="tc_view_specific_page"),
+
+    # View Specific Version of Terms
+    url(r'^view/(?P<slug>[a-zA-Z0-9_.-]+)/(?P<version>[0-9.]+)/$', TermsView.as_view(), name="tc_view_specific_version_page"),
 
     # Accept Terms
-    url(r'^accept/$', 'accept_view', name="tc_accept_page"),
+    url(r'^accept/$', AcceptView.as_view(), name="tc_accept_page"),
 
-    # Accept Terms
-    url(r'^accept/(?P<slug>[a-zA-Z0-9_.-]+)$', 'accept_view', name="tc_accept_specific_page"),
+    # Accept Specific Terms
+    url(r'^accept/(?P<slug>[a-zA-Z0-9_.-]+)$', AcceptView.as_view(), name="tc_accept_specific_page"),
 
-    # Terms Required
-    url(r'^required/$', 'terms_required_view', name="tc_required_page"),
+    # Accept Specific Terms Version
+    url(r'^accept/(?P<slug>[a-zA-Z0-9_.-]+)/(?P<version_number>\[0..9\.]+)/$', AcceptView.as_view(), name="tc_accept_specific_page"),
+
 )
-
-
-#url(r'^view/(?P<slug>[-\w]+)/$', 'terms_view', name="view_terms_page_with_slug"),
-#url(r'^(?P<slug>\[-w])/(?P<version_number>\[0..9\.]+)$', 'accept_view', name="view_terms_page_with_version"),
