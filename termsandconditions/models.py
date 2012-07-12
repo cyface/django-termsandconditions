@@ -34,7 +34,7 @@ class UserTermsAndConditions(models.Model):
 class TermsAndConditions(models.Model):
     """Holds Versions of TermsAndConditions
     Active one for a given slug is: date_active is not Null and is latest not in future"""
-    slug = models.SlugField(default='site-terms')
+    slug = models.SlugField(default=DEFAULT_TERMS_SLUG)
     name = models.TextField(max_length=255)
     users = models.ManyToManyField(User, through=UserTermsAndConditions, blank=True, null=True, )
     version_number = models.DecimalField(default=1.0, decimal_places=2, max_digits=6)
@@ -64,14 +64,12 @@ class TermsAndConditions(models.Model):
             name=DEFAULT_TERMS_SLUG,
             date_active=datetime.datetime.now(),
             version_number=1,
-            text='SITE TERMS')
+            text=DEFAULT_TERMS_SLUG + " Text. CHANGE ME.")
         return default_terms
 
     @staticmethod
-    def get_active(slug='default'):
+    def get_active(slug=DEFAULT_TERMS_SLUG):
         """Finds the latest of a particular terms and conditions"""
-        if slug == 'default':
-            slug = DEFAULT_TERMS_SLUG
 
         try:
             activeTerms = TermsAndConditions.objects.filter(
@@ -102,10 +100,8 @@ class TermsAndConditions(models.Model):
         return terms_list
 
     @staticmethod
-    def agreed_to_latest(user, slug='default'):
+    def agreed_to_latest(user, slug=DEFAULT_TERMS_SLUG):
         """Checks to see if a specified user has agreed to the latest of a particular terms and conditions"""
-        if slug == 'default':
-            slug = DEFAULT_TERMS_SLUG
 
         try:
             UserTermsAndConditions.objects.get(user=user, terms=TermsAndConditions.get_active(slug))

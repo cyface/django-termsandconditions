@@ -95,6 +95,13 @@ class TermsAndConditionsTests(TestCase):
         logged_in_response = self.c.get('/termsrequired/', follow=True)
         self.assertRedirects(logged_in_response, "http://testserver/terms/accept/site-terms?returnTo=/termsrequired/")
 
+        LOGGER.debug('Test no redirect for /termsrequired/ after accept')
+        accepted_response = self.c.post('/terms/accept/', {'terms': 2, 'returnTo': '/termsrequired/'}, follow=True)
+        LOGGER.debug('Test response after termsrequired accept')
+        LOGGER.debug(accepted_response)
+        termsrequired_response = self.c.get('/termsrequired/', follow=True)
+        self.assertContains(termsrequired_response, "required")
+
     def test_accept(self):
         """Validate that accepting terms works"""
 
@@ -137,6 +144,10 @@ class TermsAndConditionsTests(TestCase):
         terms = TermsAndConditions.objects.get()
         self.assertEquals('site-terms-1.00', str(terms))
 
+        LOGGER.debug('Test Not Creating Non-Default TermsAndConditions')
+        non_default_response = self.c.get('/terms/accept/contributor-terms/', follow=True)
+        self.assertEquals(404, non_default_response.status_code)
+
 
     def test_terms_upgrade(self):
         """Validate a user is prompted to accept terms again when new version comes out"""
@@ -171,6 +182,10 @@ class TermsAndConditionsTests(TestCase):
         LOGGER.debug('Test user1 not redirected after login')
         logged_in_response = self.c.get('/securetoo/', follow=True)
         self.assertContains(logged_in_response, "SECOND")
+
+        LOGGER.debug("Test startswith '/admin' pages not redirecting")
+        admin_response = self.c.get('/admin', follow=True)
+        self.assertContains(admin_response, "administration")
 
     def test_terms_view(self):
         """Test Accessing the View Terms and Conditions Functions"""
