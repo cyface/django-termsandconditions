@@ -2,17 +2,11 @@
 
 # pylint: disable=E1120
 
-from django.shortcuts import render_to_response
-from django.db import IntegrityError
-from django.template import RequestContext
-from django.views.decorators.cache import never_cache
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from forms import UserTermsAndConditionsModelForm
 from models import TermsAndConditions, UserTermsAndConditions, DEFAULT_TERMS_SLUG
-from django.http import Http404, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.views.generic import DetailView, CreateView
-import datetime
 import logging
 
 LOGGER = logging.getLogger(name='termsandconditions')
@@ -21,7 +15,7 @@ class TermsView(DetailView):
     template_name = "termsandconditions/tc_view_terms.html"
     context_object_name = 'terms'
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         LOGGER.debug('termsandconditions.views.TermsView.get_object')
 
         slug = self.kwargs.get("slug", DEFAULT_TERMS_SLUG)

@@ -97,7 +97,7 @@ class TermsAndConditions(models.Model):
             for term in all_terms_list:
                 terms_list.update({term.slug: TermsAndConditions.get_active(slug=term.slug)})
         except TermsAndConditions.DoesNotExist:
-            terms_list.append(TermsAndConditions.create_default_terms())
+            terms_list.update({DEFAULT_TERMS_SLUG: TermsAndConditions.create_default_terms()})
 
         return terms_list
 

@@ -8,7 +8,7 @@
 from django.conf.urls import *  #@UnusedWildImport
 from django.contrib import admin
 from views import TermsView, AcceptView
-from models import TermsAndConditions, DEFAULT_TERMS_SLUG
+from models import DEFAULT_TERMS_SLUG
 
 admin.autodiscover()
 
