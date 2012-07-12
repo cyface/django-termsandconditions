@@ -55,22 +55,19 @@ class AcceptView(CreateView):
         else:
             terms = TermsAndConditions.get_active(slug)
 
-        return {'terms': terms}
+        returnTo = self.request.GET.get('returnTo', '/')
+
+        return {'terms': terms, 'returnTo': returnTo}
 
     def form_valid(self, form):
         if self.request.user.is_authenticated():
             form.instance.user = self.request.user
         else: #Get user out of saved pipeline from django-socialauth
-            if request.session.has_key('partial_pipeline'):
-                user_pk = request.session['partial_pipeline']['kwargs']['user']['pk']
+            if self.request.session.has_key('partial_pipeline'):
+                user_pk = self.request.session['partial_pipeline']['kwargs']['user']['pk']
                 form.instance.user = User.objects.get(id=user_pk)
             else:
                 return HttpResponseRedirect('/')
         form.instance.ip_address = self.request.META['REMOTE_ADDR']
         self.success_url = form.cleaned_data.get('returnTo', '/') or '/'
         return super(AcceptView, self).form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        returnTo = self.request.GET.get('returnTo', '/')
-        kwargs.update({'returnTo': returnTo})
-        return super(AcceptView, self).get_context_data(**kwargs)
