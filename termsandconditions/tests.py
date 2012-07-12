@@ -2,12 +2,13 @@
 
 # pylint: disable=R0904, C0103
 
-from django.test.client import Client
+from django.conf import settings
 from django.test import TestCase
 from django.contrib.auth.models import User
 from termsandconditions.models import TermsAndConditions
 from termsandconditions.models import UserTermsAndConditions
 import logging
+from importlib import import_module
 
 LOGGER = logging.getLogger(name='termsandconditions')
 
@@ -18,7 +19,7 @@ class TermsAndConditionsTests(TestCase):
     def setUp(self):
         """Setup for each test"""
         LOGGER.debug('Test Setup')
-        self.c = Client()
+
         self.user1 = User.objects.create_user('user1', 'user1@user1.com', 'user1password')
         self.user2 = User.objects.create_user('user2', 'user2@user2.com', 'user2password')
         self.terms1 = TermsAndConditions.objects.create(slug="site-terms", name="Site Terms",
@@ -73,48 +74,48 @@ class TermsAndConditionsTests(TestCase):
         UserTermsAndConditions.objects.all().delete()
 
         LOGGER.debug('Test user1 login for middleware')
-        login_response = self.c.login(username='user1', password='user1password')
+        login_response = self.client.login(username='user1', password='user1password')
         self.assertTrue(login_response)
 
         LOGGER.debug('Test /secure/ after login')
-        logged_in_response = self.c.get('/secure/', follow=True)
+        logged_in_response = self.client.get('/secure/', follow=True)
         self.assertRedirects(logged_in_response, "http://testserver/terms/accept/site-terms?returnTo=/secure/")
 
     def test_terms_required_redirect(self):
         """Validate that a user is redirected to the terms accept page if they are logged in, and decorator is on method"""
 
         LOGGER.debug('Test /termsrequired/ pre login')
-        not_logged_in_response = self.c.get('/termsrequired/', follow=True)
+        not_logged_in_response = self.client.get('/termsrequired/', follow=True)
         self.assertRedirects(not_logged_in_response, "http://testserver/accounts/login/?next=/termsrequired/")
 
         LOGGER.debug('Test user1 login')
-        login_response = self.c.login(username='user1', password='user1password')
+        login_response = self.client.login(username='user1', password='user1password')
         self.assertTrue(login_response)
 
         LOGGER.debug('Test /termsrequired/ after login')
-        logged_in_response = self.c.get('/termsrequired/', follow=True)
+        logged_in_response = self.client.get('/termsrequired/', follow=True)
         self.assertRedirects(logged_in_response, "http://testserver/terms/accept/?returnTo=/termsrequired/")
 
         LOGGER.debug('Test no redirect for /termsrequired/ after accept')
-        accepted_response = self.c.post('/terms/accept/', {'terms': 2, 'returnTo': '/termsrequired/'}, follow=True)
+        accepted_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/termsrequired/'}, follow=True)
         LOGGER.debug('Test response after termsrequired accept')
         LOGGER.debug(accepted_response)
-        termsrequired_response = self.c.get('/termsrequired/', follow=True)
+        termsrequired_response = self.client.get('/termsrequired/', follow=True)
         self.assertContains(termsrequired_response, "Terms and Conditions Acceptance Required")
 
     def test_accept(self):
         """Validate that accepting terms works"""
 
         LOGGER.debug('Test user1 login for accept')
-        login_response = self.c.login(username='user1', password='user1password')
+        login_response = self.client.login(username='user1', password='user1password')
         self.assertTrue(login_response)
 
         LOGGER.debug('Test /terms/accept/ get')
-        logged_in_response = self.c.get('/terms/accept/', follow=True)
+        logged_in_response = self.client.get('/terms/accept/', follow=True)
         self.assertContains(logged_in_response, "Accept")
 
         LOGGER.debug('Test /terms/accept/ post')
-        logged_in_response = self.c.post('/terms/accept/', {'terms': 2, 'returnTo': '/secure/'}, follow=True)
+        logged_in_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/secure/'}, follow=True)
         LOGGER.debug(logged_in_response)
         self.assertContains(logged_in_response, "Contributor")
 
@@ -130,11 +131,11 @@ class TermsAndConditionsTests(TestCase):
         self.assertEquals(0, numTerms)
 
         LOGGER.debug('Test user1 login for autocreate')
-        login_response = self.c.login(username='user1', password='user1password')
+        login_response = self.client.login(username='user1', password='user1password')
         self.assertTrue(login_response)
 
         LOGGER.debug('Test /termsrequired/ after login with no TermsAndConditions')
-        logged_in_response = self.c.get('/termsrequired/', follow=True)
+        logged_in_response = self.client.get('/termsrequired/', follow=True)
         self.assertRedirects(logged_in_response, "http://testserver/terms/accept/?returnTo=/termsrequired/")
 
         LOGGER.debug('Test TermsAndConditions Object Was Created')
@@ -145,7 +146,7 @@ class TermsAndConditionsTests(TestCase):
         self.assertEquals('site-terms-1.00', str(terms))
 
         LOGGER.debug('Test Not Creating Non-Default TermsAndConditions')
-        non_default_response = self.c.get('/terms/accept/contributor-terms/', follow=True)
+        non_default_response = self.client.get('/terms/accept/contributor-terms/', follow=True)
         self.assertEquals(404, non_default_response.status_code)
 
 
@@ -155,11 +156,11 @@ class TermsAndConditionsTests(TestCase):
         UserTermsAndConditions.objects.create(user=self.user1, terms=self.terms2)
 
         LOGGER.debug('Test user1 login pre upgrade')
-        login_response = self.c.login(username='user1', password='user1password')
+        login_response = self.client.login(username='user1', password='user1password')
         self.assertTrue(login_response)
 
         LOGGER.debug('Test user1 not redirected after login')
-        logged_in_response = self.c.get('/secure/', follow=True)
+        logged_in_response = self.client.get('/secure/', follow=True)
         self.assertContains(logged_in_response, "Contributor")
 
         LOGGER.debug('Test upgrade terms')
@@ -167,7 +168,7 @@ class TermsAndConditionsTests(TestCase):
             text="Terms and Conditions2", version_number=2.5, date_active="2012-02-05")
 
         LOGGER.debug('Test user1 is redirected when changing pages')
-        post_upgrade_response = self.c.get('/secure/', follow=True)
+        post_upgrade_response = self.client.get('/secure/', follow=True)
         self.assertRedirects(post_upgrade_response, "http://testserver/terms/accept/site-terms?returnTo=/secure/")
 
     def test_no_middleware(self):
@@ -176,30 +177,58 @@ class TermsAndConditionsTests(TestCase):
         UserTermsAndConditions.objects.create(user=self.user1, terms=self.terms2)
 
         LOGGER.debug('Test user1 login no middleware')
-        login_response = self.c.login(username='user1', password='user1password')
+        login_response = self.client.login(username='user1', password='user1password')
         self.assertTrue(login_response)
 
         LOGGER.debug('Test user1 not redirected after login')
-        logged_in_response = self.c.get('/securetoo/', follow=True)
+        logged_in_response = self.client.get('/securetoo/', follow=True)
         self.assertContains(logged_in_response, "SECOND")
 
         LOGGER.debug("Test startswith '/admin' pages not redirecting")
-        admin_response = self.c.get('/admin', follow=True)
+        admin_response = self.client.get('/admin', follow=True)
         self.assertContains(admin_response, "administration")
 
     def test_terms_view(self):
         """Test Accessing the View Terms and Conditions Functions"""
 
         LOGGER.debug('Test /terms/')
-        response1 = self.c.get('/terms/', follow=True)
+        response1 = self.client.get('/terms/', follow=True)
         self.assertContains(response1, 'Terms and Conditions')
 
         LOGGER.debug('Test /terms/view/site-terms')
-        response2 = self.c.get('/terms/view/site-terms', follow=True)
+        response2 = self.client.get('/terms/view/site-terms', follow=True)
         self.assertContains(response2, 'Terms and Conditions')
 
         LOGGER.debug('Test /terms/view/site-terms/1.0')
-        response2 = self.c.get('/terms/view/site-terms/1.0', follow=True)
+        response2 = self.client.get('/terms/view/site-terms/1.0', follow=True)
         self.assertContains(response2, 'Terms and Conditions')
+
+    def test_user_pipeline(self):
+        """Test the case of a user being partially created via the django-socialauth pipeline"""
+
+        user = {'pk': 1}
+        kwa = {'user': user}
+        partial_pipeline = {'kwargs': kwa}
+
+        engine = import_module(settings.SESSION_ENGINE)
+        store = engine.SessionStore()
+        store.save()
+        self.client.cookies[settings.SESSION_COOKIE_NAME] = store.session_key
+
+        session = self.client.session
+        session["partial_pipeline"] = partial_pipeline
+        session.save()
+
+        LOGGER.debug('Pipeline Session Post-Set')
+        LOGGER.debug(self.client.session)
+
+
+        self.assertTrue(self.client.session.has_key('partial_pipeline'))
+
+        LOGGER.debug('Test /terms/accept/ post for pipeline user')
+        pipeline_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/'}, follow=True)
+        LOGGER.debug(pipeline_response)
+        self.assertContains(pipeline_response, "Home")
+
 
 
