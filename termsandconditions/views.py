@@ -12,10 +12,12 @@ import logging
 LOGGER = logging.getLogger(name='termsandconditions')
 
 class TermsView(DetailView):
+    """View to enable viewing of Terms and Conditions, e.g. when printing"""
     template_name = "termsandconditions/tc_view_terms.html"
     context_object_name = 'terms'
 
     def get_object(self, queryset=None):
+        """Override of DetailView method, queries for which T&C to return"""
         LOGGER.debug('termsandconditions.views.TermsView.get_object')
 
         slug = self.kwargs.get("slug", DEFAULT_TERMS_SLUG)
@@ -40,6 +42,7 @@ class AcceptView(CreateView):
     template_name = "termsandconditions/tc_accept_terms.html"
 
     def get_initial(self):
+        """Override of DetailView method, queries for which T&C to return and catches returnTo from URL"""
         LOGGER.debug('termsandconditions.views.AcceptView.get_object')
 
         slug = self.kwargs.get("slug", DEFAULT_TERMS_SLUG)
@@ -54,6 +57,7 @@ class AcceptView(CreateView):
         return {'terms': terms, 'returnTo': returnTo}
 
     def form_valid(self, form):
+        """Override of CreateView method, assigns default values based on user situation"""
         if self.request.user.is_authenticated():
             form.instance.user = self.request.user
         else: #Get user out of saved pipeline from django-socialauth
