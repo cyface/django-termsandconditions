@@ -246,6 +246,7 @@ class TermsAndConditionsTests(TestCase):
         self.assertContains(pipeline_response, "Anon")
 
     def test_email_terms(self):
+        """Test emailing terms and conditions"""
         LOGGER.debug('Test /terms/email/')
         email_form_response = self.client.get('/terms/email/', follow=True)
         self.assertContains(email_form_response, 'Email')

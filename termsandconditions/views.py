@@ -13,6 +13,7 @@ from django.template import Context
 from django.template.loader import get_template
 from django.core.mail import send_mail
 import logging
+from smtplib import SMTPException
 
 LOGGER = logging.getLogger(name='termsandconditions')
 
@@ -115,7 +116,7 @@ class EmailTermsView(FormView):
                 [form.cleaned_data.get('email_address')],
                 fail_silently=False)
             messages.add_message(self.request, messages.INFO, "Terms and Conditions Sent.")
-        except Exception:
+        except SMTPException:
             messages.add_message(self.request, messages.ERROR, "An Error Occurred Sending Your Message.")
 
         self.success_url = form.cleaned_data.get('returnTo', '/') or '/'
