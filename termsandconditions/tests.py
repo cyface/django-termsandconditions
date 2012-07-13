@@ -6,8 +6,7 @@ from django.core import mail
 from django.conf import settings
 from django.test import TestCase
 from django.contrib.auth.models import User
-from termsandconditions.models import TermsAndConditions
-from termsandconditions.models import UserTermsAndConditions
+from models import TermsAndConditions, UserTermsAndConditions
 import logging
 from importlib import import_module
 
