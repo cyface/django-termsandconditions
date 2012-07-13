@@ -54,7 +54,7 @@ class TermsAndConditions(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('sw_weave_detail', [self.slug]) # pylint: disable=E1101
+        return ('tc_view_specific_version_page', [self.slug,self.version_number]) # pylint: disable=E1101
 
     @staticmethod
     def create_default_terms():
@@ -107,6 +107,16 @@ class TermsAndConditions(models.Model):
             UserTermsAndConditions.objects.get(user=user, terms=TermsAndConditions.get_active(slug))
             return True
         except UserTermsAndConditions.MultipleObjectsReturned:
+            return True
+        except UserTermsAndConditions.DoesNotExist:
+            return False
+
+    @staticmethod
+    def agreed_to_terms(user, terms=None):
+        """Checks to see if a specified user has agreed to a specific terms and conditions"""
+
+        try:
+            UserTermsAndConditions.objects.get(user=user, terms=terms)
             return True
         except UserTermsAndConditions.DoesNotExist:
             return False

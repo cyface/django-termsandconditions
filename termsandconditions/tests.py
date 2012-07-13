@@ -2,6 +2,7 @@
 
 # pylint: disable=R0904, C0103
 
+from django.core import mail
 from django.conf import settings
 from django.test import TestCase
 from django.contrib.auth.models import User
@@ -111,15 +112,24 @@ class TermsAndConditionsTests(TestCase):
         self.assertTrue(login_response)
 
         LOGGER.debug('Test /terms/accept/ get')
-        logged_in_response = self.client.get('/terms/accept/', follow=True)
-        self.assertContains(logged_in_response, "Accept")
+        accept_response = self.client.get('/terms/accept/', follow=True)
+        self.assertContains(accept_response, "Accept")
 
         LOGGER.debug('Test /terms/accept/ post')
-        logged_in_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/secure/'}, follow=True)
-        LOGGER.debug(logged_in_response)
-        self.assertContains(logged_in_response, "Contributor")
+        chained_terms_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/secure/'}, follow=True)
+        LOGGER.debug(chained_terms_response)
+        self.assertContains(chained_terms_response, "Contributor")
 
         self.assertEquals(True, TermsAndConditions.agreed_to_latest(user=self.user1, slug='site-terms'))
+
+        LOGGER.debug('Test /terms/accept/contrib-terms/2/ post')
+        accept_version_response = accept_response = self.client.get('/terms/accept/contrib-terms/1.5/', follow=True)
+        LOGGER.debug(accept_version_response)
+        self.assertContains(accept_version_response, "Contributor Terms and Conditions 1.5")
+        accept_version_post_response = self.client.post('/terms/accept/', {'terms': 3, 'returnTo': '/secure/'}, follow=True)
+        LOGGER.debug(accept_version_post_response)
+        self.assertContains(accept_version_post_response, "Secure")
+        self.assertTrue(TermsAndConditions.agreed_to_terms(user=self.user1, terms=self.terms3))
 
     def test_auto_create(self):
         """Validate that a terms are auto created if none exist"""
@@ -146,7 +156,7 @@ class TermsAndConditionsTests(TestCase):
         self.assertEquals('site-terms-1.00', str(terms))
 
         LOGGER.debug('Test Not Creating Non-Default TermsAndConditions')
-        non_default_response = self.client.get('/terms/accept/contributor-terms/', follow=True)
+        non_default_response = self.client.get('/terms/accept/contrib-terms/', follow=True)
         self.assertEquals(404, non_default_response.status_code)
 
 
@@ -192,19 +202,24 @@ class TermsAndConditionsTests(TestCase):
         """Test Accessing the View Terms and Conditions Functions"""
 
         LOGGER.debug('Test /terms/')
-        response1 = self.client.get('/terms/', follow=True)
-        self.assertContains(response1, 'Terms and Conditions')
+        root_response = self.client.get('/terms/', follow=True)
+        self.assertContains(root_response, 'Terms and Conditions')
 
         LOGGER.debug('Test /terms/view/site-terms')
-        response2 = self.client.get('/terms/view/site-terms', follow=True)
-        self.assertContains(response2, 'Terms and Conditions')
+        slug_response = self.client.get('/terms/view/site-terms', follow=True)
+        self.assertContains(slug_response, 'Terms and Conditions')
 
-        LOGGER.debug('Test /terms/view/site-terms/1.0')
-        response2 = self.client.get('/terms/view/site-terms/1.0', follow=True)
-        self.assertContains(response2, 'Terms and Conditions')
+        LOGGER.debug('Test /terms/view/site-terms/1.5')
+        version_response = self.client.get(self.terms3.get_absolute_url(), follow=True)
+        self.assertContains(version_response, 'Terms and Conditions')
 
     def test_user_pipeline(self):
         """Test the case of a user being partially created via the django-socialauth pipeline"""
+
+        LOGGER.debug('Test /terms/accept/ post for no user')
+        no_user_response = self.client.post('/terms/accept/', {'terms': 2}, follow=True)
+        LOGGER.debug(no_user_response)
+        self.assertContains(no_user_response, "Home")
 
         user = {'pk': 1}
         kwa = {'user': user}
@@ -226,9 +241,27 @@ class TermsAndConditionsTests(TestCase):
         self.assertTrue(self.client.session.has_key('partial_pipeline'))
 
         LOGGER.debug('Test /terms/accept/ post for pipeline user')
-        pipeline_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/'}, follow=True)
+        pipeline_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/anon'}, follow=True)
         LOGGER.debug(pipeline_response)
-        self.assertContains(pipeline_response, "Home")
+        self.assertContains(pipeline_response, "Anon")
+
+    def test_email_terms(self):
+        LOGGER.debug('Test /terms/email/')
+        email_form_response = self.client.get('/terms/email/', follow=True)
+        self.assertContains(email_form_response, 'Email')
+
+        LOGGER.debug('Test /terms/email/ post, expecting email fail')
+        email_send_response = self.client.post('/terms/email/', {'email_address': 'foo@foo.com', 'email_subject': 'Terms Email', 'terms': 2, 'returnTo': '/'}, follow=True)
+        LOGGER.debug(email_send_response)
+        self.assertEqual(len(mail.outbox), 1) #Check that there is one email in the test outbox
+        self.assertContains(email_send_response, 'Sent')
+
+        LOGGER.debug('Test /terms/email/ post, expecting email fail')
+        email_fail_response = self.client.post('/terms/email/', {'email_address': 'INVALID EMAIL ADDRESS', 'email_subject': 'Terms Email', 'terms': 2, 'returnTo': '/'}, follow=True)
+        LOGGER.debug(email_fail_response)
+        self.assertContains(email_fail_response, 'Invalid')
+
+
 
 
 

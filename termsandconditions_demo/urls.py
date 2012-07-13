@@ -20,6 +20,9 @@ urlpatterns = patterns('',
     # Home Page
     url(r'^$', never_cache(IndexView.as_view()), name="tc_demo_home_page"),
 
+    # Home Page
+    url(r'^anon/$', never_cache(IndexView.as_view(template_name="index_anon.html")), name="tc_demo_home_anon_page"), #used for pipeline user test
+
     # Secure Page
     url(r'^secure/$', never_cache((login_required(SecureView.as_view()))), name="tc_demo_secure_page"),
 
