@@ -11,10 +11,7 @@ import logging
 
 LOGGER = logging.getLogger(name='termsandconditions')
 
-if hasattr(settings, 'DEFAULT_TERMS_SLUG'):
-    DEFAULT_TERMS_SLUG = settings.DEFAULT_TERMS_SLUG
-else:
-    DEFAULT_TERMS_SLUG = 'site-terms'
+DEFAULT_TERMS_SLUG = getattr(settings, 'DEFAULT_TERMS_SLUG', 'site-terms')
 
 class UserTermsAndConditions(models.Model):
     """Holds mapping between TermsAndConditions and Users"""
