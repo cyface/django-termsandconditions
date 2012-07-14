@@ -3,7 +3,7 @@
     pass-offs to sub-modules, who will have their own urls.py defining actions within.
 """
 
-# pylint: disable=W0401, W0614, E1120
+# pylint: disable=E1120
 
 from django.conf.urls import patterns, url, include
 from django.contrib import admin

@@ -41,7 +41,6 @@ class TermsAndConditionsTests(TestCase):
     def test_get_active_list(self):
         """Test get list of active T&Cs"""
         active_list = TermsAndConditions.get_active_list()
-        LOGGER.debug('Active Terms: ' + str(active_list))
         self.assertEqual(2, len(active_list))
 
     def test_terms_and_conditions_models(self):
@@ -99,7 +98,6 @@ class TermsAndConditionsTests(TestCase):
         LOGGER.debug('Test no redirect for /termsrequired/ after accept')
         accepted_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/termsrequired/'}, follow=True)
         LOGGER.debug('Test response after termsrequired accept')
-        LOGGER.debug(accepted_response)
         termsrequired_response = self.client.get('/termsrequired/', follow=True)
         self.assertContains(termsrequired_response, "Terms and Conditions Acceptance Required")
 
@@ -116,17 +114,16 @@ class TermsAndConditionsTests(TestCase):
 
         LOGGER.debug('Test /terms/accept/ post')
         chained_terms_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/secure/'}, follow=True)
-        LOGGER.debug(chained_terms_response)
         self.assertContains(chained_terms_response, "Contributor")
 
         self.assertEquals(True, TermsAndConditions.agreed_to_latest(user=self.user1, slug='site-terms'))
 
-        LOGGER.debug('Test /terms/accept/contrib-terms/2/ post')
+        LOGGER.debug('Test /terms/accept/contrib-terms/1.5/ post')
         accept_version_response = accept_response = self.client.get('/terms/accept/contrib-terms/1.5/', follow=True)
-        LOGGER.debug(accept_version_response)
         self.assertContains(accept_version_response, "Contributor Terms and Conditions 1.5")
+
+        LOGGER.debug('Test /terms/accept/contrib-terms/3/ post')
         accept_version_post_response = self.client.post('/terms/accept/', {'terms': 3, 'returnTo': '/secure/'}, follow=True)
-        LOGGER.debug(accept_version_post_response)
         self.assertContains(accept_version_post_response, "Secure")
         self.assertTrue(TermsAndConditions.agreed_to_terms(user=self.user1, terms=self.terms3))
 
@@ -217,7 +214,6 @@ class TermsAndConditionsTests(TestCase):
 
         LOGGER.debug('Test /terms/accept/ post for no user')
         no_user_response = self.client.post('/terms/accept/', {'terms': 2}, follow=True)
-        LOGGER.debug(no_user_response)
         self.assertContains(no_user_response, "Home")
 
         user = {'pk': 1}
@@ -233,15 +229,10 @@ class TermsAndConditionsTests(TestCase):
         session["partial_pipeline"] = partial_pipeline
         session.save()
 
-        LOGGER.debug('Pipeline Session Post-Set')
-        LOGGER.debug(self.client.session)
-
-
         self.assertTrue(self.client.session.has_key('partial_pipeline'))
 
         LOGGER.debug('Test /terms/accept/ post for pipeline user')
         pipeline_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/anon'}, follow=True)
-        LOGGER.debug(pipeline_response)
         self.assertContains(pipeline_response, "Anon")
 
     def test_email_terms(self):
@@ -252,13 +243,11 @@ class TermsAndConditionsTests(TestCase):
 
         LOGGER.debug('Test /terms/email/ post, expecting email fail')
         email_send_response = self.client.post('/terms/email/', {'email_address': 'foo@foo.com', 'email_subject': 'Terms Email', 'terms': 2, 'returnTo': '/'}, follow=True)
-        LOGGER.debug(email_send_response)
         self.assertEqual(len(mail.outbox), 1) #Check that there is one email in the test outbox
         self.assertContains(email_send_response, 'Sent')
 
         LOGGER.debug('Test /terms/email/ post, expecting email fail')
         email_fail_response = self.client.post('/terms/email/', {'email_address': 'INVALID EMAIL ADDRESS', 'email_subject': 'Terms Email', 'terms': 2, 'returnTo': '/'}, follow=True)
-        LOGGER.debug(email_fail_response)
         self.assertContains(email_fail_response, 'Invalid')
 
 
