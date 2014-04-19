@@ -15,10 +15,10 @@
 
             <p>You'll be asked to accept the site terms and conditions.</p>
 
-            <a href="{% url tc_demo_secure_page %}" data-role="button" data-ajax="false">Get Started</a>
+            <a href="{% url 'tc_demo_secure_page' %}" data-role="button" data-ajax="false">Get Started</a>
         {% else %}
             <h2>Thank you for signing in, {{ user.username }}.</h2>
-            <a href="{% url tc_demo_secure_page %}" data-role="button" data-ajax="false">Return to Secure Area</a>
+            <a href="{% url 'tc_demo_secure_page' %}" data-role="button" data-ajax="false">Return to Secure Area</a>
         {% endif %}
     </section>
 {% endblock %}

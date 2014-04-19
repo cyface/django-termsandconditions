@@ -17,6 +17,7 @@ from smtplib import SMTPException
 
 LOGGER = logging.getLogger(name='termsandconditions')
 
+
 def get_terms(kwargs):
     """Checks URL parameters for slug and/or version to pull the right TermsAndConditions object"""
     slug = kwargs.get("slug", DEFAULT_TERMS_SLUG)
@@ -69,7 +70,7 @@ class AcceptTermsView(CreateView):
         """Override of CreateView method, assigns default values based on user situation"""
         if self.request.user.is_authenticated():
             form.instance.user = self.request.user
-        else: #Get user out of saved pipeline from django-socialauth
+        else:  #Get user out of saved pipeline from django-socialauth
             if self.request.session.has_key('partial_pipeline'):
                 user_pk = self.request.session['partial_pipeline']['kwargs']['user']['pk']
                 form.instance.user = User.objects.get(id=user_pk)
@@ -78,6 +79,7 @@ class AcceptTermsView(CreateView):
         form.instance.ip_address = self.request.META['REMOTE_ADDR']
         self.success_url = form.cleaned_data.get('returnTo', '/') or '/'
         return super(AcceptTermsView, self).form_valid(form)
+
 
 class EmailTermsView(FormView):
     """
@@ -106,15 +108,15 @@ class EmailTermsView(FormView):
         template = get_template("termsandconditions/tc_email_terms.html")
         template_rendered = template.render(Context({"terms": form.cleaned_data.get('terms')}))
 
-        LOGGER.debug ("Email Terms Body:")
-        LOGGER.debug (template_rendered)
+        LOGGER.debug("Email Terms Body:")
+        LOGGER.debug(template_rendered)
 
         try:
             send_mail(form.cleaned_data.get('email_subject', 'Terms'),
-                template_rendered,
-                settings.DEFAULT_FROM_EMAIL,
-                [form.cleaned_data.get('email_address')],
-                fail_silently=False)
+                      template_rendered,
+                      settings.DEFAULT_FROM_EMAIL,
+                      [form.cleaned_data.get('email_address')],
+                      fail_silently=False)
             messages.add_message(self.request, messages.INFO, "Terms and Conditions Sent.")
         except SMTPException:
             messages.add_message(self.request, messages.ERROR, "An Error Occurred Sending Your Message.")

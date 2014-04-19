@@ -23,13 +23,17 @@ class TermsAndConditionsTests(TestCase):
         self.user1 = User.objects.create_user('user1', 'user1@user1.com', 'user1password')
         self.user2 = User.objects.create_user('user2', 'user2@user2.com', 'user2password')
         self.terms1 = TermsAndConditions.objects.create(slug="site-terms", name="Site Terms",
-            text="Site Terms and Conditions 1", version_number=1.0, date_active="2012-01-01")
+                                                        text="Site Terms and Conditions 1", version_number=1.0,
+                                                        date_active="2012-01-01")
         self.terms2 = TermsAndConditions.objects.create(slug="site-terms", name="Site Terms",
-            text="Site Terms and Conditions 2", version_number=2.0, date_active="2012-01-05")
+                                                        text="Site Terms and Conditions 2", version_number=2.0,
+                                                        date_active="2012-01-05")
         self.terms3 = TermsAndConditions.objects.create(slug="contrib-terms", name="Contributor Terms",
-            text="Contributor Terms and Conditions 1.5", version_number=1.5, date_active="2012-01-01")
+                                                        text="Contributor Terms and Conditions 1.5", version_number=1.5,
+                                                        date_active="2012-01-01")
         self.terms4 = TermsAndConditions.objects.create(slug="contrib-terms", name="Contributor Terms",
-            text="Contributor Terms and Conditions 2", version_number=2.0, date_active="2100-01-01")
+                                                        text="Contributor Terms and Conditions 2", version_number=2.0,
+                                                        date_active="2100-01-01")
 
     def tearDown(self):
         """Teardown for each test"""
@@ -123,7 +127,8 @@ class TermsAndConditionsTests(TestCase):
         self.assertContains(accept_version_response, "Contributor Terms and Conditions 1.5")
 
         LOGGER.debug('Test /terms/accept/contrib-terms/3/ post')
-        accept_version_post_response = self.client.post('/terms/accept/', {'terms': 3, 'returnTo': '/secure/'}, follow=True)
+        accept_version_post_response = self.client.post('/terms/accept/', {'terms': 3, 'returnTo': '/secure/'},
+                                                        follow=True)
         self.assertContains(accept_version_post_response, "Secure")
         self.assertTrue(TermsAndConditions.agreed_to_terms(user=self.user1, terms=self.terms3))
 
@@ -171,7 +176,8 @@ class TermsAndConditionsTests(TestCase):
 
         LOGGER.debug('Test upgrade terms')
         self.terms5 = TermsAndConditions.objects.create(slug="site-terms", name="Site Terms",
-            text="Terms and Conditions2", version_number=2.5, date_active="2012-02-05")
+                                                        text="Terms and Conditions2", version_number=2.5,
+                                                        date_active="2012-02-05")
 
         LOGGER.debug('Test user1 is redirected when changing pages')
         post_upgrade_response = self.client.get('/secure/', follow=True)
@@ -242,12 +248,16 @@ class TermsAndConditionsTests(TestCase):
         self.assertContains(email_form_response, 'Email')
 
         LOGGER.debug('Test /terms/email/ post, expecting email fail')
-        email_send_response = self.client.post('/terms/email/', {'email_address': 'foo@foo.com', 'email_subject': 'Terms Email', 'terms': 2, 'returnTo': '/'}, follow=True)
-        self.assertEqual(len(mail.outbox), 1) #Check that there is one email in the test outbox
+        email_send_response = self.client.post('/terms/email/',
+                                               {'email_address': 'foo@foo.com', 'email_subject': 'Terms Email',
+                                                'terms': 2, 'returnTo': '/'}, follow=True)
+        self.assertEqual(len(mail.outbox), 1)  # Check that there is one email in the test outbox
         self.assertContains(email_send_response, 'Sent')
 
         LOGGER.debug('Test /terms/email/ post, expecting email fail')
-        email_fail_response = self.client.post('/terms/email/', {'email_address': 'INVALID EMAIL ADDRESS', 'email_subject': 'Terms Email', 'terms': 2, 'returnTo': '/'}, follow=True)
+        email_fail_response = self.client.post('/terms/email/', {'email_address': 'INVALID EMAIL ADDRESS',
+                                                                 'email_subject': 'Terms Email', 'terms': 2,
+                                                                 'returnTo': '/'}, follow=True)
         self.assertContains(email_fail_response, 'Invalid')
 
 

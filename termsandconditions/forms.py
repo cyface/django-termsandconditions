@@ -5,6 +5,7 @@
 from django import forms
 from termsandconditions.models import UserTermsAndConditions, TermsAndConditions
 
+
 class UserTermsAndConditionsModelForm(forms.ModelForm):
     """Form used when accepting Terms and Conditions - returnTo is used to catch where to end up."""
 
@@ -22,4 +23,4 @@ class EmailTermsForm(forms.Form):
     email_subject = forms.CharField(widget=forms.HiddenInput())
     email_address = forms.EmailField()
     returnTo = forms.CharField(required=False, initial="/", widget=forms.HiddenInput())
-    terms = forms.ModelChoiceField (queryset=TermsAndConditions.objects.all(), widget=forms.HiddenInput())
+    terms = forms.ModelChoiceField(queryset=TermsAndConditions.objects.all(), widget=forms.HiddenInput())

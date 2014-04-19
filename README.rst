@@ -2,6 +2,9 @@
 Django Terms and Conditions
 ===========================
 
+.. image:: https://travis-ci.org/cyface/django-termsandconditions.svg?branch=master
+  :target: https://travis-ci.org/cyface/django-termsandconditions
+
 Django Terms and Conditions gives you an out-of-the-box way to enable you to send users to a T&C acceptance page before they
 can access the site if you wish.
 
@@ -71,7 +74,7 @@ Add termsandconditions to installed applications::
     )
 
 Add urls to urls.py
---------------------
+-------------------
 
 In your urls.py, you need to pull in the termsandconditions and/or termsandconditions urls::
 
@@ -79,7 +82,7 @@ In your urls.py, you need to pull in the termsandconditions and/or termsandcondi
     url(r'^terms/', include('termsandconditions.urls')),
 
 Terms and Conditions
-=======================
+====================
 
 You will need to set up a Terms and Conditions entry in the admin (or via direct DB load) for users to accept if
 you want to use the T&C module.
@@ -89,12 +92,12 @@ The default Terms and Conditions entry has a slug of 'site-terms'.
 If you don't create one, the first time a user is forced to accept the terms, it will create a default entry for you.
 
 Terms and Conditions Versioning
------------------------------------
+-------------------------------
 Note that the versions and dates of T&Cs are important. You can create a new version of a T&C with a future date,
 and once that date is in the past, it will force users to accept that new version of the T&Cs.
 
 Terms and Conditions Middleware
------------------------------------
+-------------------------------
 You can force protection of your whole site by using the T&C middleware. Once activated, any attempt to access an
 authenticated page will first check to see if the user has accepted the active T&Cs. This can be a performance impact,
 so you can also use the _TermsAndConditionsDecorator to protect specific views, or the pipeline setup to only check on
@@ -116,7 +119,7 @@ TERMS_EXCLUDE_URL_PREFIX_LIST is a list of 'starts with' strings to exclude, whi
 explicit full paths to exclude.
 
 Terms and Conditions View Decorator
---------------------------------------
+-----------------------------------
 You can protect only specific views with T&Cs using the @terms_required() decorator at the top of a function like this::
 
     from termsandconditions.decorators import terms_required
@@ -131,7 +134,7 @@ Note that you can skip @login_required only if you are forcing auth on that view
 Requiring T&Cs for Anonymous Users is not supported.
 
 Terms and Conditions Pipeline
------------------------------------
+-----------------------------
 You can force T&C acceptance when a new user account is created using the django-socialauth pipeline::
 
     SOCIAL_AUTH_PIPELINE = (

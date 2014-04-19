@@ -11,6 +11,7 @@ def terms_required(view_func):
     """
     This decorator checks to see if the user is logged in, and if so, if they have accepted the site terms.
     """
+
     @wraps(view_func, assigned=available_attrs(view_func))
     def _wrapped_view(request, *args, **kwargs):
         """Method to wrap the view passed in"""
@@ -23,4 +24,5 @@ def terms_required(view_func):
         querystring['returnTo'] = currentPath
         login_url_parts[4] = querystring.urlencode(safe='/')
         return HttpResponseRedirect(urlparse.urlunparse(login_url_parts))
+
     return _wrapped_view

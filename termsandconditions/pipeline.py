@@ -1,4 +1,4 @@
-"""This file contains functions used as part of a user creation pipeline, such as the one provided by django-social-auth."""
+"""This file contains functions used as part of a user creation pipeline, such as django-social-auth."""
 
 # pylint: disable=W0613
 
@@ -14,13 +14,14 @@ TERMS_RETURNTO_PARAM = getattr(settings, 'TERMS_RETURNTO_PARAM', 'returnTo')
 
 LOGGER = logging.getLogger(name='termsandconditions')
 
+
 def user_accept_terms(backend, user, uid, social_user=None, *args, **kwargs):
     """Check the user has accepted the terms and conditions after creation."""
 
     LOGGER.debug('user_accept_terms')
 
     if not TermsAndConditions.agreed_to_latest(user):
-        complete_url = reverse('socialauth_complete',  args=[backend.name])
+        complete_url = reverse('socialauth_complete', args=[backend.name])
         return redirect_to_terms_accept(complete_url)
     else:
         return {'social_user': social_user, 'user': user}

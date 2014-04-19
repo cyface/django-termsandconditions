@@ -9,6 +9,7 @@ from django.conf.urls import patterns, url, include
 from django.contrib import admin
 from django.conf import settings
 from views import TermsRequiredView, SecureView, IndexView
+from django.views.generic import RedirectView, TemplateView
 from django.views.decorators.cache import never_cache
 from termsandconditions.decorators import terms_required
 from django.contrib.auth.decorators import login_required
@@ -45,6 +46,6 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
 
     # Robots and Favicon
-    (r'^robots\.txt$', 'django.views.generic.simple.direct_to_template', {'template': 'robots.txt', 'mimetype': 'text/plain'}),
-    (r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': settings.STATIC_URL + 'images/favicon.ico'}),
+    (r'^robots\.txt$', TemplateView.as_view(), {'template': 'robots.txt', 'mimetype': 'text/plain'}),
+    (r'^favicon\.ico$', RedirectView.as_view(), {'url': settings.STATIC_URL + 'images/favicon.ico'}),
 )

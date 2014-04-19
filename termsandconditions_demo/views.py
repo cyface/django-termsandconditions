@@ -2,6 +2,7 @@
 
 from django.views.generic import TemplateView
 
+
 class IndexView(TemplateView):
     """
     Main site page page.

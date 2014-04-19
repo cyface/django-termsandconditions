@@ -13,6 +13,7 @@ LOGGER = logging.getLogger(name='termsandconditions')
 
 DEFAULT_TERMS_SLUG = getattr(settings, 'DEFAULT_TERMS_SLUG', 'site-terms')
 
+
 class UserTermsAndConditions(models.Model):
     """Holds mapping between TermsAndConditions and Users"""
     user = models.ForeignKey(User, related_name="userterms")
@@ -51,7 +52,7 @@ class TermsAndConditions(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('tc_view_specific_version_page', [self.slug, self.version_number]) # pylint: disable=E1101
+        return ('tc_view_specific_version_page', [self.slug, self.version_number])  # pylint: disable=E1101
 
     @staticmethod
     def create_default_terms():

@@ -5,6 +5,6 @@ REM This should be run from the project directory, not inside the project dir
 
 SET PIP_DOWNLOAD_CACHE=..\pip_download_cache
 
-virtualenv --system-site-packages django-termsandconditions-env
-call django-termsandconditions-env\Scripts\activate.bat
+virtualenv --system-site-packages .env
+call .env\Scripts\activate.bat
 pip install -r termsandconditions_demo/requirements_dev.txt
