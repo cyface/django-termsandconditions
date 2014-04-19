@@ -1,0 +1,8 @@
+language: python
+python:
+  - "2.7"
+# command to install dependencies
+install:
+  - "pip install -r termsandconditions_demo/requirements_dev.txt --download-cache $HOME/.pip-cache"
+# command to run tests
+script: "python manage.py jenkins termsandconditions --coverage-rcfile=devscripts/checkers/coveragerc"
