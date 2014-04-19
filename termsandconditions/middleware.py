@@ -13,7 +13,7 @@ TERMS_EXCLUDE_URL_LIST = getattr(settings, 'TERMS_EXCLUDE_URL_LIST',
 MULTIPLE_ACTIVE_TERMS = getattr(settings, 'MULTIPLE_ACTIVE_TERMS', False)
 
 
-class TermsAndConditionsRedirectMiddleware:
+class TermsAndConditionsRedirectMiddleware(object):
     """
     This middleware checks to see if the user is logged in, and if so, if they have accepted the site terms.
     """

@@ -1,6 +1,6 @@
 """Django forms for the termsandconditions application"""
 
-# pylint: disable=W0613
+# pylint: disable=E1120,W0613
 
 from django import forms
 from termsandconditions.models import UserTermsAndConditions, TermsAndConditions
@@ -11,7 +11,7 @@ class UserTermsAndConditionsModelForm(forms.ModelForm):
 
     returnTo = forms.CharField(required=False, initial="/", widget=forms.HiddenInput())
 
-    class Meta:
+    class Meta(object):
         """Configuration for this Modelform"""
         model = UserTermsAndConditions
         exclude = ('date_accepted', 'ip_address', 'user')

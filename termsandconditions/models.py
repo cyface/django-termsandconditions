@@ -1,6 +1,6 @@
 """Django Models for TermsAndConditions App"""
 
-# pylint: disable=W0613
+# pylint: disable=C1001,E0202,W0613
 
 from django.contrib.auth.models import User
 from django.db import models

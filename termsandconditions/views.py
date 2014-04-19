@@ -1,6 +1,6 @@
 """Django Views for the termsandconditions module"""
 
-# pylint: disable=E1120, R0901
+# pylint: disable=E1120,R0901,R0904
 
 from django.contrib.auth.models import User
 from forms import UserTermsAndConditionsModelForm, EmailTermsForm

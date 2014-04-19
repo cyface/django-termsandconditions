@@ -85,7 +85,7 @@ class TermsAndConditionsTests(TestCase):
         self.assertRedirects(logged_in_response, "http://testserver/terms/accept/site-terms?returnTo=/secure/")
 
     def test_terms_required_redirect(self):
-        """Validate that a user is redirected to the terms accept page if they are logged in, and decorator is on method"""
+        """Validate that a user is redirected to the terms accept page if logged in, and decorator is on method"""
 
         LOGGER.debug('Test /termsrequired/ pre login')
         not_logged_in_response = self.client.get('/termsrequired/', follow=True)
@@ -101,6 +101,7 @@ class TermsAndConditionsTests(TestCase):
 
         LOGGER.debug('Test no redirect for /termsrequired/ after accept')
         accepted_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/termsrequired/'}, follow=True)
+        self.assertContains(accepted_response, "Terms and Conditions Acceptance Required")
         LOGGER.debug('Test response after termsrequired accept')
         termsrequired_response = self.client.get('/termsrequired/', follow=True)
         self.assertContains(termsrequired_response, "Terms and Conditions Acceptance Required")
