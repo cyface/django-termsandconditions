@@ -1,5 +1,6 @@
 -r requirements.txt
 coverage
+coveralls
 django-jenkins
 pylint
 sphinx
