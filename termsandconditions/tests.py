@@ -161,7 +161,6 @@ class TermsAndConditionsTests(TestCase):
         non_default_response = self.client.get('/terms/accept/contrib-terms/', follow=True)
         self.assertEquals(404, non_default_response.status_code)
 
-
     def test_terms_upgrade(self):
         """Validate a user is prompted to accept terms again when new version comes out"""
 
@@ -260,8 +259,3 @@ class TermsAndConditionsTests(TestCase):
                                                                  'email_subject': 'Terms Email', 'terms': 2,
                                                                  'returnTo': '/'}, follow=True)
         self.assertContains(email_fail_response, 'Invalid')
-
-
-
-
-

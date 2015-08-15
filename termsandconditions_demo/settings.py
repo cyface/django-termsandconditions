@@ -48,7 +48,7 @@ MEDIA_URL = '/media/'
 # Example: "/home/media/media.lawrence.com/"
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'mediaroot')
 
-#Staticfiles Config
+# Staticfiles Config
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticroot')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(PROJECT_ROOT, 'static')]
@@ -141,7 +141,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
-    'django.middleware.doc.XViewMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -167,7 +166,7 @@ INSTALLED_APPS = (
     'termsandconditions'
 )
 
-##### Custom Variables Below Here #######
+# Custom Variables Below Here #######
 
 # Terms & Conditions (termsandconditions) Settings
 DEFAULT_TERMS_SLUG = 'site-terms'
@@ -176,8 +175,8 @@ TERMS_EXCLUDE_URL_PREFIX_LIST = {'/admin', '/terms'}
 TERMS_EXCLUDE_URL_LIST = {'/', '/termsrequired/', '/logout/', '/securetoo/'}
 MULTIPLE_ACTIVE_TERMS = True  # Multiple kinds of T&Cs active at once (like site-terms, and contributor-terms).
 
-### DEBUG TOOLBAR
-#if DEBUG:
+#  DEBUG TOOLBAR
+# if DEBUG:
 #    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
 #    INSTALLED_APPS += ('debug_toolbar',)
 #
@@ -195,7 +194,7 @@ MULTIPLE_ACTIVE_TERMS = True  # Multiple kinds of T&Cs active at once (like site
 #        'INTERCEPT_REDIRECTS': False
 #    }
 
-#### LOGGING
+# LOGGING
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -205,7 +204,7 @@ MULTIPLE_ACTIVE_TERMS = True  # Multiple kinds of T&Cs active at once (like site
 # Catch Python warnings (e.g. deprecation warnings) into the logger
 try:
     logging.captureWarnings(True)
-except AttributeError:  #python 2.6 does not do this
+except AttributeError:  # python 2.6 does not do this
     pass
 
 LOGGING = {
