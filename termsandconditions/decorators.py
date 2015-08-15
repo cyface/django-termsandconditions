@@ -18,7 +18,7 @@ def terms_required(view_func):
         if not request.user.is_authenticated() or TermsAndConditions.agreed_to_latest(request.user):
             return view_func(request, *args, **kwargs)
 
-        currentPath = request.META['PATH_INFO']
+        currentPath = request.path
         login_url_parts = list(urlparse.urlparse(ACCEPT_TERMS_PATH))
         querystring = QueryDict(login_url_parts[4], mutable=True)
         querystring['returnTo'] = currentPath
