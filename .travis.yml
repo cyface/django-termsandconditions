@@ -8,3 +8,5 @@ install:
 # command to run tests
 script: "python manage.py jenkins termsandconditions --coverage-rcfile=devscripts/checkers/coveragerc"
 sudo: false
+after_success:
+  coveralls
