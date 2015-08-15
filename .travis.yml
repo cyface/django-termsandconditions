@@ -1,6 +1,7 @@
 language: python
 python:
   - "2.7"
+cache: pip
 # command to install dependencies
 install:
   - "pip install -r termsandconditions_demo/requirements_dev.txt --download-cache $HOME/.pip-cache"

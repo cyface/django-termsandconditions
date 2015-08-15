@@ -47,5 +47,5 @@ urlpatterns = patterns('',
 
     # Robots and Favicon
     (r'^robots\.txt$', TemplateView.as_view(), {'template': 'robots.txt', 'mimetype': 'text/plain'}),
-    (r'^favicon\.ico$', RedirectView.as_view(), {'url': settings.STATIC_URL + 'images/favicon.ico'}),
+    (r'^favicon\.ico$', RedirectView.as_view(permanent=True), {'url': settings.STATIC_URL + 'images/favicon.ico'}),
 )
