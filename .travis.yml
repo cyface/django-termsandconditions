@@ -4,7 +4,7 @@ python:
 cache: pip
 # command to install dependencies
 install:
-  - "pip install -r termsandconditions_demo/requirements_dev.txt --download-cache $HOME/.pip-cache"
+  - "pip install -r termsandconditions_demo/requirements_dev.txt
 # command to run tests
 script: "python manage.py jenkins termsandconditions --coverage-rcfile=devscripts/checkers/coveragerc"
 sudo: false
