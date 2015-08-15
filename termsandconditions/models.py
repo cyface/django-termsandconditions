@@ -2,11 +2,10 @@
 
 # pylint: disable=C1001,E0202,W0613
 
-from django.contrib.auth.models import User
 from django.db import models
 from django.conf import settings
 from django.http import Http404
-import datetime
+from django.utils import timezone
 import logging
 
 LOGGER = logging.getLogger(name='termsandconditions')
@@ -16,7 +15,7 @@ DEFAULT_TERMS_SLUG = getattr(settings, 'DEFAULT_TERMS_SLUG', 'site-terms')
 
 class UserTermsAndConditions(models.Model):
     """Holds mapping between TermsAndConditions and Users"""
-    user = models.ForeignKey(User, related_name="userterms")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="userterms")
     terms = models.ForeignKey("TermsAndConditions", related_name="userterms")
     ip_address = models.IPAddressField(null=True, blank=True, verbose_name='IP Address')
     date_accepted = models.DateTimeField(auto_now_add=True, verbose_name='Date Accepted')
@@ -34,7 +33,7 @@ class TermsAndConditions(models.Model):
     Active one for a given slug is: date_active is not Null and is latest not in future"""
     slug = models.SlugField(default=DEFAULT_TERMS_SLUG)
     name = models.TextField(max_length=255)
-    users = models.ManyToManyField(User, through=UserTermsAndConditions, blank=True, null=True, )
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, through=UserTermsAndConditions, blank=True, null=True, )
     version_number = models.DecimalField(default=1.0, decimal_places=2, max_digits=6)
     text = models.TextField(null=True, blank=True)
     date_active = models.DateTimeField(blank=True, null=True, help_text="Leave Null To Never Make Active")
@@ -60,7 +59,7 @@ class TermsAndConditions(models.Model):
         default_terms = TermsAndConditions.objects.create(
             slug=DEFAULT_TERMS_SLUG,
             name=DEFAULT_TERMS_SLUG,
-            date_active=datetime.datetime.now(),
+            date_active=timezone.now(),
             version_number=1,
             text=DEFAULT_TERMS_SLUG + " Text. CHANGE ME.")
         return default_terms
@@ -72,7 +71,7 @@ class TermsAndConditions(models.Model):
         try:
             activeTerms = TermsAndConditions.objects.filter(
                 date_active__isnull=False,
-                date_active__lte=datetime.datetime.now(),
+                date_active__lte=timezone.now(),
                 slug=slug).latest('date_active')
         except TermsAndConditions.DoesNotExist:
             if slug == DEFAULT_TERMS_SLUG:
@@ -89,7 +88,7 @@ class TermsAndConditions(models.Model):
         try:
             all_terms_list = TermsAndConditions.objects.filter(
                 date_active__isnull=False,
-                date_active__lte=datetime.datetime.now())
+                date_active__lte=timezone.now())
             for term in all_terms_list:
                 terms_list.update({term.slug: TermsAndConditions.get_active(slug=term.slug)})
         except TermsAndConditions.DoesNotExist:
