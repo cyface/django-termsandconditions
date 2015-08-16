@@ -69,17 +69,17 @@ class TermsAndConditions(models.Model):
         """Finds the latest of a particular terms and conditions"""
 
         try:
-            activeTerms = TermsAndConditions.objects.filter(
+            active_terms = TermsAndConditions.objects.filter(
                 date_active__isnull=False,
                 date_active__lte=timezone.now(),
                 slug=slug).latest('date_active')
         except TermsAndConditions.DoesNotExist:
             if slug == DEFAULT_TERMS_SLUG:
-                activeTerms = TermsAndConditions.create_default_terms()
-            else:
+                active_terms = TermsAndConditions.create_default_terms()
+            else:  # pragma: nocover
                 raise Http404
 
-        return activeTerms
+        return active_terms
 
     @staticmethod
     def get_active_list():
@@ -91,7 +91,7 @@ class TermsAndConditions(models.Model):
                 date_active__lte=timezone.now())
             for term in all_terms_list:
                 terms_list.update({term.slug: TermsAndConditions.get_active(slug=term.slug)})
-        except TermsAndConditions.DoesNotExist:
+        except TermsAndConditions.DoesNotExist:  # pragma: nocover
             terms_list.update({DEFAULT_TERMS_SLUG: TermsAndConditions.create_default_terms()})
 
         return terms_list
@@ -103,7 +103,7 @@ class TermsAndConditions(models.Model):
         try:
             UserTermsAndConditions.objects.get(user=user, terms=TermsAndConditions.get_active(slug))
             return True
-        except UserTermsAndConditions.MultipleObjectsReturned:
+        except UserTermsAndConditions.MultipleObjectsReturned:  # pragma: nocover
             return True
         except UserTermsAndConditions.DoesNotExist:
             return False

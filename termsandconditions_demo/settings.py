@@ -168,12 +168,11 @@ INSTALLED_APPS = (
 
 # Custom Variables Below Here #######
 
-# Terms & Conditions (termsandconditions) Settings
+# Terms & Conditions (termsandconditions) Settings #######
 DEFAULT_TERMS_SLUG = 'site-terms'
 ACCEPT_TERMS_PATH = '/terms/accept/'
 TERMS_EXCLUDE_URL_PREFIX_LIST = {'/admin', '/terms'}
 TERMS_EXCLUDE_URL_LIST = {'/', '/termsrequired/', '/logout/', '/securetoo/'}
-MULTIPLE_ACTIVE_TERMS = True  # Multiple kinds of T&Cs active at once (like site-terms, and contributor-terms).
 
 #  DEBUG TOOLBAR
 # if DEBUG:
@@ -204,7 +203,7 @@ MULTIPLE_ACTIVE_TERMS = True  # Multiple kinds of T&Cs active at once (like site
 # Catch Python warnings (e.g. deprecation warnings) into the logger
 try:
     logging.captureWarnings(True)
-except AttributeError:  # python 2.6 does not do this
+except AttributeError:  # python 2.6 does not do this  # pragma: nocover
     pass
 
 LOGGING = {

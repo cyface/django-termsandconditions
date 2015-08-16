@@ -118,7 +118,7 @@ class EmailTermsView(FormView):
                       [form.cleaned_data.get('email_address')],
                       fail_silently=False)
             messages.add_message(self.request, messages.INFO, "Terms and Conditions Sent.")
-        except SMTPException:
+        except SMTPException:   # pragma: no cover
             messages.add_message(self.request, messages.ERROR, "An Error Occurred Sending Your Message.")
 
         self.success_url = form.cleaned_data.get('returnTo', '/') or '/'

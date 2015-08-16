@@ -3,10 +3,12 @@
 # pylint: disable=R0904, C0103
 
 from django.core import mail
+from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.test import TestCase
 from django.contrib.auth.models import User
-from models import TermsAndConditions, UserTermsAndConditions
+from .models import TermsAndConditions, UserTermsAndConditions
+from .pipeline import user_accept_terms
 import logging
 from importlib import import_module
 
@@ -41,6 +43,22 @@ class TermsAndConditionsTests(TestCase):
         User.objects.all().delete()
         TermsAndConditions.objects.all().delete()
         UserTermsAndConditions.objects.all().delete()
+
+    def test_agreed_to(self):
+        """Test the agreed_to_terms static method"""
+        LOGGER.debug("Test that user1 has not agreed to terms1.")
+        self.assertFalse(TermsAndConditions.agreed_to_terms(self.user1, self.terms1))
+
+    def test_social_redirect(self):
+        """Test the agreed_to_terms redirect from social pipeline"""
+        LOGGER.debug("Test the social pipeline")
+        response = user_accept_terms('backend', self.user1, '123')
+        self.assertIsInstance(response, HttpResponseRedirect)
+
+        UserTermsAndConditions.objects.create(user=self.user1, terms=self.terms2)
+        response = user_accept_terms('backend', self.user1, '123')
+        self.assertIsInstance(response, dict)
+
 
     def test_get_active_list(self):
         """Test get list of active T&Cs"""
@@ -103,8 +121,8 @@ class TermsAndConditionsTests(TestCase):
         accepted_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/termsrequired/'}, follow=True)
         self.assertContains(accepted_response, "Terms and Conditions Acceptance Required")
         LOGGER.debug('Test response after termsrequired accept')
-        termsrequired_response = self.client.get('/termsrequired/', follow=True)
-        self.assertContains(termsrequired_response, "Terms and Conditions Acceptance Required")
+        terms_required_response = self.client.get('/termsrequired/', follow=True)
+        self.assertContains(terms_required_response, "Terms and Conditions Acceptance Required")
 
     def test_accept(self):
         """Validate that accepting terms works"""
@@ -139,8 +157,8 @@ class TermsAndConditionsTests(TestCase):
 
         TermsAndConditions.objects.all().delete()
 
-        numTerms = TermsAndConditions.objects.count()
-        self.assertEquals(0, numTerms)
+        num_terms = TermsAndConditions.objects.count()
+        self.assertEquals(0, num_terms)
 
         LOGGER.debug('Test user1 login for autocreate')
         login_response = self.client.login(username='user1', password='user1password')
@@ -151,8 +169,8 @@ class TermsAndConditionsTests(TestCase):
         self.assertRedirects(logged_in_response, "http://testserver/terms/accept/?returnTo=/termsrequired/")
 
         LOGGER.debug('Test TermsAndConditions Object Was Created')
-        numTerms = TermsAndConditions.objects.count()
-        self.assertEquals(1, numTerms)
+        num_terms = TermsAndConditions.objects.count()
+        self.assertEquals(1, num_terms)
 
         terms = TermsAndConditions.objects.get()
         self.assertEquals('site-terms-1.00', str(terms))
