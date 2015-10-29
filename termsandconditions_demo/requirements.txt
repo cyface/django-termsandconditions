@@ -1,2 +1,1 @@
 django>=1.8.3,<1.9
-django-modeltranslation>=0.8
