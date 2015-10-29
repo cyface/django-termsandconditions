@@ -19,8 +19,13 @@ can access the site if you wish.
 Features
 ========
 
-This module is meant to be as quick to integrate as possible, and thus extensive customization will likely benefit from
-a fork. That said, a number of options are available.
+This module is meant to be as quick to integrate as possible, and thus extensive customization will likely benefit from a fork. That said, a number of options are available. Currently, the app allows for
+
+- terms-and-conditions versioning (via version_number)
+- multiple terms-and-conditions allowed (via slug field)
+- per-user terms-and-conditions acceptance
+- middleware to take care of redirecting to proper terms-and-conditions acceptance page upon the version change
+- multi-language support
 
 Installation
 ============
@@ -167,3 +172,17 @@ above, check that the user has accepted the latest T&Cs before letting them cont
 
 You can use the various T&C methods in concert depending on your needs.
 
+Multi-Language Support
+----------------------
+In case you need your terms-and-conditions objects to handle multiple languages, we recommend to use `django-modeltranslation <https://github.com/deschler/django-modeltranslation>` or similar module. In case of django-modeltranslation the setup is rather straight forward.
+
+To translate terms-and-conditions model to other languages (specified in `settings`), create a `translation.py` file in your project, with the following content::
+
+    from modeltranslation.translator import register, TranslationOptions
+    from termsandconditions.models import TermsAndConditions
+
+    @register(TermsAndConditions)
+    class TermsAndConditionsOptions(TranslationOptions):
+        fields = ('name', 'text', 'info')
+
+## TODO: to be completed!
