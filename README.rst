@@ -202,6 +202,8 @@ migration directory for the ``termsandconditions`` module (the migration due to 
 Don't forget to create the respective directory and the ``__init__.py`` file there!
 
 2. make initial local migration
+-------------------------------
+
 As we switch to the local migration for the ``termsandconditions`` module, we need to execute initial migration
 for the module (as a starting point). Thus::
 
@@ -213,6 +215,8 @@ Now, just execute the migration::
     python manage.py migrate termsandconditions
 
 3. add translation
+------------------
+
 To translate terms-and-conditions model to other languages (as specified in ``settings.py``), create a ``translation.py``
 file in your project, with the following content::
 
