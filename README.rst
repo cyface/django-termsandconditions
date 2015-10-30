@@ -174,15 +174,53 @@ You can use the various T&C methods in concert depending on your needs.
 
 Multi-Language Support
 ----------------------
-In case you need your terms-and-conditions objects to handle multiple languages, we recommend to use `django-modeltranslation <https://github.com/deschler/django-modeltranslation>` or similar module. In case of django-modeltranslation the setup is rather straight forward.
+In case you are in need of your `termsandconditions` objects to handle multiple languages, we recommend to use
+`django-modeltranslation <https://github.com/deschler/django-modeltranslation>` (or similar) module.
+In case of django-modeltranslation the setup is rather straight forward, but needs several steps. Here they are.
 
-To translate terms-and-conditions model to other languages (specified in `settings`), create a `translation.py` file in your project, with the following content::
+1. modify your `settings.py`
+In your `settings.py` file, you need to specify the `LANGUAGES` and set `MIGRATION_MODULES` to point to a local
+migration directory for the `termsandconditions` module (the migration due to modeltranslation will live there)::
 
-    from modeltranslation.translator import register, TranslationOptions
+    LANGUAGES = (
+        ('en', 'English'),
+        ('pl', 'Polish'),
+    )
+
+    MIGRATION_MODULES = {
+        # local path for migration for the termsandconditions
+        'termsandconditions': 'your_app.migrations.termsandconditions',
+    }
+
+Don't forget to create the respective directory and the `__init__.py` file there!
+
+2. make initial local migration
+As we switch to the local migration for the `termsandconditions` module, we need to execute initial migration
+for the module (as a starting point). Thus::
+
+    python manage.py makemigrations termsandconditions
+
+The relevant initial migration file should now be in `your_app/migrations/termsandconditions` directory.
+Now, just execute the migration::
+
+    python migrate termsandconditions
+
+3. add translation
+To translate terms-and-conditions model to other languages (as specified in `settings.py`), create a `translation.py`
+file in your project, with the following content::
+
+    from modeltranslation.translator import translator, TranslationOptions
     from termsandconditions.models import TermsAndConditions
 
-    @register(TermsAndConditions)
-    class TermsAndConditionsOptions(TranslationOptions):
+    class TermsAndConditionsTranslationOptions(TranslationOptions):
         fields = ('name', 'text', 'info')
+    translator.register(TermsAndConditions, TermsAndConditionsTranslationOptions)
 
-## TODO: to be completed!
+This assumes you want to have 3 most relevant model fields translated.
+After that you just need to make migrations again (to account for new fields due to modeltranslation)::
+
+    python manage.py makemigrations termsandconditions
+
+That's it. Your model is now ready to cover the translations! Just as hint we suggest to also include some
+data migration in order to populate newly created, translated fields (i.e. `name_en`, `name_pl`, etc.) with
+the initial data (e.g. by copying the content of the base field, i.e. `name`, etc.)
