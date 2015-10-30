@@ -77,7 +77,7 @@ is below, take a look at the demo app for more details.
 Requirements
 ------------
 
-The app needs `django>=1.8.3,<1.9`.
+The app needs ``django>=1.8.3,<1.9``.
 
 Add INSTALLED_APPS
 ------------------
