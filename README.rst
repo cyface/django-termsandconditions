@@ -74,6 +74,11 @@ Configuration
 Configuration is minimal for termsandconditions itself, A quick guide to a basic setup
 is below, take a look at the demo app for more details.
 
+Requirements
+------------
+
+The app needs `django>=1.8.3,<1.9`.
+
 Add INSTALLED_APPS
 ------------------
 
@@ -173,7 +178,7 @@ above, check that the user has accepted the latest T&Cs before letting them cont
 You can use the various T&C methods in concert depending on your needs.
 
 Multi-Language Support
-----------------------
+======================
 In case you are in need of your `termsandconditions` objects to handle multiple languages, we recommend to use
 `django-modeltranslation <https://github.com/deschler/django-modeltranslation>` (or similar) module.
 In case of django-modeltranslation the setup is rather straight forward, but needs several steps. Here they are.
@@ -203,7 +208,7 @@ for the module (as a starting point). Thus::
 The relevant initial migration file should now be in `your_app/migrations/termsandconditions` directory.
 Now, just execute the migration::
 
-    python migrate termsandconditions
+    python manage.py migrate termsandconditions
 
 3. add translation
 To translate terms-and-conditions model to other languages (as specified in `settings.py`), create a `translation.py`
