@@ -103,7 +103,7 @@ Terms and Conditions
 You will need to set up a Terms and Conditions entry in the admin (or via direct DB load) for users to accept if
 you want to use the T&C module.
 
-The default Terms and Conditions entry has a slug of 'site-terms'.
+The default Terms and Conditions entry has a slug of ``'site-terms'``.
 
 If you don't create one, the first time a user is forced to accept the terms, it will create a default entry for you.
 
@@ -148,6 +148,29 @@ You can protect only specific views with T&Cs using the @terms_required() decora
 Note that you can skip @login_required only if you are forcing auth on that view in some other way.
 
 Requiring T&Cs for Anonymous Users is not supported.
+
+Terms and Conditions Template Tag
+---------------------------------
+
+To facilitate support of terms changes without a direct redirection to the ``/terms/accept`` url, a template tag is
+supplied for convenience. Thus, instead of using e.g. the ``TermsAndConditionsRedirectMiddleware`` one can use the
+template tag. The template tag will take care that a proper modal is shown to the user informing a user that new terms
+have been set and need to be accepted. To use the template tag, do the following. In your template (for example in
+base.html), include the following lines::
+
+    {% load termsandconditions %}
+    .... your template here ....
+
+    {% show_terms_if_not_agreed %}
+
+This will ensure that on every page using the template (that is on each page using base.html in this case), respective
+T&C css and js are loaded to take care for handling the modal.
+
+The modal will show the basic information about the new terms as well as a link to page which enables the user to
+accept these terms. Please note that a user may wish not to accept terms and close the modal. In such a case, the
+modal will be shown again as soon as another view with the template including the template tag is called.
+This simple mechanism allows to nag users with new T&C while still allowing them to use the service, without instant
+redirections.
 
 Terms and Conditions Pipeline
 -----------------------------
