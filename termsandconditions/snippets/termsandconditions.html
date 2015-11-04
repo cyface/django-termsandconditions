@@ -1,0 +1,27 @@
+{% load staticfiles %}
+{% load i18n %}
+
+{% if terms %}
+    <link rel="stylesheet" type="text/css" href="{% static 'termsandconditions/modal.css' %}">
+    <script src="{% static 'termsandconditions/modal.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+      termsandconditions_overlay();
+    }, false);
+    </script>
+
+    <div id="termsandconditions" class="termsandconditions-modal">
+        <div>
+        <a href='javascript:void(0)' onclick='termsandconditions_overlay();' title="{% trans 'Close' %}" class="termsandconditions-close">X</a>
+        <h2>
+            {% if terms.name %}
+                {{ terms.name|safe }}
+            {% else %}
+                {% trans 'Terms and Conditions change' %}
+            {% endif %}
+        </h2>
+            {{ terms.text|safe }}
+        </div>
+    </div>
+{% endif %}
+
