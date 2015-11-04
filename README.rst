@@ -19,8 +19,13 @@ can access the site if you wish.
 Features
 ========
 
-This module is meant to be as quick to integrate as possible, and thus extensive customization will likely benefit from
-a fork. That said, a number of options are available.
+This module is meant to be as quick to integrate as possible, and thus extensive customization will likely benefit from a fork. That said, a number of options are available. Currently, the app allows for
+
+- terms-and-conditions versioning (via version_number)
+- multiple terms-and-conditions allowed (via slug field)
+- per-user terms-and-conditions acceptance
+- middleware to take care of redirecting to proper terms-and-conditions acceptance page upon the version change
+- multi-language support
 
 Installation
 ============
@@ -69,6 +74,11 @@ Configuration
 Configuration is minimal for termsandconditions itself, A quick guide to a basic setup
 is below, take a look at the demo app for more details.
 
+Requirements
+------------
+
+The app needs ``django>=1.8.3,<1.9``.
+
 Add INSTALLED_APPS
 ------------------
 
@@ -93,7 +103,7 @@ Terms and Conditions
 You will need to set up a Terms and Conditions entry in the admin (or via direct DB load) for users to accept if
 you want to use the T&C module.
 
-The default Terms and Conditions entry has a slug of 'site-terms'.
+The default Terms and Conditions entry has a slug of ``'site-terms'``.
 
 If you don't create one, the first time a user is forced to accept the terms, it will create a default entry for you.
 
@@ -139,6 +149,29 @@ Note that you can skip @login_required only if you are forcing auth on that view
 
 Requiring T&Cs for Anonymous Users is not supported.
 
+Terms and Conditions Template Tag
+---------------------------------
+
+To facilitate support of terms changes without a direct redirection to the ``/terms/accept`` url, a template tag is
+supplied for convenience. Thus, instead of using e.g. the ``TermsAndConditionsRedirectMiddleware`` one can use the
+template tag. The template tag will take care that a proper modal is shown to the user informing a user that new terms
+have been set and need to be accepted. To use the template tag, do the following. In your template (for example in
+base.html), include the following lines::
+
+    {% load termsandconditions %}
+    .... your template here ....
+
+    {% show_terms_if_not_agreed %}
+
+This will ensure that on every page using the template (that is on each page using base.html in this case), respective
+T&C css and js are loaded to take care for handling the modal.
+
+The modal will show the basic information about the new terms as well as a link to page which enables the user to
+accept these terms. Please note that a user may wish not to accept terms and close the modal. In such a case, the
+modal will be shown again as soon as another view with the template including the template tag is called.
+This simple mechanism allows to nag users with new T&C while still allowing them to use the service, without instant
+redirections.
+
 Terms and Conditions Pipeline
 -----------------------------
 You can force T&C acceptance when a new user account is created using the django-socialauth pipeline::
@@ -167,3 +200,61 @@ above, check that the user has accepted the latest T&Cs before letting them cont
 
 You can use the various T&C methods in concert depending on your needs.
 
+Multi-Language Support
+======================
+In case you are in need of your ``termsandconditions`` objects to handle multiple languages, we recommend to use
+``django-modeltranslation <https://github.com/deschler/django-modeltranslation>`` (or similar) module.
+In case of django-modeltranslation the setup is rather straight forward, but needs several steps. Here they are.
+
+1. modify your ``settings.py``
+------------------------------
+
+In your ``settings.py`` file, you need to specify the ``LANGUAGES`` and set ``MIGRATION_MODULES`` to point to a local
+migration directory for the ``termsandconditions`` module (the migration due to modeltranslation will live there)::
+
+    LANGUAGES = (
+        ('en', 'English'),
+        ('pl', 'Polish'),
+    )
+
+    MIGRATION_MODULES = {
+        # local path for migration for the termsandconditions
+        'termsandconditions': 'your_app.migrations.termsandconditions',
+    }
+
+Don't forget to create the respective directory and the ``__init__.py`` file there!
+
+2. make initial local migration
+-------------------------------
+
+As we switch to the local migration for the ``termsandconditions`` module, we need to execute initial migration
+for the module (as a starting point). Thus::
+
+    python manage.py makemigrations termsandconditions
+
+The relevant initial migration file should now be in ``your_app/migrations/termsandconditions`` directory.
+Now, just execute the migration::
+
+    python manage.py migrate termsandconditions
+
+3. add translation
+------------------
+
+To translate terms-and-conditions model to other languages (as specified in ``settings.py``), create a ``translation.py``
+file in your project, with the following content::
+
+    from modeltranslation.translator import translator, TranslationOptions
+    from termsandconditions.models import TermsAndConditions
+
+    class TermsAndConditionsTranslationOptions(TranslationOptions):
+        fields = ('name', 'text', 'info')
+    translator.register(TermsAndConditions, TermsAndConditionsTranslationOptions)
+
+This assumes you want to have 3 most relevant model fields translated.
+After that you just need to make migrations again (to account for new fields due to modeltranslation)::
+
+    python manage.py makemigrations termsandconditions
+
+That's it. Your model is now ready to cover the translations! Just as hint we suggest to also include some
+data migration in order to populate newly created, translated fields (i.e. ``name_en``, ``name_pl``, etc.) with
+the initial data (e.g. by copying the content of the base field, i.e. ``name``, etc.)

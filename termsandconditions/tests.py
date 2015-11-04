@@ -5,8 +5,10 @@
 from django.core import mail
 from django.http import HttpResponseRedirect
 from django.conf import settings
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
+from django.template import Context, Template
+from django.utils import timezone
 from .models import TermsAndConditions, UserTermsAndConditions
 from .pipeline import user_accept_terms
 import logging
@@ -277,3 +279,48 @@ class TermsAndConditionsTests(TestCase):
                                                                  'email_subject': 'Terms Email', 'terms': 2,
                                                                  'returnTo': '/'}, follow=True)
         self.assertContains(email_fail_response, 'Invalid')
+
+
+class TermsAndConditionsTemplateTagsTestCase(TestCase):
+
+    def setUp(self):
+        """Setup for each test"""
+        self.user1 = User.objects.create_user(
+            'user1', 'user1@user1.com', 'user1password')
+        self.template_string_1 = (
+            '{% load termsandconditions %}'
+            '{% show_terms_if_not_agreed %}'
+        )
+        self.template_string_2 = (
+            '{% load termsandconditions %}'
+            '{% show_terms_if_not_agreed slug="specific-terms" %}'
+        )
+
+    def render_template(self, string, context=None):
+        """a helper method to render simplistic test templates"""
+        request = RequestFactory().get('/')
+        request.user = self.user1
+        request.context = context or {}
+        return Template(string).render(Context({'request': request}))
+
+    def test_show_terms_if_not_agreed(self):
+        """test if show_terms_if_not_agreed template tag renders html code"""
+        rendered = self.render_template(self.template_string_1)
+        terms = TermsAndConditions.get_active()
+        self.assertIn(terms.slug, rendered)
+
+    def test_not_show_terms_if_agreed(self):
+        """test if show_terms_if_not_agreed template tag does not load if user
+        agreed terms"""
+        terms = TermsAndConditions.get_active()
+        UserTermsAndConditions.objects.create(terms=terms, user=self.user1)
+        rendered = self.render_template(self.template_string_1)
+        self.assertNotIn(terms.slug, rendered)
+
+    def test_show_terms_if_not_agreed_by_slug(self):
+        terms = TermsAndConditions.objects.create(
+            slug='specific-terms',
+            date_active=timezone.now()
+        )
+        rendered = self.render_template(self.template_string_2)
+        self.assertIn(terms.slug, rendered)

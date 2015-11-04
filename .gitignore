@@ -18,8 +18,6 @@
 .tox
 build/*
 coverage.xml
-css-*_.css
-js-*_.js
 local_settings.py
 nosetests.xml
 pylint.txt

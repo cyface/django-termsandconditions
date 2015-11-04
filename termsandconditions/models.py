@@ -36,6 +36,7 @@ class TermsAndConditions(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, through=UserTermsAndConditions, blank=True)
     version_number = models.DecimalField(default=1.0, decimal_places=2, max_digits=6)
     text = models.TextField(null=True, blank=True)
+    info = models.TextField(null=True, blank=True, help_text="Provide users with some info about what's changed and why")
     date_active = models.DateTimeField(blank=True, null=True, help_text="Leave Null To Never Make Active")
     date_created = models.DateTimeField(blank=True, auto_now_add=True)
 
