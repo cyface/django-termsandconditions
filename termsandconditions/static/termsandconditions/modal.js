@@ -5,4 +5,3 @@ function termsandconditions_overlay() {
         el[i].style.visibility = (el[i].style.visibility == "visible") ? "hidden" : "visible";
     };
 };
-
