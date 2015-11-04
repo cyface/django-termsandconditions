@@ -21,7 +21,8 @@
             {% endif %}
         </h2>
             {% if terms.info %}{{ terms.info|safe }}{% endif %}
-            {% trans 'To accept new Terms, visit' %}{% url 'tc_accept_specific_page' terms.slug %}
+            {% trans 'To accept new Terms, visit' %}
+            <a href="{% url 'tc_accept_specific_page' terms.slug %}">{% url 'tc_accept_specific_page' terms.slug %}</a>
         </div>
     </div>
 {% endif %}
