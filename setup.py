@@ -5,7 +5,7 @@ setup(
     version="0.1.6",
     url='http://timlwhite.com',
     license='BSD',
-    description="django-termsandconditions enables customers to accept terms and conditions before using a site.",
+    description="django-termsandconditions enables users to accept terms and conditions of a site.",
     long_description=open('README.rst').read(),
 
     author='Tim White',
