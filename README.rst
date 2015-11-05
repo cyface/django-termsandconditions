@@ -14,9 +14,10 @@ Django Terms and Conditions
 Django Terms and Conditions gives you an out-of-the-box way to enable you to send users to a T&C acceptance page before they
 can access the site if you wish.
 
-**Contributors**
-* Tim White (tim@cyface.com)
-* Adibo (https://github.com/adibo)
+Contributors:
+
+- Tim White (tim@cyface.com)
+- Adibo (https://github.com/adibo)
 
 .. contents:: Table of Contents
 
