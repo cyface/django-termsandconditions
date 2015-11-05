@@ -14,6 +14,11 @@ Django Terms and Conditions
 Django Terms and Conditions gives you an out-of-the-box way to enable you to send users to a T&C acceptance page before they
 can access the site if you wish.
 
+Contributors
+------------
+* Tim White (tim@cyface.com)
+* Adibo (https://github.com/adibo)
+
 .. contents:: Table of Contents
 
 Features
@@ -50,7 +55,6 @@ or::
 
     $ cd django-termsandconditions
     $ sudo python setup.py install
-
 
 Demo App
 ========
@@ -206,7 +210,7 @@ In case you are in need of your ``termsandconditions`` objects to handle multipl
 ``django-modeltranslation <https://github.com/deschler/django-modeltranslation>`` (or similar) module.
 In case of django-modeltranslation the setup is rather straight forward, but needs several steps. Here they are.
 
-1. modify your ``settings.py``
+1. Modify your ``settings.py``
 ------------------------------
 
 In your ``settings.py`` file, you need to specify the ``LANGUAGES`` and set ``MIGRATION_MODULES`` to point to a local
@@ -224,7 +228,7 @@ migration directory for the ``termsandconditions`` module (the migration due to 
 
 Don't forget to create the respective directory and the ``__init__.py`` file there!
 
-2. make initial local migration
+2. Make initial local migration
 -------------------------------
 
 As we switch to the local migration for the ``termsandconditions`` module, we need to execute initial migration
@@ -237,7 +241,7 @@ Now, just execute the migration::
 
     python manage.py migrate termsandconditions
 
-3. add translation
+3. Add translation
 ------------------
 
 To translate terms-and-conditions model to other languages (as specified in ``settings.py``), create a ``translation.py``
