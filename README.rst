@@ -158,7 +158,7 @@ template tag. The template tag will take care that a proper modal is shown to th
 have been set and need to be accepted. To use the template tag, do the following. In your template (for example in
 base.html), include the following lines::
 
-    {% load termsandconditions %}
+    {% load terms_tags %}
     .... your template here ....
 
     {% show_terms_if_not_agreed %}
