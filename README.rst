@@ -162,7 +162,7 @@ template tag. The template tag will take care that a proper modal is shown to th
 have been set and need to be accepted. To use the template tag, do the following. In your template (for example in
 base.html), include the following lines::
 
-    {% load termsandconditions %}
+    {% load terms_tags %}
     .... your template here ....
 
     {% show_terms_if_not_agreed %}
@@ -223,10 +223,11 @@ migration directory for the ``termsandconditions`` module (the migration due to 
 
     MIGRATION_MODULES = {
         # local path for migration for the termsandconditions
-        'termsandconditions': 'your_app.migrations.termsandconditions',
+        'termsandconditions': 'your_app.migrations.migrations_termsandconditions',
     }
 
 Don't forget to create the respective directory and the ``__init__.py`` file there!
+Please note that ``migrations_termsandconditions`` directory name is used to avoid confusion with the T&C app name.
 
 2. Make initial local migration
 -------------------------------
@@ -236,7 +237,7 @@ for the module (as a starting point). Thus::
 
     python manage.py makemigrations termsandconditions
 
-The relevant initial migration file should now be in ``your_app/migrations/termsandconditions`` directory.
+The relevant initial migration file should now be in ``your_app/migrations/migrations_termsandconditions`` directory.
 Now, just execute the migration::
 
     python manage.py migrate termsandconditions

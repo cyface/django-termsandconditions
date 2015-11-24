@@ -288,11 +288,11 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
         self.user1 = User.objects.create_user(
             'user1', 'user1@user1.com', 'user1password')
         self.template_string_1 = (
-            '{% load termsandconditions %}'
+            '{% load terms_tags %}'
             '{% show_terms_if_not_agreed %}'
         )
         self.template_string_2 = (
-            '{% load termsandconditions %}'
+            '{% load terms_tags %}'
             '{% show_terms_if_not_agreed slug="specific-terms" %}'
         )
 

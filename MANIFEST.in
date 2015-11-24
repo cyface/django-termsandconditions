@@ -1,3 +1,4 @@
 include README.rst
 recursive-include termsandconditions/templates *
+recursive-include termsandconditions/templatetags *
 recursive-include termsandconditions/static *
