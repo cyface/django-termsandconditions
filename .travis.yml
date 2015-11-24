@@ -11,3 +11,7 @@ script: "coverage run --source=termsandconditions,termsandconditions_demo --rcfi
 sudo: false
 after_success:
   coveralls
+deploy:
+  provider: pypi
+  user: $pypi.username
+  password: $pypi.password
