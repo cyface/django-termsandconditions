@@ -83,7 +83,8 @@ class AcceptTermsView(CreateView):
         self.success_url = form.cleaned_data.get('returnTo', '/') or '/'
 
         ## invalidate cache (for template tag use)
-        key = make_template_fragment_key('termsandconditions', self.request.user)
+        key = make_template_fragment_key('termsandconditions',
+                                         [self.request.user.username])
         cache.delete(key)
         return super(AcceptTermsView, self).form_valid(form)
 
