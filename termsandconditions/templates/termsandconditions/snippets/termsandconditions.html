@@ -1,6 +1,8 @@
 {% load staticfiles %}
 {% load i18n %}
+{% load cache %}
 
+{% cache 600 termsandconditions request.user.username %}
 {% if terms %}
     <link rel="stylesheet" type="text/css" href="{% static 'termsandconditions/css/modal.css' %}">
     <script src="{% static 'termsandconditions/js/modal.js' %}" type="text/javascript" charset="utf-8"></script>
@@ -26,4 +28,5 @@
         </div>
     </div>
 {% endif %}
+{% endcache %}
 

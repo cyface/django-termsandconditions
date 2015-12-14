@@ -14,6 +14,9 @@ from django.template.loader import get_template
 from django.core.mail import send_mail
 import logging
 from smtplib import SMTPException
+from django.core.cache import cache
+from django.core.cache.utils import make_template_fragment_key
+
 
 LOGGER = logging.getLogger(name='termsandconditions')
 
@@ -78,6 +81,10 @@ class AcceptTermsView(CreateView):
                 return HttpResponseRedirect('/')
         form.instance.ip_address = self.request.META['REMOTE_ADDR']
         self.success_url = form.cleaned_data.get('returnTo', '/') or '/'
+
+        ## invalidate cache (for template tag use)
+        key = make_template_fragment_key('termsandconditions', self.request.user)
+        cache.delete(key)
         return super(AcceptTermsView, self).form_valid(form)
 
 
