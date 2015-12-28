@@ -3,7 +3,7 @@
 # pylint: disable=R0904
 
 from django.contrib import admin
-from models import TermsAndConditions, UserTermsAndConditions
+from .models import TermsAndConditions, UserTermsAndConditions
 
 
 class TermsAndConditionsAdmin(admin.ModelAdmin):
