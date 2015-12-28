@@ -39,3 +39,5 @@ class TermsAndConditionsRedirectMiddleware(object):
             for term in TermsAndConditions.get_active_list():
                 if not TermsAndConditions.agreed_to_latest(request.user, term):
                     return redirect_to_terms_accept(current_path, term)
+                    
+        return None
