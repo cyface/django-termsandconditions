@@ -13,14 +13,15 @@ It is ignored by default by .gitignore, so if you don't mess with that, you shou
 # pylint: disable=R0801, W0611
 import os
 import logging
+from django import VERSION
 
 # Set the root path of the project so it's not hard coded
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 # IP Addresses that should be treated as internal/debug users
 INTERNAL_IPS = ('127.0.0.1',)
+ALLOWED_HOSTS = ('localhost', '127.0.0.1')
 
 # Cache Settings
 CACHES = {
@@ -52,7 +53,6 @@ MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'mediaroot')
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticroot')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(PROJECT_ROOT, 'static')]
-TEMPLATE_DIRS = [os.path.join(PROJECT_ROOT, 'templates')]
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -72,7 +72,7 @@ DATABASES = {
     #    },
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': PROJECT_ROOT + '/termsandconditions.db',
+        'NAME': os.path.join(PROJECT_ROOT, 'termsandconditions.db'),
         'SUPPORTS_TRANSACTIONS': 'false',
     }
 }
@@ -114,9 +114,6 @@ EMAIL_HOST_PASSWORD = 'your_mailbox_password'
 DEFAULT_FROM_EMAIL = 'a real email address'
 SERVER_EMAIL = 'a real email address'
 
-### Local add-ons to main inclusion variables
-# TEMPLATE_CONTEXT_PROCESSORS +=
-
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',  # Leave Enabled for Admin Access
 )
@@ -124,20 +121,52 @@ AUTHENTICATION_BACKENDS = (
 """ Django settings for the project. """
 
 # List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
+TEMPLATE_LOADERS_LIST = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 )
 
 # List of callables that add their data to each template
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'django.core.context_processors.request',
-    'django.contrib.messages.context_processors.messages',
-)
+
+# List of directories to find templates in
+TEMPLATE_DIRS_LIST = [os.path.join(PROJECT_ROOT, 'templates')]
+
+# Whether Template Debug is enabled
+TEMPLATE_DEBUG_SETTING = DEBUG
+
+# Needed to configure Django 1.8+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': TEMPLATE_DIRS_LIST,
+        'OPTIONS': {
+            'context_processors': (
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.request',
+                'django.contrib.messages.context_processors.messages',
+            ),
+            'debug': TEMPLATE_DEBUG_SETTING,
+            'loaders': TEMPLATE_LOADERS_LIST,
+        }
+    },
+]
+
+# Need to set these raw variables if we are on a pre-1.8 version of Django.
+if VERSION < (1, 8):
+    TEMPLATE_DEBUG = DEBUG
+    TEMPLATE_DIRS = TEMPLATE_DIRS_LIST
+    TEMPLATE_CONTEXT_PROCESSORS_LIST = (
+        'django.contrib.auth.context_processors.auth',
+        'django.core.context_processors.debug',
+        'django.core.context_processors.media',
+        'django.core.context_processors.static',
+        'django.core.context_processors.request',
+        'django.contrib.messages.context_processors.messages',
+    )
+    TEMPLATE_LOADERS = TEMPLATE_LOADERS_LIST
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',

@@ -9,7 +9,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views.generic import DetailView, CreateView, FormView
-from django.template import Context
 from django.template.loader import get_template
 from django.core.mail import send_mail
 import logging
@@ -106,7 +105,7 @@ class EmailTermsView(FormView):
         LOGGER.debug('termsandconditions.views.EmailTermsView.form_valid')
 
         template = get_template("termsandconditions/tc_email_terms.html")
-        template_rendered = template.render(Context({"terms": form.cleaned_data.get('terms')}))
+        template_rendered = template.render({"terms": form.cleaned_data.get('terms')})
 
         LOGGER.debug("Email Terms Body:")
         LOGGER.debug(template_rendered)

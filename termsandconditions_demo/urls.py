@@ -5,7 +5,7 @@
 
 # pylint: disable=E1120
 
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 from views import TermsRequiredView, SecureView, IndexView
@@ -16,13 +16,13 @@ from django.contrib.auth.decorators import login_required
 
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = (
 
     # Home Page
     url(r'^$', never_cache(IndexView.as_view()), name="tc_demo_home_page"),
 
     # Home Page
-    url(r'^anon/$', never_cache(IndexView.as_view(template_name="index_anon.html")), name="tc_demo_home_anon_page"), #used for pipeline user test
+    url(r'^anon/$', never_cache(IndexView.as_view(template_name="index_anon.html")), name="tc_demo_home_anon_page"),  # used for pipeline user test
 
     # Secure Page
     url(r'^secure/$', never_cache((login_required(SecureView.as_view()))), name="tc_demo_secure_page"),
@@ -37,15 +37,15 @@ urlpatterns = patterns('',
     url(r'^terms/', include('termsandconditions.urls')),
 
     # Auth Urls:
-    (r'^accounts/', include('django.contrib.auth.urls')),
-    
+    url(r'^accounts/', include('django.contrib.auth.urls')),
+
     # Admin documentation:
-    (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Admin Site:
-    (r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls)),
 
     # Robots and Favicon
-    (r'^robots\.txt$', TemplateView.as_view(), {'template': 'robots.txt', 'mimetype': 'text/plain'}),
-    (r'^favicon\.ico$', RedirectView.as_view(permanent=True), {'url': settings.STATIC_URL + 'images/favicon.ico'}),
+    url(r'^robots\.txt$', TemplateView.as_view(), {'template': 'robots.txt', 'mimetype': 'text/plain'}),
+    url(r'^favicon\.ico$', RedirectView.as_view(permanent=True), {'url': settings.STATIC_URL + 'images/favicon.ico'}),
 )

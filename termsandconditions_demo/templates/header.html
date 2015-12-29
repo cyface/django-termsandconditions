@@ -1,4 +1,4 @@
-<header data-role="header" data-theme="b" data-position="fixed">
+<header data-role="header" data-position="fixed">
     <div data-role="navbar">
         <ul>
             {% if user.is_authenticated %}
@@ -6,7 +6,7 @@
                 <li><a href="{% url 'logout' %}" data-icon="delete">Sign Out</a></li>
             {% else %}
                 <li><a href="{% url 'tc_demo_home_page' %}" data-icon="home">Home</a></li>
-                <li><a href="{% url 'login' %}" data-icon="save">Sign In</a></li>
+                <li><a href="{% url 'login' %}" data-icon="user">Sign In</a></li>
             {% endif %}
         </ul>
     </div>
