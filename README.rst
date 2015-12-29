@@ -4,12 +4,23 @@ Django Terms and Conditions
 
 .. image:: https://badge.fury.io/py/django-termsandconditions.svg
     :target: http://badge.fury.io/py/django-termsandconditions
+    :alt: PyPi Package Version
 
 .. image:: https://travis-ci.org/cyface/django-termsandconditions.svg?branch=master
     :target: https://travis-ci.org/cyface/django-termsandconditions
+    :alt: Travis Build Status
 
 .. image:: https://coveralls.io/repos/cyface/django-termsandconditions/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/cyface/django-termsandconditions?branch=master
+    :alt: Coveralls Code Coverage
+
+.. image:: https://scrutinizer-ci.com/g/cyface/django-termsandconditions/badges/quality-score.png?b=master
+    :target: https://scrutinizer-ci.com/g/cyface/django-termsandconditions/
+    :alt: Scrutinizer Code Quality
+
+.. image:: https://readthedocs.org/projects/django-termsandconditions/badge/?version=latest
+    :target: http://django-termsandconditions.readthedocs.org/en/latest/?badge=latest
+    :alt: Documentation Status
 
 Django Terms and Conditions gives you an out-of-the-box way to enable you to send users to a T&C acceptance page before they
 can access the site if you wish.
