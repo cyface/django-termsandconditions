@@ -1,21 +1,18 @@
 language: python
 python:
-  - "2.7"
+- '2.7'
 cache: pip
-# command to install dependencies
 install:
-  - "pip install -r termsandconditions_demo/requirements_dev.txt"
-# command to run tests
-script: "python manage.py jenkins termsandconditions --coverage-rcfile=devscripts/checkers/coveragerc"
-script: "coverage run --source=termsandconditions,termsandconditions_demo --rcfile=devscripts/checkers/coveragerc manage.py test"
+- pip install -r termsandconditions_demo/requirements_dev.txt
+script: coverage run --source=termsandconditions,termsandconditions_demo --rcfile=devscripts/checkers/coveragerc
+  manage.py test
 sudo: false
-after_success:
-  coveralls
+after_success: coveralls
 deploy:
   provider: pypi
   upload_docs: no
   user: Tim.White
   password:
-    secure: liX8rWN6UtxQC+HKoUdn6ht6QKpJRhvpNJuBFcNqLIIeepolW0EgB+FpZ528u2Usw7mr6DncH0ZTkPgShp4ZgCdRjtlFPg3dCyQUShHKiZ2vom/jMbW2yvkjpx/d/nVCDxv0Sxfv8ERdIiJHb84fTg9QhoF+4nvR6rEu9+g6ZO7ecnQCDN9ReZ3Fgt8Zt5gBudeQE245lN7mlwliGXsR7WiDW0zfU0AcrIq/YB50iPuArvaAS+CUiSMqKxlI0TyfpP22vVdZ1k4kjnoUdeKP7jFrilnJCgAHpuAShwpyQxAaOi572ZOuyLVYn1YxlEwgKSzXYlUTZ1rmKraoV2hlng0Hv9kUbDxmOr0d55ZVzwWDlhKax1fdTDQKRqM22ntypAyoO8E92ujfTa8d05riYQEUXC9wJKN0BucZnOvTKVU1PNSL2glh/Wkl9tIwVZkKpOYUSBoVOsh1zC8ToizrJ0sDGuio/Kh8wSzOmEYuihwXtsaRSJiR2Wc9IEqZyZUTeOkbCvFbROnxUaebHMhGBTTWKgRQq9nJmPcEDhoAH8bE0tMMdsvndiNikaMOMxowo0AXI6Tf7nI/uoPQf9AI+I58U26EyxcLcyAlUxfy0dI1Cst1UuQDRt0ZRT2e7EL5Xiri4gaUfod1L4D6F/CrzVJinjmWUUcqCv7VOgQyOMU=
+    secure: e8H/IHRzcNpZUwohtgDt4srkWZu7Ofa8q5N/w3sg3ZyaL0vbzhQle9D1gn1PwAoiTJQHYfuYvhP0G9HM4aZ19OEbJ/gAPXNFd3bVXD/g8kI1rRA/VN/W4DEAp/53rNly8idH+6BO5OvwH0NlPUjhisv5yCV/FAPHENSpwmdTu5g=
   on:
     repo: cyface/django-termsandconditions
