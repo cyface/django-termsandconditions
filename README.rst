@@ -22,7 +22,7 @@ Django Terms and Conditions
     :target: http://django-termsandconditions.readthedocs.org/en/latest/?badge=latest
     :alt: Documentation Status
 
-Django Terms and Conditions gives you an out-of-the-box way to enable you to send users to a T&C acceptance page before they
+Django Terms and Conditions gives you an configurable way to send users to a T&C acceptance page before they
 can access the site if you wish.
 
 Contributors:
