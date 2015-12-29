@@ -281,8 +281,3 @@ LOGGING = {
         },
     }
 }
-
-# JENKINS REPORTS
-JENKINS_TASKS = (
-    'django_jenkins.tasks.with_coverage',
-)
