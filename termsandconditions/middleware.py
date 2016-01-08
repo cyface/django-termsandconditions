@@ -23,6 +23,7 @@ class TermsAndConditionsRedirectMiddleware(object):
         LOGGER.debug('termsandconditions.middleware')
 
         current_path = request.META['PATH_INFO']
+        print '---> ', request.META['HTTP_REFERER']
         protected_path = is_path_protected(current_path)
 
         if request.user.is_authenticated() and protected_path:
