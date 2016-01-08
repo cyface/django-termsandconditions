@@ -1,6 +1,7 @@
 from django import template
 from ..models import TermsAndConditions, DEFAULT_TERMS_SLUG
 from ..middleware import is_path_protected
+from urlparse import urlparse
 
 register = template.Library()
 
@@ -24,8 +25,8 @@ def show_terms_if_not_agreed(context, slug=DEFAULT_TERMS_SLUG):
         return {}
 
     # handle excluded url's
-    current_path = request.META['HTTP_REFERER']
-    protected = is_path_protected(current_path)
+    url = urlparse(request.META['HTTP_REFERER'])
+    protected = is_path_protected(url.path)
 
     if not agreed and terms and protected:
         return {'terms': terms}
