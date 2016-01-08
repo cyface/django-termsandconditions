@@ -3,6 +3,7 @@
 branch = True
 
 omit =
+    */.env/*
 	*/settings*
 	*/tests*
 	*/manage.py

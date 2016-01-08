@@ -4,15 +4,31 @@ Django Terms and Conditions
 
 .. image:: https://badge.fury.io/py/django-termsandconditions.svg
     :target: http://badge.fury.io/py/django-termsandconditions
+    :alt: PyPi Package Version
 
 .. image:: https://travis-ci.org/cyface/django-termsandconditions.svg?branch=master
     :target: https://travis-ci.org/cyface/django-termsandconditions
+    :alt: Travis Build Status
 
 .. image:: https://coveralls.io/repos/cyface/django-termsandconditions/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/cyface/django-termsandconditions?branch=master
+    :alt: Coveralls Code Coverage
 
-Django Terms and Conditions gives you an out-of-the-box way to enable you to send users to a T&C acceptance page before they
+.. image:: https://scrutinizer-ci.com/g/cyface/django-termsandconditions/badges/quality-score.png?b=master
+    :target: https://scrutinizer-ci.com/g/cyface/django-termsandconditions/
+    :alt: Scrutinizer Code Quality
+
+.. image:: https://readthedocs.org/projects/django-termsandconditions/badge/?version=latest
+    :target: http://django-termsandconditions.readthedocs.org/en/latest/?badge=latest
+    :alt: Documentation Status
+
+Django Terms and Conditions gives you an configurable way to send users to a T&C acceptance page before they
 can access the site if you wish.
+
+Contributors:
+
+- Tim White (tim@cyface.com)
+- Adibo (https://github.com/adibo)
 
 .. contents:: Table of Contents
 
@@ -50,7 +66,6 @@ or::
 
     $ cd django-termsandconditions
     $ sudo python setup.py install
-
 
 Demo App
 ========
@@ -206,7 +221,7 @@ In case you are in need of your ``termsandconditions`` objects to handle multipl
 ``django-modeltranslation <https://github.com/deschler/django-modeltranslation>`` (or similar) module.
 In case of django-modeltranslation the setup is rather straight forward, but needs several steps. Here they are.
 
-1. modify your ``settings.py``
+1. Modify your ``settings.py``
 ------------------------------
 
 In your ``settings.py`` file, you need to specify the ``LANGUAGES`` and set ``MIGRATION_MODULES`` to point to a local
@@ -225,7 +240,7 @@ migration directory for the ``termsandconditions`` module (the migration due to 
 Don't forget to create the respective directory and the ``__init__.py`` file there!
 Please note that ``migrations_termsandconditions`` directory name is used to avoid confusion with the T&C app name.
 
-2. make initial local migration
+2. Make initial local migration
 -------------------------------
 
 As we switch to the local migration for the ``termsandconditions`` module, we need to execute initial migration
@@ -238,7 +253,7 @@ Now, just execute the migration::
 
     python manage.py migrate termsandconditions
 
-3. add translation
+3. Add translation
 ------------------
 
 To translate terms-and-conditions model to other languages (as specified in ``settings.py``), create a ``translation.py``
