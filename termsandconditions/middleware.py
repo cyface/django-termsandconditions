@@ -23,19 +23,32 @@ class TermsAndConditionsRedirectMiddleware(object):
         LOGGER.debug('termsandconditions.middleware')
 
         current_path = request.META['PATH_INFO']
-        protected_path = True
-
-        for exclude_path in TERMS_EXCLUDE_URL_PREFIX_LIST:
-            if current_path.startswith(exclude_path):
-                protected_path = False
-
-        if current_path in TERMS_EXCLUDE_URL_LIST:
-            protected_path = False
-
-        if current_path.startswith(ACCEPT_TERMS_PATH):
-            protected_path = False
+        protected_path = is_path_protected(current_path)
 
         if request.user.is_authenticated() and protected_path:
             for term in TermsAndConditions.get_active_list():
                 if not TermsAndConditions.agreed_to_latest(request.user, term):
                     return redirect_to_terms_accept(current_path, term)
+
+
+def is_path_protected(path):
+    """
+    returns True if given path is to be protected, otherwise False
+
+    The path is not to be protected when it appears on:
+    TERMS_EXCLUDE_URL_PREFIX_LIST, TERMS_EXCLUDE_URL_LIST or as
+    ACCEPT_TERMS_PATH
+    """
+    protected = True
+
+    for exclude_path in TERMS_EXCLUDE_URL_PREFIX_LIST:
+        if path.startswith(exclude_path):
+            protected = False
+
+    if path in TERMS_EXCLUDE_URL_LIST:
+        protected = False
+
+    if path.startswith(ACCEPT_TERMS_PATH):
+        protected = False
+
+    return protected

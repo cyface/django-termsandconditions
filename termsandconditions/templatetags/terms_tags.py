@@ -1,5 +1,6 @@
 from django import template
 from ..models import TermsAndConditions, DEFAULT_TERMS_SLUG
+from ..middleware import is_path_protected
 
 register = template.Library()
 
@@ -17,6 +18,16 @@ def show_terms_if_not_agreed(context, slug=DEFAULT_TERMS_SLUG):
     request = context['request']
     terms = TermsAndConditions.get_active(slug)
     agreed = TermsAndConditions.agreed_to_terms(request.user, terms)
-    if not agreed and terms:
+
+    # stop here, if terms has been agreed
+    if agreed:
+        return {}
+
+    # handle excluded url's
+    current_path = request.META['PATH_INFO']
+    protected = is_path_protected(current_path)
+
+    if not agreed and terms and protected:
         return {'terms': terms}
+
     return {}
