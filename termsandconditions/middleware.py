@@ -52,4 +52,6 @@ def is_path_protected(path):
     if path.startswith(ACCEPT_TERMS_PATH):
         protected = False
 
+    print '---> ', path, protected
+
     return protected
