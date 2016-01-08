@@ -7,23 +7,25 @@ from pipeline import redirect_to_terms_accept
 LOGGER = logging.getLogger(name='termsandconditions')
 
 ACCEPT_TERMS_PATH = getattr(settings, 'ACCEPT_TERMS_PATH', '/terms/accept/')
-TERMS_EXCLUDE_URL_PREFIX_LIST = getattr(settings, 'TERMS_EXCLUDE_URL_PREFIX_LIST', {'/admin', '/terms'})
-TERMS_EXCLUDE_URL_LIST = getattr(settings, 'TERMS_EXCLUDE_URL_LIST',
-                                 {'/', '/termsrequired/', '/logout/', '/securetoo/'})
+TERMS_EXCLUDE_URL_PREFIX_LIST = getattr(
+        settings, 'TERMS_EXCLUDE_URL_PREFIX_LIST', {'/admin', '/terms'})
+TERMS_EXCLUDE_URL_LIST = getattr(
+        settings, 'TERMS_EXCLUDE_URL_LIST',
+        {'/', '/termsrequired/', '/logout/', '/securetoo/'})
 
 
 class TermsAndConditionsRedirectMiddleware(object):
     """
-    This middleware checks to see if the user is logged in, and if so, if they have accepted the site terms.
+    This middleware checks to see if the user is logged in, and if so,
+    if they have accepted the site terms.
     """
 
     def process_request(self, request):
-        """Process each request to app to ensure terms & conditions have been accepted"""
+        """Process each request to app to ensure terms have been accepted"""
 
         LOGGER.debug('termsandconditions.middleware')
 
         current_path = request.META['PATH_INFO']
-        print '---> ', request.META['HTTP_REFERER']
         protected_path = is_path_protected(current_path)
 
         if request.user.is_authenticated() and protected_path:
@@ -52,7 +54,5 @@ def is_path_protected(path):
 
     if path.startswith(ACCEPT_TERMS_PATH):
         protected = False
-
-    print '---> ', path, protected
 
     return protected
