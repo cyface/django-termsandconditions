@@ -24,7 +24,7 @@ def show_terms_if_not_agreed(context, slug=DEFAULT_TERMS_SLUG):
         return {}
 
     # handle excluded url's
-    current_path = request.META['PATH_INFO']
+    current_path = request.META['HTTP_REFERER']
     protected = is_path_protected(current_path)
 
     if not agreed and terms and protected:
