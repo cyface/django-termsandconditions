@@ -222,6 +222,8 @@ TERMS_EXCLUDE_URL_LIST = {'/', '/termsrequired/', '/logout/', '/securetoo/'}
 #        'INTERCEPT_REDIRECTS': False
 #    }
 
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
 # LOGGING
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
