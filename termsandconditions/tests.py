@@ -61,7 +61,6 @@ class TermsAndConditionsTests(TestCase):
         response = user_accept_terms('backend', self.user1, '123')
         self.assertIsInstance(response, dict)
 
-
     def test_get_active_list(self):
         """Test get list of active T&Cs"""
         active_list = TermsAndConditions.get_active_list()
@@ -298,7 +297,7 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
 
     def render_template(self, string, context=None):
         """a helper method to render simplistic test templates"""
-        request = RequestFactory().get('/')
+        request = RequestFactory().get('/test')
         request.user = self.user1
         request.context = context or {}
         return Template(string).render(Context({'request': request}))
