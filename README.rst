@@ -187,6 +187,12 @@ modal will be shown again as soon as another view with the template including th
 This simple mechanism allows to nag users with new T&C while still allowing them to use the service, without instant
 redirections.
 
+The following configuration setting applies for the template tag::
+
+    TERMS_HTTP_PATH_FIELD = 'PATH_INFO'
+
+which defaults to ``PATH_INFO``. When needed (e.g. while using a separate AJAX view to take care for the modal) this can be changed to ``HTTP_REFERER``.
+
 Terms and Conditions Pipeline
 -----------------------------
 You can force T&C acceptance when a new user account is created using the django-socialauth pipeline::
