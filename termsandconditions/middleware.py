@@ -7,11 +7,8 @@ from pipeline import redirect_to_terms_accept
 LOGGER = logging.getLogger(name='termsandconditions')
 
 ACCEPT_TERMS_PATH = getattr(settings, 'ACCEPT_TERMS_PATH', '/terms/accept/')
-TERMS_EXCLUDE_URL_PREFIX_LIST = getattr(
-        settings, 'TERMS_EXCLUDE_URL_PREFIX_LIST', {'/admin', '/terms'})
-TERMS_EXCLUDE_URL_LIST = getattr(
-        settings, 'TERMS_EXCLUDE_URL_LIST',
-        {'/', '/termsrequired/', '/logout/', '/securetoo/'})
+TERMS_EXCLUDE_URL_PREFIX_LIST = getattr(settings, 'TERMS_EXCLUDE_URL_PREFIX_LIST', {'/admin', '/terms'})
+TERMS_EXCLUDE_URL_LIST = getattr(settings, 'TERMS_EXCLUDE_URL_LIST', {'/', '/termsrequired/', '/logout/', '/securetoo/'})
 
 
 class TermsAndConditionsRedirectMiddleware(object):

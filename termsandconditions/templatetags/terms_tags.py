@@ -6,14 +6,12 @@ from urlparse import urlparse
 
 register = template.Library()
 DEFAULT_HTTP_PATH_FIELD = 'PATH_INFO'
-TERMS_HTTP_PATH_FIELD = getattr(
-        settings, 'TERMS_HTTP_PATH_FIELD', DEFAULT_HTTP_PATH_FIELD)
+TERMS_HTTP_PATH_FIELD = getattr(settings, 'TERMS_HTTP_PATH_FIELD', DEFAULT_HTTP_PATH_FIELD)
 
 
 @register.inclusion_tag('termsandconditions/snippets/termsandconditions.html',
                         takes_context=True)
-def show_terms_if_not_agreed(context, slug=DEFAULT_TERMS_SLUG,
-                             field=DEFAULT_HTTP_PATH_FIELD):
+def show_terms_if_not_agreed(context, slug=DEFAULT_TERMS_SLUG, field=DEFAULT_HTTP_PATH_FIELD):
     """Displays a modal on a current page if a user has not yet agreed to the
     given terms. If terms are not specified, the default slug is used.
 

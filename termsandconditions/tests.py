@@ -9,7 +9,7 @@ from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 from django.template import Context, Template
 from django.utils import timezone
-from .models import TermsAndConditions, UserTermsAndConditions,\
+from .models import TermsAndConditions, UserTermsAndConditions, \
     DEFAULT_TERMS_SLUG
 from .pipeline import user_accept_terms
 from .templatetags.terms_tags import show_terms_if_not_agreed
@@ -283,11 +283,10 @@ class TermsAndConditionsTests(TestCase):
 
 
 class TermsAndConditionsTemplateTagsTestCase(TestCase):
-
     def setUp(self):
         """Setup for each test"""
         self.user1 = User.objects.create_user(
-            'user1', 'user1@user1.com', 'user1password')
+                'user1', 'user1@user1.com', 'user1password')
         self.template_string_1 = (
             '{% load terms_tags %}'
             '{% show_terms_if_not_agreed %}'
@@ -298,6 +297,7 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
         )
 
     def _make_context(self, url):
+        """Build Up Context - Used in many tests"""
         context = dict()
         context['request'] = RequestFactory()
         context['request'].user = self.user1
@@ -326,20 +326,23 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
         self.assertNotIn(terms.slug, rendered)
 
     def test_show_terms_if_not_agreed_by_slug(self):
+        """Test if show_terms not agreed to by looking up slug"""
         terms = TermsAndConditions.objects.create(
-            slug='specific-terms',
-            date_active=timezone.now()
+                slug='specific-terms',
+                date_active=timezone.now()
         )
         rendered = self.render_template(self.template_string_2)
         self.assertIn(terms.slug, rendered)
 
     def test_show_terms_if_not_agreed_on_protected_url_not_agreed(self):
+        """Check terms on protected url if not agreed"""
         context = self._make_context('/test')
         result = show_terms_if_not_agreed(context)
         terms = TermsAndConditions.get_active(slug=DEFAULT_TERMS_SLUG)
         self.assertDictEqual(result, {'terms': terms})
 
     def test_show_terms_if_not_agreed_on_unprotected_url_not_agreed(self):
+        """Check terms on unprotected url if not agreed"""
         context = self._make_context('/')
         result = show_terms_if_not_agreed(context)
         self.assertDictEqual(result, {})
