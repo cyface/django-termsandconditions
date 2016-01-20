@@ -1,12 +1,19 @@
 from django import template
 from ..models import TermsAndConditions, DEFAULT_TERMS_SLUG
+from ..middleware import is_path_protected
+from django.conf import settings
+from urlparse import urlparse
 
 register = template.Library()
+DEFAULT_HTTP_PATH_FIELD = 'PATH_INFO'
+TERMS_HTTP_PATH_FIELD = getattr(
+        settings, 'TERMS_HTTP_PATH_FIELD', DEFAULT_HTTP_PATH_FIELD)
 
 
 @register.inclusion_tag('termsandconditions/snippets/termsandconditions.html',
                         takes_context=True)
-def show_terms_if_not_agreed(context, slug=DEFAULT_TERMS_SLUG):
+def show_terms_if_not_agreed(context, slug=DEFAULT_TERMS_SLUG,
+                             field=DEFAULT_HTTP_PATH_FIELD):
     """Displays a modal on a current page if a user has not yet agreed to the
     given terms. If terms are not specified, the default slug is used.
 
@@ -17,6 +24,16 @@ def show_terms_if_not_agreed(context, slug=DEFAULT_TERMS_SLUG):
     request = context['request']
     terms = TermsAndConditions.get_active(slug)
     agreed = TermsAndConditions.agreed_to_terms(request.user, terms)
-    if not agreed and terms:
+
+    # stop here, if terms has been agreed
+    if agreed:
+        return {}
+
+    # handle excluded url's
+    url = urlparse(request.META[field])
+    protected = is_path_protected(url.path)
+
+    if (not agreed) and terms and protected:
         return {'terms': terms}
+
     return {}

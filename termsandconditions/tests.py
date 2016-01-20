@@ -9,8 +9,10 @@ from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 from django.template import Context, Template
 from django.utils import timezone
-from .models import TermsAndConditions, UserTermsAndConditions
+from .models import TermsAndConditions, UserTermsAndConditions,\
+    DEFAULT_TERMS_SLUG
 from .pipeline import user_accept_terms
+from .templatetags.terms_tags import show_terms_if_not_agreed
 import logging
 from importlib import import_module
 
@@ -60,7 +62,6 @@ class TermsAndConditionsTests(TestCase):
         UserTermsAndConditions.objects.create(user=self.user1, terms=self.terms2)
         response = user_accept_terms('backend', self.user1, '123')
         self.assertIsInstance(response, dict)
-
 
     def test_get_active_list(self):
         """Test get list of active T&Cs"""
@@ -296,9 +297,16 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
             '{% show_terms_if_not_agreed slug="specific-terms" %}'
         )
 
+    def _make_context(self, url):
+        context = dict()
+        context['request'] = RequestFactory()
+        context['request'].user = self.user1
+        context['request'].META = {'PATH_INFO': url}
+        return context
+
     def render_template(self, string, context=None):
         """a helper method to render simplistic test templates"""
-        request = RequestFactory().get('/')
+        request = RequestFactory().get('/test')
         request.user = self.user1
         request.context = context or {}
         return Template(string).render(Context({'request': request}))
@@ -324,3 +332,14 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
         )
         rendered = self.render_template(self.template_string_2)
         self.assertIn(terms.slug, rendered)
+
+    def test_show_terms_if_not_agreed_on_protected_url_not_agreed(self):
+        context = self._make_context('/test')
+        result = show_terms_if_not_agreed(context)
+        terms = TermsAndConditions.get_active(slug=DEFAULT_TERMS_SLUG)
+        self.assertDictEqual(result, {'terms': terms})
+
+    def test_show_terms_if_not_agreed_on_unprotected_url_not_agreed(self):
+        context = self._make_context('/')
+        result = show_terms_if_not_agreed(context)
+        self.assertDictEqual(result, {})
