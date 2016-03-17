@@ -1,0 +1,5 @@
+django-jenkins==0.18.1
+coverage
+coveralls
+pylint
+sphinx
