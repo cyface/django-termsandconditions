@@ -7,8 +7,11 @@ class TermsAndConditionsTestCase(TestCase):
 
     def setUp(self):
         self.terms_1 = TermsAndConditions.objects.create(
-            date_active=timezone.now())
+            name='terms_1',
+            date_active=timezone.now()
+        )
         self.terms_2 = TermsAndConditions.objects.create(
+            name='terms_2',
             date_active=None
         )
 
@@ -19,6 +22,5 @@ class TermsAndConditionsTestCase(TestCase):
     def test_termsandconditions_get_active(self):
         """test if right terms are active"""
         active = TermsAndConditions.get_active()
-        self.assertEqual(active.slug, self.terms_1.slug)
-        self.assertEqual(active.version_number, self.terms_1.version_number)
-        self.assertNotEqual(active.version_number, self.terms_2.version_number)
+        self.assertEqual(active.name, self.terms_1.name)
+        self.assertNotEqual(active.name, self.terms_2.name)
