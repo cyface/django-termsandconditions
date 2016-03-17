@@ -2,8 +2,13 @@ language: python
 python:
 - '2.7'
 cache: pip
+env:
+    matrix:
+        - DJANGO="Django<1.9,>=1.8"
+        - DJANGO="Django<1.10,>=1.9"
 install:
-- pip install -r termsandconditions_demo/requirements_dev.txt
+    - pip install $DJANGO
+    - pip install -r termsandconditions_demo/requirements_ci.txt
 script: coverage run --source=termsandconditions,termsandconditions_demo --rcfile=devscripts/checkers/coveragerc
   manage.py test
 sudo: false
