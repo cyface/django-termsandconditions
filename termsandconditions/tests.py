@@ -9,8 +9,7 @@ from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 from django.template import Context, Template
 from django.utils import timezone
-from .models import TermsAndConditions, UserTermsAndConditions, \
-    DEFAULT_TERMS_SLUG
+from .models import TermsAndConditions, UserTermsAndConditions, DEFAULT_TERMS_SLUG
 from .pipeline import user_accept_terms
 from .templatetags.terms_tags import show_terms_if_not_agreed
 import logging
@@ -155,6 +154,7 @@ class TermsAndConditionsTests(TestCase):
         self.assertTrue(TermsAndConditions.agreed_to_terms(user=self.user1, terms=self.terms3))
 
     def test_accept_store_ip_address(self):
+        """Test with IP address storage setting true (default)"""
         self.client.login(username='user1', password='user1password')
         self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/secure/'}, follow=True)
         user_terms = UserTermsAndConditions.objects.all()[0]
@@ -163,6 +163,7 @@ class TermsAndConditionsTests(TestCase):
         self.assertTrue(user_terms.ip_address)
 
     def test_accept_no_ip_address(self):
+        """Test with IP address storage setting false"""
         self.client.login(username='user1', password='user1password')
         with self.settings(TERMS_STORE_IP_ADDRESS=False):
             self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/secure/'}, follow=True)
@@ -361,3 +362,28 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
         context = self._make_context('/')
         result = show_terms_if_not_agreed(context)
         self.assertDictEqual(result, {})
+
+
+class TermsAndConditionsModelsTestCase(TestCase):
+    """Tests Models for T&C"""
+
+    def setUp(self):
+        """Set Up T&C Model Tests"""
+        self.terms_1 = TermsAndConditions.objects.create(
+            name='terms_1',
+            date_active=timezone.now()
+        )
+        self.terms_2 = TermsAndConditions.objects.create(
+            name='terms_2',
+            date_active=None
+        )
+
+    def test_tnc_default_slug(self):
+        """test if default slug is used"""
+        self.assertEqual(self.terms_1.slug, DEFAULT_TERMS_SLUG)
+
+    def test_tnc_get_active(self):
+        """test if right terms are active"""
+        active = TermsAndConditions.get_active()
+        self.assertEqual(active.name, self.terms_1.name)
+        self.assertNotEqual(active.name, self.terms_2.name)
