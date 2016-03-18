@@ -75,7 +75,9 @@ class AcceptTermsView(CreateView):
                 form.instance.user = User.objects.get(id=user_pk)
             else:
                 return HttpResponseRedirect('/')
-        form.instance.ip_address = self.request.META['REMOTE_ADDR']
+        store_ip_address = getattr(settings, 'TERMS_STORE_IP_ADDRESS', True)
+        if store_ip_address:
+            form.instance.ip_address = self.request.META['REMOTE_ADDR']
         self.success_url = form.cleaned_data.get('returnTo', '/') or '/'
         return super(AcceptTermsView, self).form_valid(form)
 
