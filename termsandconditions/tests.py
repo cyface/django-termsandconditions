@@ -156,7 +156,7 @@ class TermsAndConditionsTests(TestCase):
 
     def test_accept_store_ip_address(self):
         self.client.login(username='user1', password='user1password')
-        chained_terms_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/secure/'}, follow=True)
+        self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/secure/'}, follow=True)
         user_terms = UserTermsAndConditions.objects.all()[0]
         self.assertEqual(user_terms.user, self.user1)
         self.assertEqual(user_terms.terms, self.terms2)
@@ -165,7 +165,7 @@ class TermsAndConditionsTests(TestCase):
     def test_accept_no_ip_address(self):
         self.client.login(username='user1', password='user1password')
         with self.settings(TERMS_STORE_IP_ADDRESS=False):
-            chained_terms_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/secure/'}, follow=True)
+            self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/secure/'}, follow=True)
             user_terms = UserTermsAndConditions.objects.all()[0]
             self.assertFalse(user_terms.ip_address)
 
