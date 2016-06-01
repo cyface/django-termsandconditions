@@ -1,5 +1,8 @@
 """View Decorators for termsandconditions module"""
-import urlparse
+try:
+    from urllib.parse import urlparse, urlunparse
+except ImportError:
+    from urlparse import urlparse, urlunparse
 from functools import wraps
 from django.http import HttpResponseRedirect, QueryDict
 from django.utils.decorators import available_attrs
@@ -19,10 +22,10 @@ def terms_required(view_func):
             return view_func(request, *args, **kwargs)
 
         currentPath = request.path
-        login_url_parts = list(urlparse.urlparse(ACCEPT_TERMS_PATH))
+        login_url_parts = list(urlparse(ACCEPT_TERMS_PATH))
         querystring = QueryDict(login_url_parts[4], mutable=True)
         querystring['returnTo'] = currentPath
         login_url_parts[4] = querystring.urlencode(safe='/')
-        return HttpResponseRedirect(urlparse.urlunparse(login_url_parts))
+        return HttpResponseRedirect(urlunparse(login_url_parts))
 
     return _wrapped_view
