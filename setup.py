@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="django-termsandconditions",
-    version="1.1.4",
+    version="1.1.5",
     url='http://timlwhite.com',
     license='BSD',
     description="django-termsandconditions enables users to accept terms and conditions of a site.",
@@ -22,7 +22,13 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Internet :: WWW/HTTP',
     ]
 )
