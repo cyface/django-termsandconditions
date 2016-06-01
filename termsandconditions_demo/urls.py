@@ -8,7 +8,7 @@
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
-from views import TermsRequiredView, SecureView, IndexView
+from .views import TermsRequiredView, SecureView, IndexView
 from django.views.generic import RedirectView, TemplateView
 from django.views.decorators.cache import never_cache
 from termsandconditions.decorators import terms_required
