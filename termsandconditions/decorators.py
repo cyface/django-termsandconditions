@@ -6,8 +6,8 @@ except ImportError:
 from functools import wraps
 from django.http import HttpResponseRedirect, QueryDict
 from django.utils.decorators import available_attrs
-from models import TermsAndConditions
-from middleware import ACCEPT_TERMS_PATH
+from .models import TermsAndConditions
+from .middleware import ACCEPT_TERMS_PATH
 
 
 def terms_required(view_func):

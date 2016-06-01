@@ -3,8 +3,8 @@
 # pylint: disable=E1120,R0901,R0904
 
 from django.contrib.auth.models import User
-from forms import UserTermsAndConditionsModelForm, EmailTermsForm
-from models import TermsAndConditions, UserTermsAndConditions, DEFAULT_TERMS_SLUG
+from .forms import UserTermsAndConditionsModelForm, EmailTermsForm
+from .models import TermsAndConditions, UserTermsAndConditions, DEFAULT_TERMS_SLUG
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect

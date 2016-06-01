@@ -6,7 +6,7 @@ try:
     from urllib.parse import urlparse, urlunparse
 except ImportError:
     from urlparse import urlparse, urlunparse
-from models import TermsAndConditions
+from .models import TermsAndConditions
 from django.http import HttpResponseRedirect, QueryDict
 from django.conf import settings
 from django.core.urlresolvers import reverse
