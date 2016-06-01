@@ -2,8 +2,11 @@
 
 # pylint: disable=W0613
 
-import urlparse
-from models import TermsAndConditions
+try:
+    from urllib.parse import urlparse, urlunparse
+except ImportError:
+    from urlparse import urlparse, urlunparse
+from .models import TermsAndConditions
 from django.http import HttpResponseRedirect, QueryDict
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -28,10 +31,10 @@ def user_accept_terms(backend, user, uid, social_user=None, *args, **kwargs):
 
 def redirect_to_terms_accept(current_path='/', slug='default'):
     """Redirect the user to the terms and conditions accept page."""
-    redirect_url_parts = list(urlparse.urlparse(ACCEPT_TERMS_PATH))
+    redirect_url_parts = list(urlparse(ACCEPT_TERMS_PATH))
     if slug != 'default':
         redirect_url_parts[2] += slug
     querystring = QueryDict(redirect_url_parts[4], mutable=True)
     querystring[TERMS_RETURNTO_PARAM] = current_path
     redirect_url_parts[4] = querystring.urlencode(safe='/')
-    return HttpResponseRedirect(urlparse.urlunparse(redirect_url_parts))
+    return HttpResponseRedirect(urlunparse(redirect_url_parts))

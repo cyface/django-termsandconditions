@@ -7,8 +7,8 @@
 
 from django.conf.urls import url
 from django.contrib import admin
-from views import TermsView, AcceptTermsView, EmailTermsView
-from models import DEFAULT_TERMS_SLUG
+from .views import TermsView, AcceptTermsView, EmailTermsView
+from .models import DEFAULT_TERMS_SLUG
 
 admin.autodiscover()
 

@@ -1,8 +1,8 @@
 """Terms and Conditions Middleware"""
-from models import TermsAndConditions
+from .models import TermsAndConditions
 from django.conf import settings
 import logging
-from pipeline import redirect_to_terms_accept
+from .pipeline import redirect_to_terms_accept
 
 LOGGER = logging.getLogger(name='termsandconditions')
 
