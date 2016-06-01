@@ -47,7 +47,7 @@ class TermsAndConditions(models.Model):
         verbose_name = 'Terms and Conditions'
         verbose_name_plural = 'Terms and Conditions'
 
-    def __unicode__(self):
+    def __str__(self):
         return "{0}-{1:.2f}".format(self.slug, self.version_number)
 
     @models.permalink
