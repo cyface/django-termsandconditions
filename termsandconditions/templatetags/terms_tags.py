@@ -2,7 +2,11 @@ from django import template
 from ..models import TermsAndConditions, DEFAULT_TERMS_SLUG
 from ..middleware import is_path_protected
 from django.conf import settings
-from urlparse import urlparse
+
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 
 register = template.Library()
 DEFAULT_HTTP_PATH_FIELD = 'PATH_INFO'
