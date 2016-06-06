@@ -17,7 +17,6 @@
 .tmp_*
 .tox
 build/*
-coverage.xml
 dist
 local_settings.py
 nosetests.xml
@@ -27,3 +26,5 @@ settings_local.py
 settings_local_test.py
 settings_test_local.py
 style-*_.css
+*.virtualenv
+*.virtualenv3

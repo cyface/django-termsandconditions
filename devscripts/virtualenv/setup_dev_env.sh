@@ -4,6 +4,6 @@
 # curl -O https://raw.github.com/pypa/virtualenv/master/virtualenv.py
 # This should be run from the project directory, not inside the project dir
 
-virtualenv --system-site-packages .env
-. .env/bin/activate
+virtualenv --system-site-packages .virtualenv
+. .virtualenv/bin/activate
 pip install -r ./termsandconditions_demo/requirements_dev.txt
