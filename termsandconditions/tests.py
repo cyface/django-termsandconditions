@@ -212,7 +212,7 @@ class TermsAndConditionsTests(TestCase):
 
         # First, Accept Contributor Terms
         LOGGER.debug('Test /terms/accept/contrib-terms/3/ post')
-        accept_version_post_response = self.client.post('/terms/accept/', {'terms': 3, 'returnTo': '/secure/'}, follow=True)
+        self.client.post('/terms/accept/', {'terms': 3, 'returnTo': '/secure/'}, follow=True)
 
         LOGGER.debug('Test upgrade terms')
         self.terms5 = TermsAndConditions.objects.create(slug="site-terms", name="Site Terms",
