@@ -1,3 +1,4 @@
+"""Django Tags"""
 from django import template
 from ..models import TermsAndConditions, DEFAULT_TERMS_SLUG
 from ..middleware import is_path_protected
