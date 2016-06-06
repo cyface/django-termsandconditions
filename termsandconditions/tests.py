@@ -275,7 +275,7 @@ class TermsAndConditionsTests(TestCase):
         session["partial_pipeline"] = partial_pipeline
         session.save()
 
-        self.assertTrue(self.client.session.has_key('partial_pipeline'))
+        self.assertTrue('partial_pipeline' in self.client.session)
 
         LOGGER.debug('Test /terms/accept/ post for pipeline user')
         pipeline_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/anon'}, follow=True)
