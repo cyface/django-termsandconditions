@@ -102,7 +102,7 @@ class TermsAndConditionsTests(TestCase):
 
         LOGGER.debug('Test /secure/ after login')
         logged_in_response = self.client.get('/secure/', follow=True)
-        self.assertRedirects(logged_in_response, 'http://testserver/terms/accept/site-terms?returnTo=/secure/')
+        self.assertRedirects(logged_in_response, 'http://testserver/terms/accept/contrib-terms?returnTo=/secure/')
 
     def test_terms_required_redirect(self):
         """Validate that a user is redirected to the terms accept page if logged in, and decorator is on method"""
@@ -144,12 +144,11 @@ class TermsAndConditionsTests(TestCase):
         self.assertEquals(True, TermsAndConditions.agreed_to_latest(user=self.user1, slug='site-terms'))
 
         LOGGER.debug('Test /terms/accept/contrib-terms/1.5/ post')
-        accept_version_response = accept_response = self.client.get('/terms/accept/contrib-terms/1.5/', follow=True)
+        accept_version_response = self.client.get('/terms/accept/contrib-terms/1.5/', follow=True)
         self.assertContains(accept_version_response, "Contributor Terms and Conditions 1.5")
 
         LOGGER.debug('Test /terms/accept/contrib-terms/3/ post')
-        accept_version_post_response = self.client.post('/terms/accept/', {'terms': 3, 'returnTo': '/secure/'},
-                                                        follow=True)
+        accept_version_post_response = self.client.post('/terms/accept/', {'terms': 3, 'returnTo': '/secure/'}, follow=True)
         self.assertContains(accept_version_post_response, "Secure")
         self.assertTrue(TermsAndConditions.agreed_to_terms(user=self.user1, terms=self.terms3))
 
@@ -210,6 +209,10 @@ class TermsAndConditionsTests(TestCase):
         LOGGER.debug('Test user1 not redirected after login')
         logged_in_response = self.client.get('/secure/', follow=True)
         self.assertContains(logged_in_response, "Contributor")
+
+        # First, Accept Contributor Terms
+        LOGGER.debug('Test /terms/accept/contrib-terms/3/ post')
+        accept_version_post_response = self.client.post('/terms/accept/', {'terms': 3, 'returnTo': '/secure/'}, follow=True)
 
         LOGGER.debug('Test upgrade terms')
         self.terms5 = TermsAndConditions.objects.create(slug="site-terms", name="Site Terms",
@@ -302,7 +305,7 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
     def setUp(self):
         """Setup for each test"""
         self.user1 = User.objects.create_user(
-                'user1', 'user1@user1.com', 'user1password')
+            'user1', 'user1@user1.com', 'user1password')
         self.template_string_1 = (
             '{% load terms_tags %}'
             '{% show_terms_if_not_agreed %}'
@@ -344,8 +347,8 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
     def test_show_terms_if_not_agreed_by_slug(self):
         """Test if show_terms not agreed to by looking up slug"""
         terms = TermsAndConditions.objects.create(
-                slug='specific-terms',
-                date_active=timezone.now()
+            slug='specific-terms',
+            date_active=timezone.now()
         )
         rendered = self.render_template(self.template_string_2)
         self.assertIn(terms.slug, rendered)

@@ -89,7 +89,7 @@ class TermsAndConditions(models.Model):
         try:
             all_terms_list = TermsAndConditions.objects.filter(
                 date_active__isnull=False,
-                date_active__lte=timezone.now())
+                date_active__lte=timezone.now()).order_by('slug')
             for term in all_terms_list:
                 terms_list.update({term.slug: TermsAndConditions.get_active(slug=term.slug)})
         except TermsAndConditions.DoesNotExist:  # pragma: nocover
