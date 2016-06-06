@@ -1,6 +1,7 @@
 """Django Models for TermsAndConditions App"""
 
 # pylint: disable=C1001,E0202,W0613
+from collections import OrderedDict
 
 from django.db import models
 from django.conf import settings
@@ -95,6 +96,7 @@ class TermsAndConditions(models.Model):
         except TermsAndConditions.DoesNotExist:  # pragma: nocover
             terms_list.update({DEFAULT_TERMS_SLUG: TermsAndConditions.create_default_terms()})
 
+        terms_list = OrderedDict(sorted(terms_list.items(), key=lambda t: t[0]))
         return terms_list
 
     @staticmethod
