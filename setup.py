@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="django-termsandconditions",
-    version="1.1.7",
+    version="1.1.8",
     url='https://github.com/cyface/django-termsandconditions',
     license='BSD',
     description="django-termsandconditions enables users to accept terms and conditions of a site.",
