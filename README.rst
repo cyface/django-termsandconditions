@@ -178,6 +178,14 @@ base.html), include the following lines::
 
     {% show_terms_if_not_agreed %}
 
+Alternatively use::
+
+    {% load terms_tags %}
+    .... your template here ....
+
+    {% show_terms_if_not_agreed field='HTTP_REFERER' %}
+
+if you want other than default ``TERMS_HTTP_PATH_FIELD`` to be used (this can also be controlled via settings, see below).
 This will ensure that on every page using the template (that is on each page using base.html in this case), respective
 T&C css and js are loaded to take care for handling the modal.
 
