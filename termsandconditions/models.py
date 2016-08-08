@@ -110,6 +110,8 @@ class TermsAndConditions(models.Model):
             return True
         except UserTermsAndConditions.DoesNotExist:
             return False
+        except TypeError:
+            return False
 
     @staticmethod
     def agreed_to_terms(user, terms=None):
@@ -119,4 +121,6 @@ class TermsAndConditions(models.Model):
             UserTermsAndConditions.objects.get(user=user, terms=terms)
             return True
         except UserTermsAndConditions.DoesNotExist:
+            return False
+        except TypeError:
             return False

@@ -1,7 +1,7 @@
 {% load staticfiles %}
 {% load i18n %}
 
-{% if terms %}
+{% if not_agreed_terms %}
     <link rel="stylesheet" type="text/css" href="{% static 'termsandconditions/css/modal.css' %}">
     <script src="{% static 'termsandconditions/js/modal.js' %}" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
@@ -11,18 +11,23 @@
     </script>
 
     <div id="termsandconditions" class="termsandconditions-modal">
-        <div>
-        <a href='javascript:void(0)' onclick='termsandconditions_overlay();' title="{% trans 'Close' %}" class="termsandconditions-close">X</a>
-        <h2>
-            {% if terms.name %}
-                {{ terms.name|safe }}
-            {% else %}
-                {% trans 'Terms and Conditions' %}
-            {% endif %}
-        </h2>
-            {% if terms.info %}{{ terms.info|safe }}{% endif %}
-            {% trans 'To accept new Terms, visit' %}
-            <a href="{% url 'tc_accept_specific_page' terms.slug %}">{% url 'tc_accept_specific_page' terms.slug %}</a>
+        <div id="toc-header">
+            <h6>Our Terms and Conditions Have Changed</h6>
+            <a href='javascript:void(0)' onclick='termsandconditions_overlay();' title="{% trans 'Close' %}" class="toc-close">&times;</a>
+        </div>
+        <div id="toc-content">
+            <div id="toc-body">
+                <span>Changes have been made to our </span>
+                {% for terms in not_agreed_terms %}
+                    {% if not forloop.first and not forloop.last %}<span>, </span>{% endif %}
+                    {% if forloop.last and not_agreed_terms|length > 2 %}<span>, and </span>{% elif forloop.last %}<span> and </span>{% endif %}
+                    <a class="terms-link" href="{% url 'tc_accept_specific_page' terms.slug %}">{% if terms.name %}{{ terms.name|safe }}{% endif %}</a>
+                {% endfor %}
+                <span> document{{ not_agreed_terms|length|pluralize }}. Please, review and accept the changes to prevent future interruption.</span>
+            </div>
+            <div id="toc-footer">
+                <a class="toc-accept-all-btn" href="">{% trans 'ACCEPT ALL' %}</a>
+            </div>
         </div>
     </div>
 {% endif %}

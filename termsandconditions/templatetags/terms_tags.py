@@ -25,18 +25,24 @@ def show_terms_if_not_agreed(context, slug=DEFAULT_TERMS_SLUG, field=TERMS_HTTP_
     care of displaying a respective modal.
     """
     request = context['request']
-    terms = TermsAndConditions.get_active(slug)
-    agreed = TermsAndConditions.agreed_to_terms(request.user, terms)
+    all_active_terms = TermsAndConditions.get_active_list()
+    all_agreed = True
+    not_agreed_terms = []
 
-    # stop here, if terms has been agreed
-    if agreed:
+    for terms_slug, terms in all_active_terms.iteritems():
+        if not TermsAndConditions.agreed_to_terms(request.user, terms):
+            all_agreed = False
+            not_agreed_terms.append(terms)
+
+    # stop here, if all terms have been agreed
+    if all_agreed:
         return {}
 
     # handle excluded url's
     url = urlparse(request.META[field])
     protected = is_path_protected(url.path)
 
-    if (not agreed) and terms and protected:
-        return {'terms': terms}
+    if (not all_agreed) and not_agreed_terms and protected:
+        return {'not_agreed_terms': not_agreed_terms}
 
     return {}
