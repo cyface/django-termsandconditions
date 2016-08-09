@@ -5,7 +5,7 @@
     width: 500px;
     margin-left: -250px;
     z-index: 1000;
-    background: #fff;
+    background: #ffffff;
     box-shadow: 0 -1px 10px 1px rgba(0, 0, 0, 0.3);
 }
 
@@ -39,16 +39,21 @@
 }
 
 #termsandconditions #toc-header .toc-close:hover {
-    color: lightgray;
+    color: #d3d3d3;
+    text-decoration: none;
 }
 
 #termsandconditions #toc-content #toc-body {
     padding: 15px 0;
 }
 
+#termsandconditions #toc-content #toc-body a:hover {
+    text-decoration: underline;
+}
+
 #termsandconditions #toc-content #toc-footer {
     width: 100%;
-    border-top: 1px lightgray solid;
+    border-top: 1px #d3d3d3 solid;
 }
 
 #termsandconditions #toc-content #toc-footer .toc-accept-all-btn {
@@ -61,7 +66,8 @@
 }
 
 #termsandconditions #toc-content #toc-footer .toc-accept-all-btn:hover {
-    background-color: lightgray;
+    background-color: #d3d3d3;
+    text-decoration: none;
 }
 
 @media(max-width: 500px) {

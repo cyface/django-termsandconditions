@@ -84,19 +84,32 @@ class TermsAndConditions(models.Model):
         return active_terms
 
     @staticmethod
-    def get_active_list():
+    def get_active_list(as_dict=True):
         """Finds the latest of all terms and conditions"""
-        terms_list = {}
+        terms_ids = []
+
+        if as_dict:
+            terms_list = {}
+        else:
+            terms_list = []
+
         try:
             all_terms_list = TermsAndConditions.objects.filter(
                 date_active__isnull=False,
                 date_active__lte=timezone.now()).order_by('slug')
-            for term in all_terms_list:
-                terms_list.update({term.slug: TermsAndConditions.get_active(slug=term.slug)})
+            for terms in all_terms_list:
+                if as_dict:
+                    terms_list.update({terms.slug: TermsAndConditions.get_active(slug=terms.slug)})
+                else:
+                    t = TermsAndConditions.get_active(slug=terms.slug)
+                    terms_ids.append(t.id)
         except TermsAndConditions.DoesNotExist:  # pragma: nocover
             terms_list.update({DEFAULT_TERMS_SLUG: TermsAndConditions.create_default_terms()})
 
-        terms_list = OrderedDict(sorted(terms_list.items(), key=lambda t: t[0]))
+        if as_dict:
+            terms_list = OrderedDict(sorted(terms_list.items(), key=lambda t: t[0]))
+        else:
+            terms_list = TermsAndConditions.objects.filter(pk__in=terms_ids).order_by('slug')
         return terms_list
 
     @staticmethod

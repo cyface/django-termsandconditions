@@ -1,24 +1,32 @@
 {% extends "page.html" %}
 
-{% block title %}Accept Terms and Conditions{% endblock %}
+{% load staticfiles %}
 
-{# {% block header %}{% endblock %} #}
+{% block title %}Accept Terms and Conditions{% endblock %}
+{% block styles %}
+    {{ block.super }}
+    <link href="{% static 'termsandconditions/css/view_accept.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
     <section title="termsandconditions" data-role="content">
-        <h1>Please Accept {{ form.initial.terms.name|safe }}</h1>
         {{ form.errors }}
-        <div id="tc-terms-html">
-            {{ form.initial.terms.text|safe }}
-        </div>
+        {% for terms in form.initial.terms %}
+            <h1>Please Accept {{ terms.name|safe }}</h1>
+            <div class="toc-container">
+                <div id="tc-terms-html">
+                    {{ terms.text|safe }}
+                </div>
+            </div>
+
+            <p><a href="{% url "tc_print_page" terms.slug terms.version_number %}"
+                  target="_blank">Print {{ terms.name }}</a></p>
+        {% endfor %}
         <form action="{% url 'tc_accept_page' %}" method="post" id="tc-terms-form" data-ajax="false">
             {% csrf_token %}
             {{ form.terms }}
             {{ form.returnTo }}
-            <p><input type="submit" value="Accept" data-role="button"></p>
+            <p><input type="submit" value="Accept{% if form.initial.terms|length > 1 %} All{% endif %}" data-role="button"></p>
         </form>
-        <p><a href="{% url "tc_print_page" form.initial.terms.slug form.initial.terms.version_number %}"
-              target="_blank">Print Terms & Conditions</a></p>
     </section>
 {% endblock %}
-{# {% block footer %}{% endblock %} #}

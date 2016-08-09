@@ -20,13 +20,13 @@
                 <span>Changes have been made to our </span>
                 {% for terms in not_agreed_terms %}
                     {% if not forloop.first and not forloop.last %}<span>, </span>{% endif %}
-                    {% if forloop.last and not_agreed_terms|length > 2 %}<span>, and </span>{% elif forloop.last %}<span> and </span>{% endif %}
+                    {% if forloop.last and not_agreed_terms|length > 2 %}<span>, and </span>{% elif forloop.last and not_agreed_terms|length > 1 %}<span> and </span>{% endif %}
                     <a class="terms-link" href="{% url 'tc_accept_specific_page' terms.slug %}">{% if terms.name %}{{ terms.name|safe }}{% endif %}</a>
                 {% endfor %}
-                <span> document{{ not_agreed_terms|length|pluralize }}. Please, review and accept the changes to prevent future interruption.</span>
+                <span> document{{ not_agreed_terms|length|pluralize }}. Please, review and accept the changes to prevent future interruptions.</span>
             </div>
             <div id="toc-footer">
-                <a class="toc-accept-all-btn" href="">{% trans 'ACCEPT ALL' %}</a>
+                <a class="toc-accept-all-btn" href="{% url 'tc_accept_page' %}">{% trans 'ACCEPT ALL' %}</a>
             </div>
         </div>
     </div>
