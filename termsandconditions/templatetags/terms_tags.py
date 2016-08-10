@@ -43,6 +43,6 @@ def show_terms_if_not_agreed(context, slug=DEFAULT_TERMS_SLUG, field=TERMS_HTTP_
     protected = is_path_protected(url.path)
 
     if (not all_agreed) and not_agreed_terms and protected:
-        return {'not_agreed_terms': not_agreed_terms}
+        return {'not_agreed_terms': not_agreed_terms, 'returnTo': url.path}
 
     return {}

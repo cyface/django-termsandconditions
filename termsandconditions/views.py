@@ -28,7 +28,7 @@ class GetTermsViewMixin(object):
         version = kwargs.get("version")
 
         if slug and version:
-            terms = [TermsAndConditions.objects.get(slug=slug, version_number=version)]
+            terms = [TermsAndConditions.objects.filter(slug=slug, version_number=version).latest('date_active')]
         elif slug:
             terms = [TermsAndConditions.get_active(slug)]
         else:
@@ -79,44 +79,40 @@ class AcceptTermsView(CreateView, GetTermsViewMixin):
         """
         Handles POST request.
         """
-        form = self.form_class(request.POST)
-        print(form.is_valid())
+        return_url = request.POST.get('returnTo', '/')
+        terms_ids = request.POST.getlist('terms')
 
-        if form.is_valid():
-            return_url = form.cleaned_data.get('returnTo', '/') or '/'
-            terms_ids = request.POST.getlist('terms')
-            print(terms_ids)
-
-            if request.user.is_authenticated():
-                user = request.user
-            else:
-                # Get user out of saved pipeline from django-socialauth
-                if request.session.has_key('partial_pipeline'):
-                    user_pk = request.session['partial_pipeline']['kwargs']['user']['pk']
-                    user = User.objects.get(id=user_pk)
-                else:
-                    return HttpResponseRedirect('/')
-
-            store_ip_address = getattr(settings, 'TERMS_STORE_IP_ADDRESS', True)
-            if store_ip_address:
-                ip_address = request.META['REMOTE_ADDR']
-            else:
-                ip_address = ""
-
-            for terms_id in terms_ids:
-                try:
-                    new_user_terms = UserTermsAndConditions(
-                        user=user,
-                        terms=TermsAndConditions.objects.get(pk=int(terms_id)),
-                        ip_address=ip_address
-                    )
-                    new_user_terms.save()
-                except IntegrityError:
-                    pass
-
+        if not terms_ids:
             return HttpResponseRedirect(return_url)
 
-        return render(request, self.template_name, {'form': form})
+        if request.user.is_authenticated():
+            user = request.user
+        else:
+            # Get user out of saved pipeline from django-socialauth
+            if request.session.has_key('partial_pipeline'):
+                user_pk = request.session['partial_pipeline']['kwargs']['user']['pk']
+                user = User.objects.get(id=user_pk)
+            else:
+                return HttpResponseRedirect('/')
+
+        store_ip_address = getattr(settings, 'TERMS_STORE_IP_ADDRESS', True)
+        if store_ip_address:
+            ip_address = request.META['REMOTE_ADDR']
+        else:
+            ip_address = ""
+
+        for terms_id in terms_ids:
+            try:
+                new_user_terms = UserTermsAndConditions(
+                    user=user,
+                    terms=TermsAndConditions.objects.get(pk=int(terms_id)),
+                    ip_address=ip_address
+                )
+                new_user_terms.save()
+            except IntegrityError:
+                pass
+
+        return HttpResponseRedirect(return_url)
 
 
 class EmailTermsView(FormView, GetTermsViewMixin):

@@ -3,7 +3,7 @@
 # pylint: disable=E1120,W0613
 
 from django import forms
-from termsandconditions.models import UserTermsAndConditions, TermsAndConditions
+from termsandconditions.models import TermsAndConditions
 
 
 class UserTermsAndConditionsModelForm(forms.Form):
@@ -11,14 +11,12 @@ class UserTermsAndConditionsModelForm(forms.Form):
     returnTo = forms.CharField(required=False, initial="/", widget=forms.HiddenInput())
     terms = forms.ModelMultipleChoiceField(
         TermsAndConditions.get_active_list(as_dict=False),
-        widget=forms.MultipleHiddenInput
+        widget=forms.MultipleHiddenInput,
     )
 
     def __init__(self, *args, **kwargs):
-        print(kwargs)
         if 'instance' in kwargs:
-            instance = kwargs.pop('instance')
-            print(instance)
+            kwargs.pop('instance')
 
         if 'initial' in kwargs:
             initial = kwargs.get('initial')
@@ -26,14 +24,8 @@ class UserTermsAndConditionsModelForm(forms.Form):
             if 'terms' in initial:
                 self.terms = forms.ModelMultipleChoiceField(
                     initial.get('terms'),
-                    widget=forms.MultipleHiddenInput
+                    widget=forms.MultipleHiddenInput,
                 )
-
-        if kwargs.get('terms'):
-            self.terms = forms.ModelMultipleChoiceField(
-                TermsAndConditions.get_active_list(as_dict=False),
-                widget=forms.MultipleHiddenInput
-            )
         super(UserTermsAndConditionsModelForm, self).__init__(*args, **kwargs)
 
 

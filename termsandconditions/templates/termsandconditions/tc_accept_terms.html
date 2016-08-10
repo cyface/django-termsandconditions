@@ -9,18 +9,25 @@
 {% endblock %}
 
 {% block content %}
-    <section title="termsandconditions" data-role="content">
+    <section id="termsandconditions-section" title="termsandconditions" data-role="content">
         {{ form.errors }}
         {% for terms in form.initial.terms %}
-            <h1>Please Accept {{ terms.name|safe }}</h1>
+            <h1>Please Accept {{ terms.name|safe }} {{ terms.version_number|safe }}</h1>
+            {% if terms.info %}
+                <h4>Summary of Changes</h4>
+                <div class="toc-container">
+                    {{ terms.info|safe }}
+                </div>
+                <h4>Full Text</h4>
+            {% endif %}
             <div class="toc-container">
                 <div id="tc-terms-html">
                     {{ terms.text|safe }}
                 </div>
             </div>
 
-            <p><a href="{% url "tc_print_page" terms.slug terms.version_number %}"
-                  target="_blank">Print {{ terms.name }}</a></p>
+            <p><a href="{% url "tc_print_page" terms.slug|safe terms.version_number|safe %}"
+                  target="_blank">Print {{ terms.name|safe }}</a></p>
         {% endfor %}
         <form action="{% url 'tc_accept_page' %}" method="post" id="tc-terms-form" data-ajax="false">
             {% csrf_token %}
