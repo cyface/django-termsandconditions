@@ -18,6 +18,9 @@ import logging
 from smtplib import SMTPException
 
 LOGGER = logging.getLogger(name='termsandconditions')
+DEFAULT_TERMS_BASE_TEMPLATE = 'base.html'
+DEFAULT_ACCEPT_TERMS_OVERRIDE_HEADER_BLOCK = True
+DEFAULT_ACCEPT_TERMS_OVERRIDE_FOOTER_BLOCK = True
 
 
 class GetTermsViewMixin(object):
@@ -49,6 +52,12 @@ class TermsView(DetailView, GetTermsViewMixin):
     template_name = "termsandconditions/tc_view_terms.html"
     context_object_name = 'terms_list'
 
+    def get_context_data(self, **kwargs):
+        """Pass additional context data"""
+        context = super(TermsView, self).get_context_data(**kwargs)
+        context['terms_base_template'] = getattr(settings, 'TERMS_BASE_TEMPLATE', DEFAULT_TERMS_BASE_TEMPLATE)
+        return context
+
     def get_object(self, queryset=None):
         """Override of DetailView method, queries for which T&C to return"""
         LOGGER.debug('termsandconditions.views.TermsView.get_object')
@@ -65,6 +74,16 @@ class AcceptTermsView(CreateView, GetTermsViewMixin):
     model = UserTermsAndConditions
     form_class = UserTermsAndConditionsModelForm
     template_name = "termsandconditions/tc_accept_terms.html"
+
+    def get_context_data(self, **kwargs):
+        """Pass additional context data"""
+        context = super(AcceptTermsView, self).get_context_data(**kwargs)
+        context['terms_base_template'] = getattr(settings, 'TERMS_BASE_TEMPLATE', DEFAULT_TERMS_BASE_TEMPLATE)
+        context['terms_header_block'] = getattr(settings, 'TERMS_HEADER_BLOCK', DEFAULT_TERMS_HEADER_BLOCK)
+        context['terms_content_block'] = getattr(settings, 'TERMS_CONTENT_BLOCK', DEFAULT_TERMS_CONTENT_BLOCK)
+        context['terms_footer_block'] = getattr(settings, 'TERMS_FOOTER_BLOCK', DEFAULT_TERMS_FOOTER_BLOCK)
+        context['terms_styles_block'] = getattr(settings, 'TERMS_STYLES_BLOCK', DEFAULT_TERMS_STYLES_BLOCK)
+        return context
 
     def get_initial(self):
         """Override of CreateView method, queries for which T&C to accept and catches returnTo from URL"""
@@ -124,6 +143,16 @@ class EmailTermsView(FormView, GetTermsViewMixin):
     template_name = "termsandconditions/tc_email_terms_form.html"
 
     form_class = EmailTermsForm
+
+    def get_context_data(self, **kwargs):
+        """Pass additional context data"""
+        context = super(EmailTermsView, self).get_context_data(**kwargs)
+        context['terms_base_template'] = getattr(settings, 'TERMS_BASE_TEMPLATE', DEFAULT_TERMS_BASE_TEMPLATE)
+        context['terms_header_block'] = getattr(settings, 'TERMS_HEADER_BLOCK', DEFAULT_TERMS_HEADER_BLOCK)
+        context['terms_content_block'] = getattr(settings, 'TERMS_CONTENT_BLOCK', DEFAULT_TERMS_CONTENT_BLOCK)
+        context['terms_footer_block'] = getattr(settings, 'TERMS_FOOTER_BLOCK', DEFAULT_TERMS_FOOTER_BLOCK)
+        context['terms_styles_block'] = getattr(settings, 'TERMS_STYLES_BLOCK', DEFAULT_TERMS_STYLES_BLOCK)
+        return context
 
     def get_initial(self):
         """Override of CreateView method, queries for which T&C send, catches returnTo from URL"""
