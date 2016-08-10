@@ -19,8 +19,6 @@ from smtplib import SMTPException
 
 LOGGER = logging.getLogger(name='termsandconditions')
 DEFAULT_TERMS_BASE_TEMPLATE = 'base.html'
-DEFAULT_ACCEPT_TERMS_OVERRIDE_HEADER_BLOCK = True
-DEFAULT_ACCEPT_TERMS_OVERRIDE_FOOTER_BLOCK = True
 
 
 class GetTermsViewMixin(object):
@@ -79,10 +77,6 @@ class AcceptTermsView(CreateView, GetTermsViewMixin):
         """Pass additional context data"""
         context = super(AcceptTermsView, self).get_context_data(**kwargs)
         context['terms_base_template'] = getattr(settings, 'TERMS_BASE_TEMPLATE', DEFAULT_TERMS_BASE_TEMPLATE)
-        context['terms_header_block'] = getattr(settings, 'TERMS_HEADER_BLOCK', DEFAULT_TERMS_HEADER_BLOCK)
-        context['terms_content_block'] = getattr(settings, 'TERMS_CONTENT_BLOCK', DEFAULT_TERMS_CONTENT_BLOCK)
-        context['terms_footer_block'] = getattr(settings, 'TERMS_FOOTER_BLOCK', DEFAULT_TERMS_FOOTER_BLOCK)
-        context['terms_styles_block'] = getattr(settings, 'TERMS_STYLES_BLOCK', DEFAULT_TERMS_STYLES_BLOCK)
         return context
 
     def get_initial(self):
@@ -148,10 +142,6 @@ class EmailTermsView(FormView, GetTermsViewMixin):
         """Pass additional context data"""
         context = super(EmailTermsView, self).get_context_data(**kwargs)
         context['terms_base_template'] = getattr(settings, 'TERMS_BASE_TEMPLATE', DEFAULT_TERMS_BASE_TEMPLATE)
-        context['terms_header_block'] = getattr(settings, 'TERMS_HEADER_BLOCK', DEFAULT_TERMS_HEADER_BLOCK)
-        context['terms_content_block'] = getattr(settings, 'TERMS_CONTENT_BLOCK', DEFAULT_TERMS_CONTENT_BLOCK)
-        context['terms_footer_block'] = getattr(settings, 'TERMS_FOOTER_BLOCK', DEFAULT_TERMS_FOOTER_BLOCK)
-        context['terms_styles_block'] = getattr(settings, 'TERMS_STYLES_BLOCK', DEFAULT_TERMS_STYLES_BLOCK)
         return context
 
     def get_initial(self):

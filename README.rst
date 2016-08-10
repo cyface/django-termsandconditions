@@ -164,6 +164,10 @@ Note that you can skip @login_required only if you are forcing auth on that view
 
 Requiring T&Cs for Anonymous Users is not supported.
 
+Many of the templates extend the 'base.html' template by default. The TERMS_BASE_TEMPLATE setting can be used to specify a different template to extend::
+
+    TERMS_BASE_TEMPLATE = 'page.html'
+
 Terms and Conditions Template Tag
 ---------------------------------
 
