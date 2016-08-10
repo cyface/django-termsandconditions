@@ -3,7 +3,7 @@
 # pylint: disable=C1001,E0202,W0613
 from collections import OrderedDict
 
-from django.db import models
+from django.db import models, utils
 from django.conf import settings
 from django.http import Http404
 from django.utils import timezone
@@ -97,6 +97,7 @@ class TermsAndConditions(models.Model):
             all_terms_list = TermsAndConditions.objects.filter(
                 date_active__isnull=False,
                 date_active__lte=timezone.now()).order_by('slug')
+
             for terms in all_terms_list:
                 if as_dict:
                     terms_list.update({terms.slug: TermsAndConditions.get_active(slug=terms.slug)})
@@ -105,6 +106,10 @@ class TermsAndConditions(models.Model):
                     terms_ids.append(t.id)
         except TermsAndConditions.DoesNotExist:  # pragma: nocover
             terms_list.update({DEFAULT_TERMS_SLUG: TermsAndConditions.create_default_terms()})
+        except utils.ProgrammingError:
+            # Handle a particular tricky path that occurs when trying to makemigrations and migrate database first time.
+            LOGGER.warning('Unable to find active terms list because terms and conditions tables not intialized.')
+            return terms_list
 
         if as_dict:
             terms_list = OrderedDict(sorted(terms_list.items(), key=lambda t: t[0]))
