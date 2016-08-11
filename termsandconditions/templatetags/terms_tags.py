@@ -25,14 +25,13 @@ def show_terms_if_not_agreed(context, slug=DEFAULT_TERMS_SLUG, field=TERMS_HTTP_
     care of displaying a respective modal.
     """
     request = context['request']
-    all_active_terms = TermsAndConditions.get_active_list()
     all_agreed = True
     not_agreed_terms = []
 
-    for term in all_active_terms():
-        if not TermsAndConditions.agreed_to_terms(request.user, term):
+    for terms in TermsAndConditions.get_active_list(as_dict=False):
+        if not TermsAndConditions.agreed_to_terms(request.user, terms):
             all_agreed = False
-            not_agreed_terms.append(term)
+            not_agreed_terms.append(terms)
 
     # stop here, if all terms have been agreed
     if all_agreed:
