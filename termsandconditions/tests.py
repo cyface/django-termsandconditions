@@ -314,6 +314,9 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
             '{% load terms_tags %}'
             '{% show_terms_if_not_agreed slug="specific-terms" %}'
         )
+        self.terms1 = TermsAndConditions.objects.create(slug="site-terms", name="Site Terms",
+                                                        text="Site Terms and Conditions 1", version_number=1.0,
+                                                        date_active="2012-01-01")
 
     def _make_context(self, url):
         """Build Up Context - Used in many tests"""
@@ -358,7 +361,7 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
         context = self._make_context('/test')
         result = show_terms_if_not_agreed(context)
         terms = TermsAndConditions.get_active(slug=DEFAULT_TERMS_SLUG)
-        self.assertDictEqual(result, {'terms': terms})
+        self.assertEqual(result.get('not_agreed_terms'), [terms])
 
     def test_show_terms_if_not_agreed_on_unprotected_url_not_agreed(self):
         """Check terms on unprotected url if not agreed"""

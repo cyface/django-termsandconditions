@@ -3,7 +3,7 @@
 # pylint: disable=C1001,E0202,W0613
 from collections import OrderedDict
 
-from django.db import models
+from django.db import models, utils
 from django.conf import settings
 from django.http import Http404
 from django.utils import timezone
@@ -84,19 +84,37 @@ class TermsAndConditions(models.Model):
         return active_terms
 
     @staticmethod
-    def get_active_list():
+    def get_active_list(as_dict=True):
         """Finds the latest of all terms and conditions"""
-        terms_list = {}
+        terms_ids = []
+
+        if as_dict:
+            terms_list = {}
+        else:
+            terms_list = []
+
         try:
             all_terms_list = TermsAndConditions.objects.filter(
                 date_active__isnull=False,
                 date_active__lte=timezone.now()).order_by('slug')
-            for term in all_terms_list:
-                terms_list.update({term.slug: TermsAndConditions.get_active(slug=term.slug)})
+
+            for terms in all_terms_list:
+                if as_dict:
+                    terms_list.update({terms.slug: TermsAndConditions.get_active(slug=terms.slug)})
+                else:
+                    t = TermsAndConditions.get_active(slug=terms.slug)
+                    terms_ids.append(t.id)
         except TermsAndConditions.DoesNotExist:  # pragma: nocover
             terms_list.update({DEFAULT_TERMS_SLUG: TermsAndConditions.create_default_terms()})
+        except utils.ProgrammingError:  # pragma: nocover
+            # Handle a particular tricky path that occurs when trying to makemigrations and migrate database first time.
+            LOGGER.warning('Unable to find active terms list because terms and conditions tables not intialized.')
+            return terms_list
 
-        terms_list = OrderedDict(sorted(terms_list.items(), key=lambda t: t[0]))
+        if as_dict:
+            terms_list = OrderedDict(sorted(terms_list.items(), key=lambda t: t[0]))
+        else:
+            terms_list = TermsAndConditions.objects.filter(pk__in=terms_ids).order_by('slug')
         return terms_list
 
     @staticmethod
@@ -110,6 +128,8 @@ class TermsAndConditions(models.Model):
             return True
         except UserTermsAndConditions.DoesNotExist:
             return False
+        except TypeError:  # pragma: nocover
+            return False
 
     @staticmethod
     def agreed_to_terms(user, terms=None):
@@ -119,4 +139,6 @@ class TermsAndConditions(models.Model):
             UserTermsAndConditions.objects.get(user=user, terms=terms)
             return True
         except UserTermsAndConditions.DoesNotExist:
+            return False
+        except TypeError:
             return False

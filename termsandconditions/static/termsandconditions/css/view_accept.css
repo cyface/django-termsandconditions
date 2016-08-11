@@ -1,0 +1,11 @@
+.toc-container {
+    border: 2px solid lightgray;
+    padding: 10px 20px;
+    max-height: 400px;
+    overflow: auto;
+    margin-bottom: 20px;
+}
+
+.toc-print-container {
+    margin: 0 50px;
+}

@@ -1,11 +1,23 @@
-{% extends 'base.html' %}
+{% extends terms_base_template %}
+
+{% load staticfiles %}
+
+{% block title %}View Terms and Conditions{% endblock %}
+{% block styles %}
+    {{ block.super }}
+    <link href="{% static 'termsandconditions/css/view_accept.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
     <section title="Terms and Conditions" data-role="content">
-        <h1>{{ terms.name|safe }}</h1>
+        {% for terms in terms_list %}
+            <h1>{{ terms.name|safe }} {{ terms.version_number|safe }}</h1>
 
-        <div>
-            {{ terms.text|safe }}
-        </div>
+            <div class="toc-container">
+                {{ terms.text|safe }}
+            </div>
+            <p><a href="{% url "tc_print_page" terms.slug|safe terms.version_number|safe %}"
+                      target="_blank">Print {{ terms.name|safe }}</a></p>
+        {% endfor %}
     </section>
 {% endblock %}
