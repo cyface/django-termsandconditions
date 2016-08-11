@@ -29,10 +29,10 @@ def show_terms_if_not_agreed(context, slug=DEFAULT_TERMS_SLUG, field=TERMS_HTTP_
     all_agreed = True
     not_agreed_terms = []
 
-    for terms_slug, terms in all_active_terms.iteritems():
-        if not TermsAndConditions.agreed_to_terms(request.user, terms):
+    for term in all_active_terms():
+        if not TermsAndConditions.agreed_to_terms(request.user, term):
             all_agreed = False
-            not_agreed_terms.append(terms)
+            not_agreed_terms.append(term)
 
     # stop here, if all terms have been agreed
     if all_agreed:
