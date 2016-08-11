@@ -95,7 +95,7 @@ class AcceptTermsView(CreateView, GetTermsViewMixin):
         return_url = request.POST.get('returnTo', '/')
         terms_ids = request.POST.getlist('terms')
 
-        if not terms_ids:
+        if not terms_ids:   # pragma: nocover
             return HttpResponseRedirect(return_url)
 
         if request.user.is_authenticated():
@@ -122,7 +122,7 @@ class AcceptTermsView(CreateView, GetTermsViewMixin):
                     ip_address=ip_address
                 )
                 new_user_terms.save()
-            except IntegrityError:
+            except IntegrityError:  # pragma: nocover
                 pass
 
         return HttpResponseRedirect(return_url)

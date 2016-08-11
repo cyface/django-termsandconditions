@@ -106,7 +106,7 @@ class TermsAndConditions(models.Model):
                     terms_ids.append(t.id)
         except TermsAndConditions.DoesNotExist:  # pragma: nocover
             terms_list.update({DEFAULT_TERMS_SLUG: TermsAndConditions.create_default_terms()})
-        except utils.ProgrammingError:
+        except utils.ProgrammingError:  # pragma: nocover
             # Handle a particular tricky path that occurs when trying to makemigrations and migrate database first time.
             LOGGER.warning('Unable to find active terms list because terms and conditions tables not intialized.')
             return terms_list
@@ -128,7 +128,7 @@ class TermsAndConditions(models.Model):
             return True
         except UserTermsAndConditions.DoesNotExist:
             return False
-        except TypeError:
+        except TypeError:  # pragma: nocover
             return False
 
     @staticmethod
