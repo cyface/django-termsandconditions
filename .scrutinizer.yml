@@ -200,7 +200,6 @@ checks:
         no_native_reassign: true
         no_negated_in_lhs: true
         no_nested_ternary: true
-        no_new: true
         no_loop_func: true
         no_mixed_spaces_and_tabs: true
         no_multi_str: true
