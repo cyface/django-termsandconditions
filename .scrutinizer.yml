@@ -1,7 +1,6 @@
 checks:
-    dependencies:
-        before:
-            - pip install -r termsandconditions_demo/requirements.txt
+    before:
+        - pip install -r termsandconditions_demo/requirements.txt
     python:
         code_rating: true
         duplicate_code: true
