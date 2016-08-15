@@ -268,4 +268,4 @@ build:
         before:
             - pip install -r termsandconditions_demo/requirements.txt
     environment:
-        python: '2.7.11'
+        python: '2.7.7'
