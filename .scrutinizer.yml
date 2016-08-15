@@ -1,6 +1,4 @@
 checks:
-    before:
-        - pip install -r termsandconditions_demo/requirements.txt
     python:
         code_rating: true
         duplicate_code: true
@@ -262,7 +260,7 @@ tools:
         config_file: 'devscripts/checkers/pylintrc'
 filter:
     excluded_paths:
-        - '*/test/*'
+        - '*tests*'
         - '*/vendor/*'
         - '*/migrations/*'
 build:
