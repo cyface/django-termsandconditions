@@ -4,7 +4,6 @@
 
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from django.shortcuts import render
 
 from .forms import UserTermsAndConditionsModelForm, EmailTermsForm
 from .models import TermsAndConditions, UserTermsAndConditions
