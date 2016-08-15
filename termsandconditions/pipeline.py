@@ -9,7 +9,6 @@ except ImportError:
 from .models import TermsAndConditions
 from django.http import HttpResponseRedirect, QueryDict
 from django.conf import settings
-from django.core.urlresolvers import reverse
 import logging
 
 ACCEPT_TERMS_PATH = getattr(settings, 'ACCEPT_TERMS_PATH', '/terms/accept/')
