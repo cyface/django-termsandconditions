@@ -7,7 +7,7 @@ from django.db import IntegrityError
 from django.shortcuts import render
 
 from .forms import UserTermsAndConditionsModelForm, EmailTermsForm
-from .models import TermsAndConditions, UserTermsAndConditions, DEFAULT_TERMS_SLUG
+from .models import TermsAndConditions, UserTermsAndConditions
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -22,6 +22,7 @@ DEFAULT_TERMS_BASE_TEMPLATE = 'base.html'
 
 
 class GetTermsViewMixin(object):
+    """Checks URL parameters for slug and/or version to pull the right TermsAndConditions object"""
     def get_terms(self, kwargs):
         """Checks URL parameters for slug and/or version to pull the right TermsAndConditions object"""
 
