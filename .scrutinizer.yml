@@ -254,7 +254,7 @@ checks:
         consistent_this: true
         consistent_return: true
         camelcase: true
-        block_scoped_var: true
+        block_scoped_var: false
 
 tools:
     pylint:
