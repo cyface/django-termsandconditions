@@ -302,6 +302,7 @@ class TermsAndConditionsTests(TestCase):
 
 
 class TermsAndConditionsTemplateTagsTestCase(TestCase):
+    """Tests Tags for T&C"""
     def setUp(self):
         """Setup for each test"""
         self.user1 = User.objects.create_user(
