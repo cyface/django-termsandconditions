@@ -1,0 +1,7 @@
+filter:
+    excluded_paths:
+        - "*/migrations/*"            # Exclude migrations
+tools:
+    pylint:
+        python_version: 2     # Possible values: 2, 3
+        config_file: 'devscripts/checkers/pylintrc'
