@@ -1,3 +1,5 @@
+before_commands:
+    - pip install -r termsandconditions_demo/requirements.txt
 checks:
     python:
         code_rating: true
