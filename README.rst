@@ -29,6 +29,7 @@ Contributors:
 
 - Tim White (tim@cyface.com)
 - Adibo (https://github.com/adibo)
+- Nathan Swain (https://github.com/swainn)
 
 .. contents:: Table of Contents
 
