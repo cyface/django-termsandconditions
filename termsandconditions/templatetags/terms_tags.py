@@ -1,6 +1,6 @@
 """Django Tags"""
 from django import template
-from ..models import TermsAndConditions, DEFAULT_TERMS_SLUG
+from ..models import TermsAndConditions
 from ..middleware import is_path_protected
 from django.conf import settings
 
@@ -16,7 +16,7 @@ TERMS_HTTP_PATH_FIELD = getattr(settings, 'TERMS_HTTP_PATH_FIELD', DEFAULT_HTTP_
 
 @register.inclusion_tag('termsandconditions/snippets/termsandconditions.html',
                         takes_context=True)
-def show_terms_if_not_agreed(context, slug=DEFAULT_TERMS_SLUG, field=TERMS_HTTP_PATH_FIELD):
+def show_terms_if_not_agreed(context, field=TERMS_HTTP_PATH_FIELD):
     """Displays a modal on a current page if a user has not yet agreed to the
     given terms. If terms are not specified, the default slug is used.
 
