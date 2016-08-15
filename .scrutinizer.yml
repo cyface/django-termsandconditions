@@ -266,6 +266,6 @@ filter:
 build:
     dependencies:
         before:
-            - sudo pip install -r termsandconditions_demo/requirements.txt
+            - pip install -r termsandconditions_demo/requirements.txt
     environment:
         python: '2.7.7'
