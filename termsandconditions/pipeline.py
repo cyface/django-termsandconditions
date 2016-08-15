@@ -2,7 +2,7 @@
 
 # pylint: disable=W0613
 
-from six.moves.urllib.parse import urlparse, urlunparse
+from future.moves.urllib.parse import urlparse, urlunparse
 from .models import TermsAndConditions
 from django.http import HttpResponseRedirect, QueryDict
 from django.conf import settings
