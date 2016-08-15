@@ -262,7 +262,6 @@ tools:
         config_file: 'devscripts/checkers/pylintrc'
 filter:
     excluded_paths:
-        - '*tests*'
         - '*/vendor/*'
         - '*/migrations/*'
 build:

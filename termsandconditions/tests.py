@@ -347,15 +347,6 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
         rendered = self.render_template(self.template_string_1)
         self.assertNotIn(terms.slug, rendered)
 
-    def test_show_terms_if_not_agreed_by_slug(self):
-        """Test if show_terms not agreed to by looking up slug"""
-        terms = TermsAndConditions.objects.create(
-            slug='specific-terms',
-            date_active=timezone.now()
-        )
-        rendered = self.render_template(self.template_string_2)
-        self.assertIn(terms.slug, rendered)
-
     def test_show_terms_if_not_agreed_on_protected_url_not_agreed(self):
         """Check terms on protected url if not agreed"""
         context = self._make_context('/test')
