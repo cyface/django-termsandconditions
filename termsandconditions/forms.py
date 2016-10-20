@@ -10,7 +10,7 @@ class UserTermsAndConditionsModelForm(forms.Form):
     """Form used when accepting Terms and Conditions - returnTo is used to catch where to end up."""
     returnTo = forms.CharField(required=False, initial="/", widget=forms.HiddenInput())
     terms = forms.ModelMultipleChoiceField(
-        TermsAndConditions.get_active_list(as_dict=False),
+        TermsAndConditions.objects.none(),
         widget=forms.MultipleHiddenInput,
     )
 
@@ -18,14 +18,21 @@ class UserTermsAndConditionsModelForm(forms.Form):
         if 'instance' in kwargs:
             kwargs.pop('instance')
 
+        terms_list = None
+
         if 'initial' in kwargs:
             initial = kwargs.get('initial')
 
             if 'terms' in initial:
-                self.terms = forms.ModelMultipleChoiceField(
-                    initial.get('terms'),
-                    widget=forms.MultipleHiddenInput,
-                )
+                terms_list = initial.get('terms')
+
+        if terms_list is None:
+            terms_list = TermsAndConditions.get_active_list(as_dict=False)
+
+        self.terms = forms.ModelMultipleChoiceField(
+            terms_list,
+            widget=forms.MultipleHiddenInput)
+
         super(UserTermsAndConditionsModelForm, self).__init__(*args, **kwargs)
 
 
