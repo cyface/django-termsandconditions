@@ -14,7 +14,7 @@ setup(
     packages=find_packages(exclude=('termsandconditions_demo', 'tests', 'devscripts')),
     include_package_data=True,
     zip_safe=False,
-    install_requires=['django>=1.8.3', ],
+    install_requires=['django>=1.8.3', 'future>=0.15.2'],
 
     classifiers=[
         'Development Status :: 5 - Production/Stable',
