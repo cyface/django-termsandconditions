@@ -2,19 +2,19 @@ git:
   depth: 1
 language: python
 python:
-- '2.7.11'
-- '3.5.1'
+- '2.7.12'
+- '3.6.1'
 cache: pip
 env:
     matrix:
         - DJANGO="Django<1.9,>=1.8"
-          - SETTINGS="settings_pre_1_10"
+          - SETTINGS="termsandconditions_demo.settings_pre_1_10"
         - DJANGO="Django<1.10,>=1.9"
-          - SETTINGS="settings"
+          - SETTINGS="termsandconditions_demo.settings"
         - DJANGO="Django<1.11,>=1.10"
-          - SETTINGS="settings"
+          - SETTINGS="termsandconditions_demo.settings"
         - DJANGO="Django<1.12,>=1.11"
-          - SETTINGS="settings"
+          - SETTINGS="termsandconditions_demo.settings"
 install:
     - pip install $DJANGO
     - pip install -r termsandconditions_demo/requirements_ci.txt
