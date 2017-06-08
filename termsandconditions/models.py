@@ -87,11 +87,7 @@ class TermsAndConditions(models.Model):
     def get_active_list(as_dict=True):
         """Finds the latest of all terms and conditions"""
         terms_ids = []
-
-        if as_dict:
-            terms_list = {}
-        else:
-            terms_list = []
+        terms_dict = {}
 
         try:
             all_terms_list = TermsAndConditions.objects.filter(
@@ -99,20 +95,17 @@ class TermsAndConditions(models.Model):
                 date_active__lte=timezone.now()).order_by('slug')
 
             for terms in all_terms_list:
-                if as_dict:
-                    terms_list.update({terms.slug: TermsAndConditions.get_active(slug=terms.slug)})
-                else:
-                    active_terms = TermsAndConditions.get_active(slug=terms.slug)
-                    terms_ids.append(active_terms.id)
+                terms_dict.update({terms.slug: TermsAndConditions.get_active(slug=terms.slug)})
+                terms_ids.append(TermsAndConditions.get_active(slug=terms.slug).id)
         except TermsAndConditions.DoesNotExist:  # pragma: nocover
-            terms_list.update({DEFAULT_TERMS_SLUG: TermsAndConditions.create_default_terms()})
+            terms_dict.update({DEFAULT_TERMS_SLUG: TermsAndConditions.create_default_terms()})
         except utils.ProgrammingError:  # pragma: nocover
             # Handle a particular tricky path that occurs when trying to makemigrations and migrate database first time.
             LOGGER.warning('Unable to find active terms list because terms and conditions tables not initialized.')
-            return terms_list
+            return terms_dict
 
         if as_dict:
-            terms_list = OrderedDict(sorted(terms_list.items(), key=lambda t: t[0]))
+            terms_list = OrderedDict(sorted(terms_dict.items(), key=lambda t: t[0]))
         else:
             terms_list = TermsAndConditions.objects.filter(pk__in=terms_ids).order_by('slug')
         return terms_list

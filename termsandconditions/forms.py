@@ -15,23 +15,17 @@ class UserTermsAndConditionsModelForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        if 'instance' in kwargs:
-            kwargs.pop('instance')
+        kwargs.pop('instance', None)
 
-        terms_list = None
-
-        if 'initial' in kwargs:
-            initial = kwargs.get('initial')
-
-            if 'terms' in initial:
-                terms_list = initial.get('terms')
+        terms_list = kwargs.get('initial', {}).get('terms', None)
 
         if terms_list is None:
             terms_list = TermsAndConditions.get_active_list(as_dict=False)
 
         self.terms = forms.ModelMultipleChoiceField(
             terms_list,
-            widget=forms.MultipleHiddenInput)
+            widget=forms.MultipleHiddenInput
+        )
 
         super(UserTermsAndConditionsModelForm, self).__init__(*args, **kwargs)
 

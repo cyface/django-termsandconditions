@@ -16,28 +16,19 @@ def show_terms_if_not_agreed(context, field=TERMS_HTTP_PATH_FIELD):
     """Displays a modal on a current page if a user has not yet agreed to the
     given terms. If terms are not specified, the default slug is used.
 
-    How it works? A small snippet is included into your template if a user
+    A small snippet is included into your template if a user
     who requested the view has not yet agreed the terms. The snippet takes
     care of displaying a respective modal.
     """
     request = context['request']
-    all_agreed = True
+    url = urlparse(request.META[field])
     not_agreed_terms = []
 
     for terms in TermsAndConditions.get_active_list(as_dict=False):
         if not TermsAndConditions.agreed_to_terms(request.user, terms):
-            all_agreed = False
             not_agreed_terms.append(terms)
 
-    # stop here, if all terms have been agreed
-    if all_agreed:
-        return {}
-
-    # handle excluded url's
-    url = urlparse(request.META[field])
-    protected = is_path_protected(url.path)
-
-    if (not all_agreed) and not_agreed_terms and protected:
+    if not_agreed_terms and is_path_protected(url.path):
         return {'not_agreed_terms': not_agreed_terms, 'returnTo': url.path}
-
-    return {}
+    else:
+        return {}

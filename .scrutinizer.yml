@@ -264,7 +264,6 @@ filter:
     excluded_paths:
         - '*/vendor/*'
         - '*/migrations/*'
-        - '*tests*'
 build:
     dependencies:
         before:
