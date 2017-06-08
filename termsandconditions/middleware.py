@@ -3,7 +3,12 @@ from .models import TermsAndConditions
 from django.conf import settings
 import logging
 from .pipeline import redirect_to_terms_accept
-from django.utils.deprecation import MiddlewareMixin
+import django
+
+if django.VERSION >= (1, 10, 0):
+    from django.utils.deprecation import MiddlewareMixin
+else:
+    MiddlewareMixin = object
 
 LOGGER = logging.getLogger(name='termsandconditions')
 
