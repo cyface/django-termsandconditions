@@ -10,7 +10,7 @@ env:
         - DJANGO="Django<1.9,>=1.8"
           - SETTINGS="termsandconditions_demo.settings_pre_1_10"
         - DJANGO="Django<1.10,>=1.9"
-          - SETTINGS="termsandconditions_demo.settings"
+          - SETTINGS="termsandconditions_demo.settings_pre_1_10"
         - DJANGO="Django<1.11,>=1.10"
           - SETTINGS="termsandconditions_demo.settings"
         - DJANGO="Django<1.12,>=1.11"
