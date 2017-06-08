@@ -84,9 +84,9 @@ class AcceptTermsView(CreateView, GetTermsViewMixin):
         LOGGER.debug('termsandconditions.views.AcceptTermsView.get_initial')
 
         terms = self.get_terms(self.kwargs)
-        returnTo = self.request.GET.get('returnTo', '/')
+        return_to = self.request.GET.get('returnTo', '/')
 
-        return {'terms': terms, 'returnTo': returnTo}
+        return {'terms': terms, 'returnTo': return_to}
 
     def post(self, request, *args, **kwargs):
         """
@@ -102,7 +102,7 @@ class AcceptTermsView(CreateView, GetTermsViewMixin):
             user = request.user
         else:
             # Get user out of saved pipeline from django-socialauth
-            if request.session.has_key('partial_pipeline'):
+            if 'partial_pipeline' in request.session:
                 user_pk = request.session['partial_pipeline']['kwargs']['user']['pk']
                 user = User.objects.get(id=user_pk)
             else:
@@ -150,9 +150,9 @@ class EmailTermsView(FormView, GetTermsViewMixin):
 
         terms = self.get_terms(self.kwargs)
 
-        returnTo = self.request.GET.get('returnTo', '/')
+        return_to = self.request.GET.get('returnTo', '/')
 
-        return {'terms': terms, 'returnTo': returnTo}
+        return {'terms': terms, 'returnTo': return_to}
 
     def form_valid(self, form):
         """Override of CreateView method, sends the email."""

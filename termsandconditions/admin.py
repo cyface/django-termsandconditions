@@ -14,7 +14,7 @@ class TermsAndConditionsAdmin(admin.ModelAdmin):
 
 class UserTermsAndConditionsAdmin(admin.ModelAdmin):
     """Sets up the custom User Terms and Conditions admin display"""
-    #fields = ('terms', 'user', 'date_accepted', 'ip_address',)
+    # fields = ('terms', 'user', 'date_accepted', 'ip_address',)
     readonly_fields = ('date_accepted',)
     list_display = ('terms', 'user', 'date_accepted', 'ip_address',)
     date_hierarchy = 'date_accepted'

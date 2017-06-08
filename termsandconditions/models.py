@@ -102,13 +102,13 @@ class TermsAndConditions(models.Model):
                 if as_dict:
                     terms_list.update({terms.slug: TermsAndConditions.get_active(slug=terms.slug)})
                 else:
-                    t = TermsAndConditions.get_active(slug=terms.slug)
-                    terms_ids.append(t.id)
+                    active_terms = TermsAndConditions.get_active(slug=terms.slug)
+                    terms_ids.append(active_terms.id)
         except TermsAndConditions.DoesNotExist:  # pragma: nocover
             terms_list.update({DEFAULT_TERMS_SLUG: TermsAndConditions.create_default_terms()})
         except utils.ProgrammingError:  # pragma: nocover
             # Handle a particular tricky path that occurs when trying to makemigrations and migrate database first time.
-            LOGGER.warning('Unable to find active terms list because terms and conditions tables not intialized.')
+            LOGGER.warning('Unable to find active terms list because terms and conditions tables not initialized.')
             return terms_list
 
         if as_dict:

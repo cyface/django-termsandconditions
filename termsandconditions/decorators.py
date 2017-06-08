@@ -18,10 +18,10 @@ def terms_required(view_func):
         if not request.user.is_authenticated() or TermsAndConditions.agreed_to_latest(request.user):
             return view_func(request, *args, **kwargs)
 
-        currentPath = request.path
+        current_path = request.path
         login_url_parts = list(urlparse(ACCEPT_TERMS_PATH))
         querystring = QueryDict(login_url_parts[4], mutable=True)
-        querystring['returnTo'] = currentPath
+        querystring['returnTo'] = current_path
         login_url_parts[4] = querystring.urlencode(safe='/')
         return HttpResponseRedirect(urlunparse(login_url_parts))
 

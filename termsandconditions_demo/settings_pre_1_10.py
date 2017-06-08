@@ -168,8 +168,8 @@ if VERSION < (1, 8):
     )
     TEMPLATE_LOADERS = TEMPLATE_LOADERS_LIST
 
-# For use Django 1.10+
-MIDDLEWARE = (
+# For use Pre Django 1.10
+MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
