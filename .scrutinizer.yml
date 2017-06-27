@@ -3,7 +3,7 @@ before_commands:
 checks:
     python:
         code_rating: true
-        duplicate_code: true
+        duplicate_code: false
         variables_used_before_assignment: true
         variables_unused_wildcard_import: true
         variables_unused_import: true
