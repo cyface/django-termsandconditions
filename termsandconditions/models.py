@@ -56,17 +56,6 @@ class TermsAndConditions(models.Model):
         return ('tc_view_specific_version_page', [self.slug, self.version_number])  # pylint: disable=E1101
 
     @staticmethod
-    def create_default_terms():
-        """Create a default TermsAndConditions Object"""
-        default_terms = TermsAndConditions.objects.create(
-            slug=DEFAULT_TERMS_SLUG,
-            name=DEFAULT_TERMS_SLUG,
-            date_active=timezone.now(),
-            version_number=1,
-            text=DEFAULT_TERMS_SLUG + " Text. CHANGE ME.")
-        return default_terms
-
-    @staticmethod
     def get_active(slug=DEFAULT_TERMS_SLUG):
         """Finds the latest of a particular terms and conditions"""
 
@@ -76,10 +65,8 @@ class TermsAndConditions(models.Model):
                 date_active__lte=timezone.now(),
                 slug=slug).latest('date_active')
         except TermsAndConditions.DoesNotExist:
-            if slug == DEFAULT_TERMS_SLUG:
-                active_terms = TermsAndConditions.create_default_terms()
-            else:  # pragma: nocover
-                raise Http404
+            LOGGER.error("Requested Terms and Conditions that Have Not Been Created.")
+            raise Http404
 
         return active_terms
 

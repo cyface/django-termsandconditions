@@ -169,34 +169,6 @@ class TermsAndConditionsTests(TestCase):
             user_terms = UserTermsAndConditions.objects.all()[0]
             self.assertFalse(user_terms.ip_address)
 
-    def test_auto_create(self):
-        """Validate that a terms are auto created if none exist"""
-        LOGGER.debug('Test auto create terms')
-
-        TermsAndConditions.objects.all().delete()
-
-        num_terms = TermsAndConditions.objects.count()
-        self.assertEquals(0, num_terms)
-
-        LOGGER.debug('Test user1 login for autocreate')
-        login_response = self.client.login(username='user1', password='user1password')
-        self.assertTrue(login_response)
-
-        LOGGER.debug('Test /termsrequired/ after login with no TermsAndConditions')
-        logged_in_response = self.client.get('/termsrequired/', follow=True)
-        self.assertRedirects(logged_in_response, 'http://testserver/terms/accept/?returnTo=/termsrequired/')
-
-        LOGGER.debug('Test TermsAndConditions Object Was Created')
-        num_terms = TermsAndConditions.objects.count()
-        self.assertEquals(1, num_terms)
-
-        terms = TermsAndConditions.objects.get()
-        self.assertEquals('site-terms-1.00', str(terms))
-
-        LOGGER.debug('Test Not Creating Non-Default TermsAndConditions')
-        non_default_response = self.client.get('/terms/accept/contrib-terms/', follow=True)
-        self.assertEquals(404, non_default_response.status_code)
-
     def test_terms_upgrade(self):
         """Validate a user is prompted to accept terms again when new version comes out"""
 
@@ -303,6 +275,7 @@ class TermsAndConditionsTests(TestCase):
 
 class TermsAndConditionsTemplateTagsTestCase(TestCase):
     """Tests Tags for T&C"""
+
     def setUp(self):
         """Setup for each test"""
         self.user1 = User.objects.create_user(
