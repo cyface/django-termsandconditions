@@ -28,3 +28,4 @@ settings_test_local.py
 style-*_.css
 *.virtualenv
 *.virtualenv3
+*.virtualenv36
