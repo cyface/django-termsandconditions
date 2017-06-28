@@ -5,7 +5,6 @@ from collections import OrderedDict
 
 from django.db import models, utils
 from django.conf import settings
-from django.http import Http404
 from django.utils import timezone
 import logging
 
