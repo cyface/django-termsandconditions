@@ -66,7 +66,7 @@ class TermsAndConditions(models.Model):
                 slug=slug).latest('date_active')
         except TermsAndConditions.DoesNotExist:
             LOGGER.error("Requested Terms and Conditions that Have Not Been Created.")
-            raise Http404
+            return None
 
         return active_terms
 
