@@ -5,7 +5,7 @@ setup(
     version="1.1.14",
     url='https://github.com/cyface/django-termsandconditions',
     license='BSD',
-    description="django-termsandconditions enables users to accept terms and conditions of a site.",
+    description="django-termsandconditions is a Django app that enables users to accept terms and conditions of a site.",
     long_description=open('README.rst').read(),
 
     author='Tim White',
