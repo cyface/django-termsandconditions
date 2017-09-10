@@ -169,6 +169,23 @@ Many of the templates extend the 'base.html' template by default. The TERMS_BASE
 
     TERMS_BASE_TEMPLATE = 'page.html'
 
+A bare minimum template that can be used is the following::
+
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>[My Title]</title>
+        {% block styles %}{% endblock %}
+        <link href='<path-to-my-css>' rel='stylesheet' type='text/css' />
+      </head>
+      <body>
+        <main>
+          <h2>{% block title %}{% endblock %}</h2>
+          {% block content %}{% endblock %}
+        </main>
+      </body>
+    </html>
+    
 Terms and Conditions Template Tag
 ---------------------------------
 
