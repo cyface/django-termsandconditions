@@ -1,6 +1,8 @@
 """Terms and Conditions Middleware"""
 from .models import TermsAndConditions
 from django.conf import settings
+from django.db.models import Max
+from django.utils import timezone
 import logging
 from .pipeline import redirect_to_terms_accept
 import django
@@ -31,8 +33,21 @@ class TermsAndConditionsRedirectMiddleware(MiddlewareMixin):
         current_path = request.META['PATH_INFO']
 
         if request.user.is_authenticated() and is_path_protected(current_path):
-            for term in TermsAndConditions.get_active_list():
-                if not TermsAndConditions.agreed_to_latest(request.user, term):
+            active_terms = (
+                TermsAndConditions.objects.prefetch_related('users')
+                .filter(
+                    date_active__isnull=False,
+                    date_active__lte=timezone.now(),
+                )
+                .values_list('slug')
+                .annotate(Max('date_active'))
+                .order_by()
+            )
+            user_agreed_terms = active_terms.filter(users=request.user)
+            if not set(active_terms) == set(user_agreed_terms):
+                pending_terms = set(active_terms) - set(user_agreed_terms)
+                for each in pending_terms:
+                    term = each[0]
                     return redirect_to_terms_accept(current_path, term)
         return None
 
