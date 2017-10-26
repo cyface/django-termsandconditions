@@ -3,7 +3,7 @@
 branch = True
 
 omit =
-    */.env/*
+    	*/.env/*
 	*/settings*
 	*/tests*
 	*/manage.py
@@ -12,6 +12,7 @@ omit =
 	*/docs/*
 	*/local_settings_template.py
 	*/wsgi.py
+	*/app.py
 	*/__init__.py
 
 [report]
