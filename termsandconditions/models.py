@@ -6,6 +6,7 @@ from collections import OrderedDict
 from django.db import models, utils
 from django.conf import settings
 from django.utils import timezone
+from django.core.cache import cache
 import logging
 
 LOGGER = logging.getLogger(name='termsandconditions')
@@ -26,6 +27,9 @@ class UserTermsAndConditions(models.Model):
         verbose_name = 'User Terms and Conditions'
         verbose_name_plural = 'User Terms and Conditions'
         unique_together = ('user', 'terms',)
+
+    def __str__(self):
+        return "{0}:{1}-{2:.2f}".format(self.user.username, self.terms.slug, self.terms.version_number)
 
 
 class TermsAndConditions(models.Model):
@@ -58,43 +62,59 @@ class TermsAndConditions(models.Model):
     def get_active(slug=DEFAULT_TERMS_SLUG):
         """Finds the latest of a particular terms and conditions"""
 
-        try:
-            active_terms = TermsAndConditions.objects.filter(
-                date_active__isnull=False,
-                date_active__lte=timezone.now(),
-                slug=slug).latest('date_active')
-        except TermsAndConditions.DoesNotExist:
-            LOGGER.error("Requested Terms and Conditions that Have Not Been Created.")
-            return None
+        active_terms = cache.get('tandc.active_terms_' + slug)
+        if not active_terms:
+            try:
+                active_terms = TermsAndConditions.objects.filter(
+                    date_active__isnull=False,
+                    date_active__lte=timezone.now(),
+                    slug=slug).latest('date_active')
+                cache.set('tandc.active_terms_' + slug, active_terms)
+            except TermsAndConditions.DoesNotExist:
+                LOGGER.error("Requested Terms and Conditions that Have Not Been Created.")
+                return None
 
         return active_terms
 
     @staticmethod
-    def get_active_list(as_dict=True):
-        """Finds the latest of all terms and conditions"""
-        terms_ids = []
-        terms_dict = {}
+    def get_active_terms_ids():
+        """Returns a list of the IDs of of all terms and conditions"""
 
-        try:
-            all_terms_list = TermsAndConditions.objects.filter(
-                date_active__isnull=False,
-                date_active__lte=timezone.now()).order_by('slug')
+        active_terms_ids = cache.get('tandc.active_terms_ids')
+        if not active_terms_ids:
+            active_terms_ids = []
 
-            for terms in all_terms_list:
-                terms_dict.update({terms.slug: TermsAndConditions.get_active(slug=terms.slug)})
-                terms_ids.append(TermsAndConditions.get_active(slug=terms.slug).id)
-        except TermsAndConditions.DoesNotExist:  # pragma: nocover
-            terms_dict.update({DEFAULT_TERMS_SLUG: TermsAndConditions.create_default_terms()})
-        except utils.ProgrammingError:  # pragma: nocover
-            # Handle a particular tricky path that occurs when trying to makemigrations and migrate database first time.
-            LOGGER.warning('Unable to find active terms list because terms and conditions tables not initialized.')
-            return terms_dict
+            try:
+                active_terms_set = TermsAndConditions.objects.raw('SELECT id, slug, max(date_active) FROM termsandconditions_termsandconditions WHERE date_active IS NOT NULL AND date_active < %s GROUP BY slug ORDER BY slug', [timezone.now()])
 
-        if as_dict:
-            terms_list = OrderedDict(sorted(terms_dict.items(), key=lambda t: t[0]))
-        else:
-            terms_list = TermsAndConditions.objects.filter(pk__in=terms_ids).order_by('slug')
-        return terms_list
+                for terms in active_terms_set:
+                    active_terms_ids.append(terms.id)
+
+                cache.set('tandc.active_terms_ids', active_terms_ids)
+
+            except utils.ProgrammingError:  # pragma: nocover
+                # Handle a particular tricky path that occurs when trying to makemigrations and migrate database first time.
+                LOGGER.warning('Unable to find active terms ids because terms and conditions tables not initialized.')
+                return active_terms_ids
+
+        return active_terms_ids
+
+    @staticmethod
+    def get_active_terms_list():
+        """Returns all the latest active terms and conditions"""
+
+        active_terms_list = cache.get('tandc.active_terms_list')
+        if not active_terms_list:
+            active_terms_list = None
+            try:
+                active_terms_list = TermsAndConditions.objects.filter(id__in=TermsAndConditions.get_active_terms_ids()).order_by('slug')
+                cache.set('tandc.active_terms_list', active_terms_list)
+            except utils.ProgrammingError:  # pragma: nocover
+                # Handle a particular tricky path that occurs when trying to makemigrations and migrate database first time.
+                LOGGER.warning('Unable to find active terms list because terms and conditions tables not initialized.')
+                return active_terms_list
+
+        return active_terms_list
 
     @staticmethod
     def agreed_to_latest(user, slug=DEFAULT_TERMS_SLUG):
@@ -109,6 +129,23 @@ class TermsAndConditions(models.Model):
             return False
         except TypeError:  # pragma: nocover
             return False
+
+    @staticmethod
+    def get_active_terms_not_agreed_to(user):
+        """Checks to see if a specified user has agreed to all the latest terms and conditions"""
+
+        not_agreed_terms = cache.get('tandc_not_agreed_terms')
+        if not not_agreed_terms:
+            try:
+                not_agreed_terms = TermsAndConditions.objects.filter(id__in=TermsAndConditions.get_active_terms_ids()).exclude(
+                    userterms__in=UserTermsAndConditions.objects.filter(user=user).values_list('id')
+                ).order_by('slug')
+
+                cache.set('tandc_not_agreed_terms', not_agreed_terms)
+            except (TypeError, UserTermsAndConditions.DoesNotExist):
+                return None
+
+        return not_agreed_terms
 
     @staticmethod
     def agreed_to_terms(user, terms=None):

@@ -272,6 +272,10 @@ LOGGING = {
             'level': 'WARNING',
             'propagate': True,
         },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
         'django.request': {
             'handlers': ['mail_admins', 'console'],
             'level': 'ERROR',

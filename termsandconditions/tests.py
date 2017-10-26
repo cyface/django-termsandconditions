@@ -62,10 +62,23 @@ class TermsAndConditionsTests(TestCase):
         response = user_accept_terms('backend', self.user1, '123')
         self.assertIsInstance(response, dict)
 
-    def test_get_active_list(self):
+    def test_get_active_terms_list(self):
         """Test get list of active T&Cs"""
-        active_list = TermsAndConditions.get_active_list()
+        active_list = TermsAndConditions.get_active_terms_list()
         self.assertEqual(2, len(active_list))
+        self.assertQuerysetEqual(active_list, [repr(self.terms3), repr(self.terms2)])
+
+    def test_get_active_terms_not_agreed_to(self):
+        """Test get T&Cs not agreed to"""
+        active_list = TermsAndConditions.get_active_terms_not_agreed_to(self.user1)
+        self.assertEqual(2, len(active_list))
+        self.assertQuerysetEqual(active_list, [repr(self.terms3), repr(self.terms2)])
+
+    def test_get_active_terms_ids(self):
+        """Test get ids of active T&Cs"""
+        active_list = TermsAndConditions.get_active_terms_ids()
+        self.assertEqual(2, len(active_list))
+        self.assertEqual(active_list, [3, 2])
 
     def test_terms_and_conditions_models(self):
         """Various tests of the TermsAndConditions Module"""
@@ -149,8 +162,8 @@ class TermsAndConditionsTests(TestCase):
 
         LOGGER.debug('Test /terms/accept/contrib-terms/3/ post')
         accept_version_post_response = self.client.post('/terms/accept/', {'terms': 3, 'returnTo': '/secure/'}, follow=True)
-        self.assertContains(accept_version_post_response, "Secure")
         self.assertTrue(TermsAndConditions.agreed_to_terms(user=self.user1, terms=self.terms3))
+        self.assertContains(accept_version_post_response, "Secure")
 
     def test_accept_store_ip_address(self):
         """Test with IP address storage setting true (default)"""
@@ -326,35 +339,10 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
         context = self._make_context('/test')
         result = show_terms_if_not_agreed(context)
         terms = TermsAndConditions.get_active(slug=DEFAULT_TERMS_SLUG)
-        self.assertEqual(result.get('not_agreed_terms'), [terms])
+        self.assertEqual(result.get('not_agreed_terms')[0], terms)
 
     def test_show_terms_if_not_agreed_on_unprotected_url_not_agreed(self):
         """Check terms on unprotected url if not agreed"""
         context = self._make_context('/')
         result = show_terms_if_not_agreed(context)
         self.assertDictEqual(result, {})
-
-
-class TermsAndConditionsModelsTestCase(TestCase):
-    """Tests Models for T&C"""
-
-    def setUp(self):
-        """Set Up T&C Model Tests"""
-        self.terms_1 = TermsAndConditions.objects.create(
-            name='terms_1',
-            date_active=timezone.now()
-        )
-        self.terms_2 = TermsAndConditions.objects.create(
-            name='terms_2',
-            date_active=None
-        )
-
-    def test_tnc_default_slug(self):
-        """test if default slug is used"""
-        self.assertEqual(self.terms_1.slug, DEFAULT_TERMS_SLUG)
-
-    def test_tnc_get_active(self):
-        """test if right terms are active"""
-        active = TermsAndConditions.get_active()
-        self.assertEqual(active.name, self.terms_1.name)
-        self.assertNotEqual(active.name, self.terms_2.name)

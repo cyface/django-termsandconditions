@@ -33,11 +33,8 @@ class GetTermsViewMixin(object):
         elif slug:
             terms = [TermsAndConditions.get_active(slug)]
         else:
-            # Return a list of not agreed to terms for the list view
-            terms = []
-            for active_term in TermsAndConditions.get_active_list(as_dict=False):
-                if not TermsAndConditions.agreed_to_terms(self.request.user, active_term):
-                    terms.append(active_term)
+            # Return a list of not agreed to terms for the current user for the list view
+            terms = TermsAndConditions.get_active_terms_not_agreed_to(self.request.user)
         return terms
 
 

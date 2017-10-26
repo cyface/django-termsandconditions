@@ -20,7 +20,7 @@ TERMS_EXCLUDE_URL_LIST = getattr(settings, 'TERMS_EXCLUDE_URL_LIST', {'/', '/ter
 class TermsAndConditionsRedirectMiddleware(MiddlewareMixin):
     """
     This middleware checks to see if the user is logged in, and if so,
-    if they have accepted the site terms.
+    if they have accepted all the active terms.
     """
 
     def process_request(self, request):
@@ -31,9 +31,8 @@ class TermsAndConditionsRedirectMiddleware(MiddlewareMixin):
         current_path = request.META['PATH_INFO']
 
         if request.user.is_authenticated() and is_path_protected(current_path):
-            for term in TermsAndConditions.get_active_list():
-                if not TermsAndConditions.agreed_to_latest(request.user, term):
-                    return redirect_to_terms_accept(current_path, term)
+            for term in TermsAndConditions.get_active_terms_not_agreed_to(request.user):
+                return redirect_to_terms_accept(current_path, term.slug)
         return None
 
 

@@ -22,11 +22,7 @@ def show_terms_if_not_agreed(context, field=TERMS_HTTP_PATH_FIELD):
     """
     request = context['request']
     url = urlparse(request.META[field])
-    not_agreed_terms = []
-
-    for terms in TermsAndConditions.get_active_list(as_dict=False):
-        if not TermsAndConditions.agreed_to_terms(request.user, terms):
-            not_agreed_terms.append(terms)
+    not_agreed_terms = TermsAndConditions.get_active_terms_not_agreed_to(request.user)
 
     if not_agreed_terms and is_path_protected(url.path):
         return {'not_agreed_terms': not_agreed_terms, 'returnTo': url.path}
