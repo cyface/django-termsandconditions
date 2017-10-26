@@ -50,7 +50,7 @@ class TermsAndConditions(models.Model):
         verbose_name = 'Terms and Conditions'
         verbose_name_plural = 'Terms and Conditions'
 
-    def __str__(self):
+    def __str__(self):   # pragma: nocover
         return "{0}-{1:.2f}".format(self.slug, self.version_number)
 
     @models.permalink
@@ -69,7 +69,7 @@ class TermsAndConditions(models.Model):
                     date_active__lte=timezone.now(),
                     slug=slug).latest('date_active')
                 cache.set('tandc.active_terms_' + slug, active_terms)
-            except TermsAndConditions.DoesNotExist:
+            except TermsAndConditions.DoesNotExist:   # pragma: nocover
                 LOGGER.error("Requested Terms and Conditions that Have Not Been Created.")
                 return None
 
@@ -155,5 +155,5 @@ class TermsAndConditions(models.Model):
             return True
         except UserTermsAndConditions.DoesNotExist:
             return False
-        except TypeError:
+        except TypeError:   # pragma: nocover
             return False
