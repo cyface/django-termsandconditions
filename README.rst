@@ -119,10 +119,6 @@ Terms and Conditions
 You will need to set up a Terms and Conditions entry in the admin (or via direct DB load) for users to accept if
 you want to use the T&C module.
 
-The default Terms and Conditions entry has a slug of ``'site-terms'``.
-
-If you don't create one, the first time a user is forced to accept the terms, it will create a default entry for you.
-
 Terms and Conditions Versioning
 -------------------------------
 Note that the versions and dates of T&Cs are important. You can create a new version of a T&C with a future date,
