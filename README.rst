@@ -10,7 +10,7 @@ Django Terms and Conditions
     :target: https://travis-ci.org/cyface/django-termsandconditions
     :alt: Travis Build Status
 
-.. image:: https://coveralls.io/repos/cyface/django-termsandconditions/badge.svg?branch=master&service=github
+.. image:: https://coveralls.io/repos/github/cyface/django-termsandconditions/badge.svg?branch=master
     :target: https://coveralls.io/github/cyface/django-termsandconditions?branch=master
     :alt: Coveralls Code Coverage
 
