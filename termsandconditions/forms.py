@@ -19,8 +19,8 @@ class UserTermsAndConditionsModelForm(forms.Form):
 
         terms_list = kwargs.get('initial', {}).get('terms', None)
 
-        if terms_list is None:
-            terms_list = TermsAndConditions.get_active_list(as_dict=False)
+        if terms_list is None:   # pragma: nocover
+            terms_list = TermsAndConditions.get_active_terms_list()
 
         self.terms = forms.ModelMultipleChoiceField(
             terms_list,
