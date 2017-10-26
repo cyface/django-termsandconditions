@@ -27,7 +27,7 @@ class UserTermsAndConditions(models.Model):
         verbose_name_plural = 'User Terms and Conditions'
         unique_together = ('user', 'terms',)
 
-    def __str__(self):
+    def __str__(self):  # pragma: nocover
         return "{0}:{1}-{2:.2f}".format(self.user.username, self.terms.slug, self.terms.version_number)
 
 
@@ -50,7 +50,7 @@ class TermsAndConditions(models.Model):
         verbose_name = 'Terms and Conditions'
         verbose_name_plural = 'Terms and Conditions'
 
-    def __str__(self):   # pragma: nocover
+    def __str__(self):  # pragma: nocover
         return "{0}-{1:.2f}".format(self.slug, self.version_number)
 
     @models.permalink
