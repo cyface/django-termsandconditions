@@ -8,7 +8,6 @@ from django.conf import settings
 from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 from django.template import Context, Template
-from django.utils import timezone
 from .models import TermsAndConditions, UserTermsAndConditions, DEFAULT_TERMS_SLUG
 from .pipeline import user_accept_terms
 from .templatetags.terms_tags import show_terms_if_not_agreed

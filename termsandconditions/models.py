@@ -1,7 +1,6 @@
 """Django Models for TermsAndConditions App"""
 
 # pylint: disable=C1001,E0202,W0613
-from collections import OrderedDict
 
 from django.db import models, utils
 from django.conf import settings
