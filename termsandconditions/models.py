@@ -11,6 +11,7 @@ import logging
 LOGGER = logging.getLogger(name='termsandconditions')
 
 DEFAULT_TERMS_SLUG = getattr(settings, 'DEFAULT_TERMS_SLUG', 'site-terms')
+TERMS_CACHE_SECONDS = getattr(settings, 'TERMS_CACHE_SECONDS', 30)
 
 
 class UserTermsAndConditions(models.Model):
@@ -62,13 +63,13 @@ class TermsAndConditions(models.Model):
         """Finds the latest of a particular terms and conditions"""
 
         active_terms = cache.get('tandc.active_terms_' + slug)
-        if not active_terms:
+        if active_terms is None:
             try:
                 active_terms = TermsAndConditions.objects.filter(
                     date_active__isnull=False,
                     date_active__lte=timezone.now(),
                     slug=slug).latest('date_active')
-                cache.set('tandc.active_terms_' + slug, active_terms)
+                cache.set('tandc.active_terms_' + slug, active_terms, TERMS_CACHE_SECONDS)
             except TermsAndConditions.DoesNotExist:   # pragma: nocover
                 LOGGER.error("Requested Terms and Conditions that Have Not Been Created.")
                 return None
@@ -80,7 +81,7 @@ class TermsAndConditions(models.Model):
         """Returns a list of the IDs of of all terms and conditions"""
 
         active_terms_ids = cache.get('tandc.active_terms_ids')
-        if not active_terms_ids:
+        if active_terms_ids is None:
             active_terms_ids = []
 
             try:
@@ -89,7 +90,7 @@ class TermsAndConditions(models.Model):
                 for terms in active_terms_set:
                     active_terms_ids.append(terms.id)
 
-                cache.set('tandc.active_terms_ids', active_terms_ids)
+                cache.set('tandc.active_terms_ids', active_terms_ids, TERMS_CACHE_SECONDS)
 
             except utils.ProgrammingError:  # pragma: nocover
                 # Handle a particular tricky path that occurs when trying to makemigrations and migrate database first time.
@@ -103,11 +104,10 @@ class TermsAndConditions(models.Model):
         """Returns all the latest active terms and conditions"""
 
         active_terms_list = cache.get('tandc.active_terms_list')
-        if not active_terms_list:
-            active_terms_list = None
+        if active_terms_list is None:
             try:
                 active_terms_list = TermsAndConditions.objects.filter(id__in=TermsAndConditions.get_active_terms_ids()).order_by('slug')
-                cache.set('tandc.active_terms_list', active_terms_list)
+                cache.set('tandc.active_terms_list', active_terms_list, TERMS_CACHE_SECONDS)
             except utils.ProgrammingError:  # pragma: nocover
                 # Handle a particular tricky path that occurs when trying to makemigrations and migrate database first time.
                 LOGGER.warning('Unable to find active terms list because terms and conditions tables not initialized.')
@@ -116,44 +116,19 @@ class TermsAndConditions(models.Model):
         return active_terms_list
 
     @staticmethod
-    def agreed_to_latest(user, slug=DEFAULT_TERMS_SLUG):
-        """Checks to see if a specified user has agreed to the latest of a particular terms and conditions"""
-
-        try:
-            UserTermsAndConditions.objects.get(user=user, terms=TermsAndConditions.get_active(slug))
-            return True
-        except UserTermsAndConditions.MultipleObjectsReturned:  # pragma: nocover
-            return True
-        except UserTermsAndConditions.DoesNotExist:
-            return False
-        except TypeError:  # pragma: nocover
-            return False
-
-    @staticmethod
     def get_active_terms_not_agreed_to(user):
         """Checks to see if a specified user has agreed to all the latest terms and conditions"""
 
         not_agreed_terms = cache.get('tandc_not_agreed_terms')
-        if not not_agreed_terms:
+        if not_agreed_terms is None:
             try:
-                not_agreed_terms = TermsAndConditions.objects.filter(id__in=TermsAndConditions.get_active_terms_ids()).exclude(
-                    userterms__in=UserTermsAndConditions.objects.filter(user=user).values_list('id')
+                LOGGER.debug("Not Agreed Terms")
+                not_agreed_terms = TermsAndConditions.get_active_terms_list().exclude(
+                    userterms__in=UserTermsAndConditions.objects.filter(user=user)
                 ).order_by('slug')
 
-                cache.set('tandc_not_agreed_terms', not_agreed_terms)
+                cache.set('tandc_not_agreed_terms', not_agreed_terms, TERMS_CACHE_SECONDS)
             except (TypeError, UserTermsAndConditions.DoesNotExist):
                 return None
 
         return not_agreed_terms
-
-    @staticmethod
-    def agreed_to_terms(user, terms=None):
-        """Checks to see if a specified user has agreed to a specific terms and conditions"""
-
-        try:
-            UserTermsAndConditions.objects.get(user=user, terms=terms)
-            return True
-        except UserTermsAndConditions.DoesNotExist:
-            return False
-        except TypeError:   # pragma: nocover
-            return False

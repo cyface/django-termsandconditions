@@ -193,7 +193,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'django_jenkins',
-    'termsandconditions'
+    'termsandconditions',
 )
 
 # Custom Variables Below Here #######
@@ -203,6 +203,7 @@ DEFAULT_TERMS_SLUG = 'site-terms'
 ACCEPT_TERMS_PATH = '/terms/accept/'
 TERMS_EXCLUDE_URL_PREFIX_LIST = {'/admin', '/terms'}
 TERMS_EXCLUDE_URL_LIST = {'/', '/termsrequired/', '/logout/', '/securetoo/'}
+TERMS_CACHE_SECONDS = 30
 
 #  DEBUG TOOLBAR
 # if DEBUG:

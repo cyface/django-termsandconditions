@@ -15,9 +15,11 @@ def terms_required(view_func):
     @wraps(view_func, assigned=available_attrs(view_func))
     def _wrapped_view(request, *args, **kwargs):
         """Method to wrap the view passed in"""
-        if not request.user.is_authenticated() or TermsAndConditions.agreed_to_latest(request.user):
+        # If user has not logged in, or if they have logged in and already agreed to the terms, let the view through
+        if not request.user.is_authenticated() or not TermsAndConditions.get_active_terms_not_agreed_to(request.user):
             return view_func(request, *args, **kwargs)
 
+        # Otherwise, redirect to terms accept
         current_path = request.path
         login_url_parts = list(urlparse(ACCEPT_TERMS_PATH))
         querystring = QueryDict(login_url_parts[4], mutable=True)

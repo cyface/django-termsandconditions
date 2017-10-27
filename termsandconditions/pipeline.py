@@ -19,7 +19,7 @@ def user_accept_terms(backend, user, uid, social_user=None, *args, **kwargs):
 
     LOGGER.debug('user_accept_terms')
 
-    if not TermsAndConditions.agreed_to_latest(user):
+    if TermsAndConditions.get_active_terms_not_agreed_to(user):
         return redirect_to_terms_accept('/')
     else:
         return {'social_user': social_user, 'user': user}

@@ -146,6 +146,16 @@ By default, some pages are excluded from the middleware, you can configure exclu
 TERMS_EXCLUDE_URL_PREFIX_LIST is a list of 'starts with' strings to exclude, while TERMS_EXCLUDE_URL_LIST is a list of
 explicit full paths to exclude.
 
+Terms and Conditions Cache
+--------------------------
+To speed performance, especially for the middleware, the terms and their acceptance are cached.
+
+You can control how long they are cached (or if they are cached at all) with this setting::
+
+    TERMS_CACHE_SECONDS = 30
+
+A numeric value is the number of seconds that the terms and their acceptance should be cached (default 30).  If set to 0, values will never be cached.
+
 Terms and Conditions View Decorator
 -----------------------------------
 You can protect only specific views with T&Cs using the @terms_required() decorator at the top of a function like this::

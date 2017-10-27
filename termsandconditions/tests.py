@@ -46,18 +46,15 @@ class TermsAndConditionsTests(TestCase):
         TermsAndConditions.objects.all().delete()
         UserTermsAndConditions.objects.all().delete()
 
-    def test_agreed_to(self):
-        """Test the agreed_to_terms static method"""
-        LOGGER.debug("Test that user1 has not agreed to terms1.")
-        self.assertFalse(TermsAndConditions.agreed_to_terms(self.user1, self.terms1))
-
     def test_social_redirect(self):
         """Test the agreed_to_terms redirect from social pipeline"""
         LOGGER.debug("Test the social pipeline")
         response = user_accept_terms('backend', self.user1, '123')
         self.assertIsInstance(response, HttpResponseRedirect)
 
+        # Accept the terms and try again
         UserTermsAndConditions.objects.create(user=self.user1, terms=self.terms2)
+        UserTermsAndConditions.objects.create(user=self.user1, terms=self.terms3)
         response = user_accept_terms('backend', self.user1, '123')
         self.assertIsInstance(response, dict)
 
@@ -95,10 +92,6 @@ class TermsAndConditionsTests(TestCase):
         self.assertEquals(2.0, TermsAndConditions.get_active(slug='site-terms').version_number)
         self.assertEquals(1.5, TermsAndConditions.get_active(slug='contrib-terms').version_number)
 
-        # Testing the agreed_to_latest static method of TermsAndConditions
-        self.assertEquals(False, TermsAndConditions.agreed_to_latest(user=self.user1, slug='site-terms'))
-        self.assertEquals(True, TermsAndConditions.agreed_to_latest(user=self.user2, slug='contrib-terms'))
-
         # Testing the unicode method of TermsAndConditions
         self.assertEquals('site-terms-2.00', str(TermsAndConditions.get_active(slug='site-terms')))
         self.assertEquals('contrib-terms-1.50', str(TermsAndConditions.get_active(slug='contrib-terms')))
@@ -133,10 +126,10 @@ class TermsAndConditionsTests(TestCase):
 
         LOGGER.debug('Test no redirect for /termsrequired/ after accept')
         accepted_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/termsrequired/'}, follow=True)
-        self.assertContains(accepted_response, "Terms and Conditions Acceptance Required")
+        self.assertContains(accepted_response, "Please Accept")
         LOGGER.debug('Test response after termsrequired accept')
         terms_required_response = self.client.get('/termsrequired/', follow=True)
-        self.assertContains(terms_required_response, "Terms and Conditions Acceptance Required")
+        self.assertContains(terms_required_response, "Please Accept")
 
     def test_accept(self):
         """Validate that accepting terms works"""
@@ -153,15 +146,12 @@ class TermsAndConditionsTests(TestCase):
         chained_terms_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/secure/'}, follow=True)
         self.assertContains(chained_terms_response, "Contributor")
 
-        self.assertEquals(True, TermsAndConditions.agreed_to_latest(user=self.user1, slug='site-terms'))
-
         LOGGER.debug('Test /terms/accept/contrib-terms/1.5/ post')
         accept_version_response = self.client.get('/terms/accept/contrib-terms/1.5/', follow=True)
         self.assertContains(accept_version_response, "Contributor Terms and Conditions 1.5")
 
         LOGGER.debug('Test /terms/accept/contrib-terms/3/ post')
         accept_version_post_response = self.client.post('/terms/accept/', {'terms': 3, 'returnTo': '/secure/'}, follow=True)
-        self.assertTrue(TermsAndConditions.agreed_to_terms(user=self.user1, terms=self.terms3))
         self.assertContains(accept_version_post_response, "Secure")
 
     def test_accept_store_ip_address(self):
