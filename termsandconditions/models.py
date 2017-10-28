@@ -84,18 +84,12 @@ class TermsAndConditions(models.Model):
         if active_terms_ids is None:
             active_terms_ids = []
 
-            try:
-                active_terms_set = TermsAndConditions.objects.raw('SELECT id, slug, max(date_active) FROM termsandconditions_termsandconditions WHERE date_active IS NOT NULL AND date_active < %s GROUP BY slug ORDER BY slug', [timezone.now()])
+            active_terms_set = TermsAndConditions.objects.raw('SELECT id, slug, max(date_active) FROM termsandconditions_termsandconditions WHERE date_active IS NOT NULL AND date_active < %s GROUP BY slug ORDER BY slug', [timezone.now()])
 
-                for terms in active_terms_set:
-                    active_terms_ids.append(terms.id)
+            for terms in active_terms_set:
+                active_terms_ids.append(terms.id)
 
-                cache.set('tandc.active_terms_ids', active_terms_ids, TERMS_CACHE_SECONDS)
-
-            except utils.ProgrammingError:  # pragma: nocover
-                # Handle a particular tricky path that occurs when trying to makemigrations and migrate database first time.
-                LOGGER.warning('Unable to find active terms ids because terms and conditions tables not initialized.')
-                return active_terms_ids
+            cache.set('tandc.active_terms_ids', active_terms_ids, TERMS_CACHE_SECONDS)
 
         return active_terms_ids
 
@@ -105,13 +99,8 @@ class TermsAndConditions(models.Model):
 
         active_terms_list = cache.get('tandc.active_terms_list')
         if active_terms_list is None:
-            try:
-                active_terms_list = TermsAndConditions.objects.filter(id__in=TermsAndConditions.get_active_terms_ids()).order_by('slug')
-                cache.set('tandc.active_terms_list', active_terms_list, TERMS_CACHE_SECONDS)
-            except utils.ProgrammingError:  # pragma: nocover
-                # Handle a particular tricky path that occurs when trying to makemigrations and migrate database first time.
-                LOGGER.warning('Unable to find active terms list because terms and conditions tables not initialized.')
-                return active_terms_list
+            active_terms_list = TermsAndConditions.objects.filter(id__in=TermsAndConditions.get_active_terms_ids()).order_by('slug')
+            cache.set('tandc.active_terms_list', active_terms_list, TERMS_CACHE_SECONDS)
 
         return active_terms_list
 

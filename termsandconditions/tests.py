@@ -13,6 +13,7 @@ from .pipeline import user_accept_terms
 from .templatetags.terms_tags import show_terms_if_not_agreed
 import logging
 from importlib import import_module
+from django.core.cache import cache
 
 LOGGER = logging.getLogger(name='termsandconditions')
 
@@ -192,7 +193,6 @@ class TermsAndConditionsTests(TestCase):
         self.terms5 = TermsAndConditions.objects.create(slug="site-terms", name="Site Terms",
                                                         text="Terms and Conditions2", version_number=2.5,
                                                         date_active="2012-02-05")
-
         LOGGER.debug('Test user1 is redirected when changing pages')
         post_upgrade_response = self.client.get('/secure/', follow=True)
         self.assertRedirects(post_upgrade_response, 'http://testserver/terms/accept/site-terms?returnTo=/secure/')
@@ -293,6 +293,7 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
         self.terms1 = TermsAndConditions.objects.create(slug="site-terms", name="Site Terms",
                                                         text="Site Terms and Conditions 1", version_number=1.0,
                                                         date_active="2012-01-01")
+        cache.clear()
 
     def _make_context(self, url):
         """Build Up Context - Used in many tests"""
@@ -312,6 +313,7 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
     def test_show_terms_if_not_agreed(self):
         """test if show_terms_if_not_agreed template tag renders html code"""
         rendered = self.render_template(self.template_string_1)
+        LOGGER.debug(rendered)
         terms = TermsAndConditions.get_active()
         self.assertIn(terms.slug, rendered)
 
