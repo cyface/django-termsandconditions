@@ -26,7 +26,8 @@ ALLOWED_HOSTS = ('localhost', '127.0.0.1')
 # Cache Settings
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        #'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
 CACHE_MIDDLEWARE_SECONDS = 30
