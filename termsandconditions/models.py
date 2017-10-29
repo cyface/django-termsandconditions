@@ -1,6 +1,7 @@
 """Django Models for TermsAndConditions App"""
 
 # pylint: disable=C1001,E0202,W0613
+from collections import OrderedDict
 
 from django.db import models
 from django.conf import settings
@@ -88,6 +89,8 @@ class TermsAndConditions(models.Model):
             active_terms_set = TermsAndConditions.objects.filter(date_active__isnull=False, date_active__lte=timezone.now()).order_by('date_active')
             for active_terms in active_terms_set:
                 active_terms_dict[active_terms.slug] = active_terms.id
+
+            active_terms_dict = OrderedDict(sorted(active_terms_dict.items(), key=lambda t: t[0]))
 
             for terms in active_terms_dict:
                 active_terms_ids.append(active_terms_dict[terms])
