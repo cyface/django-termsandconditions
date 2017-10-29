@@ -2,8 +2,8 @@ git:
   depth: 1
 language: python
 python:
-- '2.7.13'
-- '3.6.1'
+- '2.7.14'
+- '3.6.3'
 cache: pip
 env:
     matrix:
