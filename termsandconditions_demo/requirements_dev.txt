@@ -3,4 +3,3 @@ coverage
 coveralls
 pylint
 sphinx
-django-debug-toolbar

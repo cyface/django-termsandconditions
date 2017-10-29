@@ -2,7 +2,7 @@
 
 # pylint: disable=C1001,E0202,W0613
 
-from django.db import models, utils
+from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.core.cache import cache
@@ -82,12 +82,15 @@ class TermsAndConditions(models.Model):
 
         active_terms_ids = cache.get('tandc.active_terms_ids')
         if active_terms_ids is None:
+            active_terms_dict = {}
             active_terms_ids = []
 
-            active_terms_set = TermsAndConditions.objects.raw('SELECT id, slug, max(date_active) FROM termsandconditions_termsandconditions WHERE date_active IS NOT NULL AND date_active < %s GROUP BY slug ORDER BY slug', [timezone.now()])
+            active_terms_set = TermsAndConditions.objects.filter(date_active__isnull=False, date_active__lte=timezone.now()).order_by('date_active')
+            for active_terms in active_terms_set:
+                active_terms_dict[active_terms.slug] = active_terms.id
 
-            for terms in active_terms_set:
-                active_terms_ids.append(terms.id)
+            for terms in active_terms_dict:
+                active_terms_ids.append(active_terms_dict[terms])
 
             cache.set('tandc.active_terms_ids', active_terms_ids, TERMS_CACHE_SECONDS)
 
