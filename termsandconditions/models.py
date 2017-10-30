@@ -30,7 +30,7 @@ class UserTermsAndConditions(models.Model):
         unique_together = ('user', 'terms',)
 
     def __str__(self):  # pragma: nocover
-        return "{0}:{1}-{2:.2f}".format(self.user.username, self.terms.slug, self.terms.version_number)
+        return "{0}:{1}-{2:.2f}".format(self.user.get_username(), self.terms.slug, self.terms.version_number)
 
 
 class TermsAndConditions(models.Model):
@@ -114,7 +114,7 @@ class TermsAndConditions(models.Model):
     def get_active_terms_not_agreed_to(user):
         """Checks to see if a specified user has agreed to all the latest terms and conditions"""
 
-        not_agreed_terms = cache.get('tandc.not_agreed_terms_' + user.username)
+        not_agreed_terms = cache.get('tandc.not_agreed_terms_' + user.get_username())
         if not_agreed_terms is None:
             try:
                 LOGGER.debug("Not Agreed Terms")
@@ -122,7 +122,7 @@ class TermsAndConditions(models.Model):
                     userterms__in=UserTermsAndConditions.objects.filter(user=user)
                 ).order_by('slug')
 
-                cache.set('tandc.not_agreed_terms_' + user.username, not_agreed_terms, TERMS_CACHE_SECONDS)
+                cache.set('tandc.not_agreed_terms_' + user.get_username(), not_agreed_terms, TERMS_CACHE_SECONDS)
             except (TypeError, UserTermsAndConditions.DoesNotExist):
                 return None
 

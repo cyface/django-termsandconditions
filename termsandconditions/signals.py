@@ -16,7 +16,7 @@ def user_terms_updated(sender, **kwargs):
     """Called when user terms and conditions is changed - to force cache clearing"""
     LOGGER.debug("User T&C Updated Signal Handler")
     if kwargs.get('instance').user:
-        cache.delete('tandc.not_agreed_terms_' + kwargs.get('instance').user.username)
+        cache.delete('tandc.not_agreed_terms_' + kwargs.get('instance').user.get_username())
 
 
 @receiver([post_delete, post_save], sender=TermsAndConditions)
@@ -27,5 +27,5 @@ def terms_updated(sender, **kwargs):
     cache.delete('tandc.active_terms_list')
     if kwargs.get('instance').slug:
         cache.delete('tandc.active_terms_' + kwargs.get('instance').slug)
-    for username in UserTermsAndConditions.objects.values_list('user__username'):
-        cache.delete('tandc.not_agreed_terms_' + username[0])
+    for utandc in UserTermsAndConditions.objects.all():
+        cache.delete('tandc.not_agreed_terms_' + utandc.user.get_username())

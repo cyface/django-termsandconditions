@@ -87,7 +87,7 @@ class TermsAndConditionsTests(TestCase):
         self.assertEquals(1.0, self.user1.userterms.get().terms.version_number)
         self.assertEquals(1.5, self.user2.userterms.get().terms.version_number)
 
-        self.assertEquals('user1', self.terms1.users.all()[0].username)
+        self.assertEquals('user1', self.terms1.users.all()[0].get_username())
 
         # Testing the get_active static method of TermsAndConditions
         self.assertEquals(2.0, TermsAndConditions.get_active(slug='site-terms').version_number)
