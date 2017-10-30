@@ -23,7 +23,7 @@ Django Terms and Conditions
     :alt: Documentation Status
 
 Django Terms and Conditions gives you an configurable way to send users to a T&C acceptance page before they
-can access the site if you wish.
+can access the site.
 
 Contributors:
 
