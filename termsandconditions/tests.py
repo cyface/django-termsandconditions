@@ -128,6 +128,7 @@ class TermsAndConditionsTests(TestCase):
         LOGGER.debug('Test no redirect for /termsrequired/ after accept')
         accepted_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/termsrequired/'}, follow=True)
         self.assertContains(accepted_response, "Please Accept")
+
         LOGGER.debug('Test response after termsrequired accept')
         terms_required_response = self.client.get('/termsrequired/', follow=True)
         self.assertContains(terms_required_response, "Please Accept")
@@ -193,6 +194,7 @@ class TermsAndConditionsTests(TestCase):
         self.terms5 = TermsAndConditions.objects.create(id=5, slug="site-terms", name="Site Terms",
                                                         text="Terms and Conditions2", version_number=2.5,
                                                         date_active="2012-02-05")
+
         LOGGER.debug('Test user1 is redirected when changing pages')
         post_upgrade_response = self.client.get('/secure/', follow=True)
         self.assertRedirects(post_upgrade_response, 'http://testserver/terms/accept/site-terms?returnTo=/secure/')
@@ -236,7 +238,7 @@ class TermsAndConditionsTests(TestCase):
         no_user_response = self.client.post('/terms/accept/', {'terms': 2}, follow=True)
         self.assertContains(no_user_response, "Home")
 
-        user = {'pk': 1}
+        user = {'pk': self.user1.id}
         kwa = {'user': user}
         partial_pipeline = {'kwargs': kwa}
 
@@ -312,14 +314,14 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
 
     def test_show_terms_if_not_agreed(self):
         """test if show_terms_if_not_agreed template tag renders html code"""
+        LOGGER.debug('Test template tag not showing terms if not agreed to')
         rendered = self.render_template(self.template_string_1)
-        LOGGER.debug(rendered)
         terms = TermsAndConditions.get_active()
         self.assertIn(terms.slug, rendered)
 
     def test_not_show_terms_if_agreed(self):
-        """test if show_terms_if_not_agreed template tag does not load if user
-        agreed terms"""
+        """test if show_terms_if_not_agreed template tag does not load if user agreed terms"""
+        LOGGER.debug('Test template tag not showing terms once agreed to')
         terms = TermsAndConditions.get_active()
         UserTermsAndConditions.objects.create(terms=terms, user=self.user1)
         rendered = self.render_template(self.template_string_1)
