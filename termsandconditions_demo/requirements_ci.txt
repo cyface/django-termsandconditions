@@ -1,6 +1,7 @@
-django-jenkins==0.110.0
+django-jenkins
 coverage
 coveralls
-future==0.16.0
+future
 pylint
+psycopg2
 sphinx
