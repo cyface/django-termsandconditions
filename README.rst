@@ -79,7 +79,7 @@ all the needed dependencies::
 
     $ pip install -r requirements.txt
 
-The ``settings_main.py``, and ``settings_local_template.py`` files have a working configuration you can crib from.
+The ``settings_main.py``, file has a working configuration you can crib from. Look for the
 
 The templates in the ``termsandconditions/templates``, and ``termsandconditions_demo/templates`` directories
 give you a good idea of the kinds of things you will need to do if you want to provide a custom interface.
