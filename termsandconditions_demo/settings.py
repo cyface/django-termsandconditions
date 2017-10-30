@@ -61,22 +61,26 @@ STATICFILES_DIRS = [os.path.join(PROJECT_ROOT, 'static')]
 ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 
 # DB settings
-DATABASES = {
-    #    'default': {
-    #        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #        'NAME': 'termsandconditions',
-    #        'USER': 'termsandconditions',
-    #        'PASSWORD': '',
-    #        'HOST': '127.0.0.1',
-    #        'PORT': '', # Set to empty string for default.
-    #        'SUPPORTS_TRANSACTIONS': 'true',
-    #    },
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(PROJECT_ROOT, 'termsandconditions.db'),
-        'SUPPORTS_TRANSACTIONS': 'false',
+if os.environ.get('TERMS_DATABASE', "sqlite") == 'postgresql':
+    DATABASES = {
+       'default': {
+           'ENGINE': 'django.db.backends.postgresql_psycopg2',
+           'NAME': 'termsandconditions',
+           'USER': 'termsandconditions',
+           'PASSWORD': '',
+           'HOST': '127.0.0.1',
+           'PORT': '',  # Set to empty string for default.
+           'SUPPORTS_TRANSACTIONS': 'true',
+       },
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(PROJECT_ROOT, 'termsandconditions.db'),
+            'SUPPORTS_TRANSACTIONS': 'false',
+        }
+    }
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'termsandconditions_demo.wsgi.application'
@@ -181,6 +185,10 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
 )
+if VERSION < (1, 10):
+    # For use Pre Django 1.10
+    MIDDLEWARE_CLASSES = MIDDLEWARE
+
 
 ROOT_URLCONF = 'termsandconditions_demo.urls'
 
@@ -206,34 +214,9 @@ TERMS_EXCLUDE_URL_PREFIX_LIST = {'/admin', '/terms'}
 TERMS_EXCLUDE_URL_LIST = {'/', '/termsrequired/', '/logout/', '/securetoo/'}
 TERMS_CACHE_SECONDS = 30
 
-#  DEBUG TOOLBAR
-# if DEBUG:
-#    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-#    INSTALLED_APPS += ('debug_toolbar',)
-#
-#    DEBUG_TOOLBAR_PANELS = (
-#        'debug_toolbar.panels.timer.TimerDebugPanel',
-#        'debug_toolbar.panels.headers.HeaderDebugPanel',
-#        'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
-#        'debug_toolbar.panels.template.TemplateDebugPanel',
-#        'debug_toolbar.panels.sql.SQLDebugPanel',
-#        'debug_toolbar.panels.signals.SignalDebugPanel',
-#        'debug_toolbar.panels.logger.LoggingPanel',
-#        )
-#
-#    DEBUG_TOOLBAR_CONFIG = {
-#        'INTERCEPT_REDIRECTS': False
-#    }
-
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
-# LOGGING
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error when DEBUG=False.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
-
+# LOGGING ######
 # Catch Python warnings (e.g. deprecation warnings) into the logger
 try:
     logging.captureWarnings(True)
