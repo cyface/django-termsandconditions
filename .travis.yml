@@ -26,6 +26,7 @@ install:
 before_script:
   - psql -c 'CREATE DATABASE termsandconditions;' -U postgres
   - psql -c "CREATE USER termsandconditions WITH PASSWORD '';" -U postgres
+  - psql -c "ALTER USER termsandconditions CREATEDB;" -U postgres
 script:
   coverage run --source=termsandconditions,termsandconditions_demo --rcfile=devscripts/checkers/coveragerc
   manage.py test --settings=$SETTINGS
