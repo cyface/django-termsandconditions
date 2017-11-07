@@ -124,7 +124,7 @@ class TermsAndConditions(models.Model):
 
                 cache.set('tandc.not_agreed_terms_' + user.get_username(), not_agreed_terms, TERMS_CACHE_SECONDS)
             except (TypeError, UserTermsAndConditions.DoesNotExist):
-                return None
+                return []
 
         return not_agreed_terms
 
