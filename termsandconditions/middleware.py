@@ -30,7 +30,7 @@ class TermsAndConditionsRedirectMiddleware(MiddlewareMixin):
 
         current_path = request.META['PATH_INFO']
 
-        if request.user.is_authenticated() and is_path_protected(current_path):
+        if request.user.is_authenticated and is_path_protected(current_path):
             for term in TermsAndConditions.get_active_terms_not_agreed_to(request.user):
                 return redirect_to_terms_accept(current_path, term.slug)
         return None
