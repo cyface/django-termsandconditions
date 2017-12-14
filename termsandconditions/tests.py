@@ -108,14 +108,14 @@ class TermsAndConditionsTests(TestCase):
 
         LOGGER.debug('Test /secure/ after login')
         logged_in_response = self.client.get('/secure/', follow=True)
-        self.assertRedirects(logged_in_response, 'http://testserver/terms/accept/contrib-terms?returnTo=/secure/')
+        self.assertRedirects(logged_in_response, '/terms/accept/contrib-terms?returnTo=/secure/')
 
     def test_terms_required_redirect(self):
         """Validate that a user is redirected to the terms accept page if logged in, and decorator is on method"""
 
         LOGGER.debug('Test /termsrequired/ pre login')
         not_logged_in_response = self.client.get('/termsrequired/', follow=True)
-        self.assertRedirects(not_logged_in_response, 'http://testserver/accounts/login/?next=/termsrequired/')
+        self.assertRedirects(not_logged_in_response, '/accounts/login/?next=/termsrequired/')
 
         LOGGER.debug('Test user1 login')
         login_response = self.client.login(username='user1', password='user1password')
@@ -123,7 +123,7 @@ class TermsAndConditionsTests(TestCase):
 
         LOGGER.debug('Test /termsrequired/ after login')
         logged_in_response = self.client.get('/termsrequired/', follow=True)
-        self.assertRedirects(logged_in_response, 'http://testserver/terms/accept/?returnTo=/termsrequired/')
+        self.assertRedirects(logged_in_response, '/terms/accept/?returnTo=/termsrequired/')
 
         LOGGER.debug('Test no redirect for /termsrequired/ after accept')
         accepted_response = self.client.post('/terms/accept/', {'terms': 2, 'returnTo': '/termsrequired/'}, follow=True)
@@ -197,7 +197,7 @@ class TermsAndConditionsTests(TestCase):
 
         LOGGER.debug('Test user1 is redirected when changing pages')
         post_upgrade_response = self.client.get('/secure/', follow=True)
-        self.assertRedirects(post_upgrade_response, 'http://testserver/terms/accept/site-terms?returnTo=/secure/')
+        self.assertRedirects(post_upgrade_response, '/terms/accept/site-terms?returnTo=/secure/')
 
     def test_no_middleware(self):
         """Test a secure page with the middleware excepting it"""

@@ -20,6 +20,11 @@ env:
     - DJANGO="Django<1.12,>=1.11"
       - SETTINGS="termsandconditions_demo.settings"
       - TERMS_DATABASE="postgresql"
+    - DJANGO="Django<2.1,>=2.0"
+      - SETTINGS="termsandconditions_demo.settings"
+    - DJANGO="Django<2.1,>=2.0"
+      - SETTINGS="termsandconditions_demo.settings"
+      - TERMS_DATABASE="postgresql"
 install:
   - pip install $DJANGO
   - pip install -r termsandconditions_demo/requirements_ci.txt

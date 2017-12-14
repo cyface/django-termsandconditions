@@ -95,7 +95,7 @@ class AcceptTermsView(CreateView, GetTermsViewMixin):
         if not terms_ids:   # pragma: nocover
             return HttpResponseRedirect(return_url)
 
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             user = request.user
         else:
             # Get user out of saved pipeline from django-socialauth

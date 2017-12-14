@@ -43,7 +43,7 @@ urlpatterns = (
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Admin Site:
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
 
     # Robots and Favicon
     url(r'^robots\.txt$', TemplateView.as_view(), {'template': 'robots.txt', 'mimetype': 'text/plain'}),
