@@ -93,7 +93,7 @@ is below, take a look at the demo app for more details.
 Requirements
 ------------
 
-The app needs ``django>=1.8.3,<1.12``.
+The app needs ``django>=1.10.8,<2.1``.
 
 Add INSTALLED_APPS
 ------------------
