@@ -24,7 +24,9 @@ env:
 matrix:
   exclude:
     - python: '2.7.14'
-      env: DJANGO="Django<2.1,>=2.0"
+      env: DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings"
+    - python: '2.7.14'
+      env: DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
 install:
   - pip install $DJANGO
   - pip install -r termsandconditions_demo/requirements_ci.txt
