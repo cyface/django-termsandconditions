@@ -13,7 +13,7 @@ from django.conf import settings
 def run_tests():
     test_runner = get_runner(settings)
     failures = test_runner([], verbosity=1, interactive=True)
-    sys.exit(failures)
+    sys.exit()
 
 
 if __name__ == '__main__':
