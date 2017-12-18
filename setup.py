@@ -15,6 +15,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=['django>=1.8.3', 'future>=0.15.2'],
+    test_suite="termsandconditions_demo.run_tests",
 
     classifiers=[
         'Development Status :: 5 - Production/Stable',
