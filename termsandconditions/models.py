@@ -17,8 +17,8 @@ TERMS_CACHE_SECONDS = getattr(settings, 'TERMS_CACHE_SECONDS', 30)
 
 class UserTermsAndConditions(models.Model):
     """Holds mapping between TermsAndConditions and Users"""
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="userterms")
-    terms = models.ForeignKey("TermsAndConditions", related_name="userterms")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="userterms", on_delete=models.CASCADE)
+    terms = models.ForeignKey("TermsAndConditions", related_name="userterms", on_delete=models.CASCADE)
     ip_address = models.GenericIPAddressField(null=True, blank=True, verbose_name='IP Address')
     date_accepted = models.DateTimeField(auto_now_add=True, verbose_name='Date Accepted')
 

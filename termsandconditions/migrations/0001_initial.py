@@ -36,8 +36,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('ip_address', models.GenericIPAddressField(null=True, verbose_name=b'IP Address', blank=True)),
                 ('date_accepted', models.DateTimeField(auto_now_add=True, verbose_name=b'Date Accepted')),
-                ('terms', models.ForeignKey(related_name='userterms', to='termsandconditions.TermsAndConditions')),
-                ('user', models.ForeignKey(related_name='userterms', to=settings.AUTH_USER_MODEL)),
+                ('terms', models.ForeignKey(related_name='userterms', to='termsandconditions.TermsAndConditions', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(related_name='userterms', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'get_latest_by': 'date_accepted',

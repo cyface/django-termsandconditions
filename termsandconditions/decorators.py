@@ -1,4 +1,5 @@
 """View Decorators for termsandconditions module"""
+from django import VERSION as DJANGO_VERSION
 from future.moves.urllib.parse import urlparse, urlunparse
 from functools import wraps
 from django.http import HttpResponseRedirect, QueryDict
@@ -16,7 +17,12 @@ def terms_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
         """Method to wrap the view passed in"""
         # If user has not logged in, or if they have logged in and already agreed to the terms, let the view through
-        if not request.user.is_authenticated() or not TermsAndConditions.get_active_terms_not_agreed_to(request.user):
+        if DJANGO_VERSION <= (2, 0, 0):
+            user_authenticated = request.user.is_authenticated()
+        else:
+            user_authenticated = request.user.is_authenticated
+
+        if not request.user.is_authenticated or not TermsAndConditions.get_active_terms_not_agreed_to(request.user):
             return view_func(request, *args, **kwargs)
 
         # Otherwise, redirect to terms accept

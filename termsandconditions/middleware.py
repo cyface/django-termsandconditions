@@ -3,9 +3,9 @@ from .models import TermsAndConditions
 from django.conf import settings
 import logging
 from .pipeline import redirect_to_terms_accept
-import django
+from django import VERSION as DJANGO_VERSION
 
-if django.VERSION >= (1, 10, 0):
+if DJANGO_VERSION >= (1, 10, 0):
     from django.utils.deprecation import MiddlewareMixin
 else:
     MiddlewareMixin = object
@@ -30,9 +30,15 @@ class TermsAndConditionsRedirectMiddleware(MiddlewareMixin):
 
         current_path = request.META['PATH_INFO']
 
-        if request.user.is_authenticated() and is_path_protected(current_path):
+        if DJANGO_VERSION <= (2, 0, 0):
+            user_authenticated = request.user.is_authenticated()
+        else:
+            user_authenticated = request.user.is_authenticated
+
+        if user_authenticated and is_path_protected(current_path):
             for term in TermsAndConditions.get_active_terms_not_agreed_to(request.user):
                 return redirect_to_terms_accept(current_path, term.slug)
+
         return None
 
 

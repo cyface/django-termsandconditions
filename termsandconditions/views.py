@@ -1,7 +1,7 @@
 """Django Views for the termsandconditions module"""
 
 # pylint: disable=E1120,R0901,R0904
-
+from django import VERSION as DJANGO_VERSION
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 
@@ -22,6 +22,7 @@ DEFAULT_TERMS_BASE_TEMPLATE = 'base.html'
 
 class GetTermsViewMixin(object):
     """Checks URL parameters for slug and/or version to pull the right TermsAndConditions object"""
+
     def get_terms(self, kwargs):
         """Checks URL parameters for slug and/or version to pull the right TermsAndConditions object"""
 
@@ -92,10 +93,15 @@ class AcceptTermsView(CreateView, GetTermsViewMixin):
         return_url = request.POST.get('returnTo', '/')
         terms_ids = request.POST.getlist('terms')
 
-        if not terms_ids:   # pragma: nocover
+        if not terms_ids:  # pragma: nocover
             return HttpResponseRedirect(return_url)
 
-        if request.user.is_authenticated():
+        if DJANGO_VERSION <= (2, 0, 0):
+            user_authenticated = request.user.is_authenticated()
+        else:
+            user_authenticated = request.user.is_authenticated
+
+        if user_authenticated:
             user = request.user
         else:
             # Get user out of saved pipeline from django-socialauth
@@ -168,7 +174,7 @@ class EmailTermsView(FormView, GetTermsViewMixin):
                       [form.cleaned_data.get('email_address')],
                       fail_silently=False)
             messages.add_message(self.request, messages.INFO, "Terms and Conditions Sent.")
-        except SMTPException:   # pragma: no cover
+        except SMTPException:  # pragma: no cover
             messages.add_message(self.request, messages.ERROR, "An Error Occurred Sending Your Message.")
 
         self.success_url = form.cleaned_data.get('returnTo', '/') or '/'
