@@ -22,7 +22,7 @@ def terms_required(view_func):
         else:
             user_authenticated = request.user.is_authenticated
 
-        if not request.user.is_authenticated or not TermsAndConditions.get_active_terms_not_agreed_to(request.user):
+        if not user_authenticated or not TermsAndConditions.get_active_terms_not_agreed_to(request.user):
             return view_func(request, *args, **kwargs)
 
         # Otherwise, redirect to terms accept
