@@ -13,6 +13,7 @@ LOGGER = logging.getLogger(name='termsandconditions')
 
 DEFAULT_TERMS_SLUG = getattr(settings, 'DEFAULT_TERMS_SLUG', 'site-terms')
 TERMS_CACHE_SECONDS = getattr(settings, 'TERMS_CACHE_SECONDS', 30)
+TERMS_EXCLUDE_USERS_WITH_PERM = getattr(settings, 'TERMS_EXCLUDE_USERS_WITH_PERM', None)
 
 
 class UserTermsAndConditions(models.Model):
@@ -113,6 +114,11 @@ class TermsAndConditions(models.Model):
     @staticmethod
     def get_active_terms_not_agreed_to(user):
         """Checks to see if a specified user has agreed to all the latest terms and conditions"""
+
+        if TERMS_EXCLUDE_USERS_WITH_PERM is not None:
+            if user.has_perm(TERMS_EXCLUDE_USERS_WITH_PERM) and not user.is_superuser:
+                # Django's has_perm() returns True if is_superuser, we don't want that
+                return []
 
         not_agreed_terms = cache.get('tandc.not_agreed_terms_' + user.get_username())
         if not_agreed_terms is None:

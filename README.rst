@@ -146,6 +146,14 @@ By default, some pages are excluded from the middleware, you can configure exclu
 TERMS_EXCLUDE_URL_PREFIX_LIST is a list of 'starts with' strings to exclude, while TERMS_EXCLUDE_URL_LIST is a list of
 explicit full paths to exclude.
 
+You can also define a setting TERMS_EXCLUDE_USERS_WITH_PERM to exclude users with a custom permission you create yourself.::
+
+    TERMS_EXCLUDE_USERS_WITH_PERM 'MyModel.can_skip_terms'
+
+This can be useful if you need to run continuous login integration tests or simply exclude specific users from having to accept your T&Cs.
+Note that we exclude superusers from this check due to Django's has_perm() method returning True for any permission check, so adding this
+permission to a superuser has no effect.
+
 Terms and Conditions Cache
 --------------------------
 To speed performance, especially for the middleware, the terms and their acceptance are cached.
