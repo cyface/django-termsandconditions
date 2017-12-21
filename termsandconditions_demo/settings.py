@@ -213,6 +213,7 @@ ACCEPT_TERMS_PATH = '/terms/accept/'
 TERMS_EXCLUDE_URL_PREFIX_LIST = {'/admin', '/terms'}
 TERMS_EXCLUDE_URL_LIST = {'/', '/termsrequired/', '/logout/', '/securetoo/'}
 TERMS_CACHE_SECONDS = 30
+TERMS_EXCLUDE_USERS_WITH_PERM='auth.can_skip_t&c'
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 

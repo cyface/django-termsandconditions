@@ -1,19 +1,21 @@
 """Unit Tests for the termsandconditions module"""
 
 # pylint: disable=R0904, C0103
+from importlib import import_module
+import logging
 
 from django.core import mail
+from django.core.cache import cache
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.test import TestCase, RequestFactory
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, ContentType, Permission
 from django.template import Context, Template
+
 from .models import TermsAndConditions, UserTermsAndConditions, DEFAULT_TERMS_SLUG
 from .pipeline import user_accept_terms
 from .templatetags.terms_tags import show_terms_if_not_agreed
-import logging
-from importlib import import_module
-from django.core.cache import cache
+
 
 LOGGER = logging.getLogger(name='termsandconditions')
 
@@ -25,8 +27,10 @@ class TermsAndConditionsTests(TestCase):
         """Setup for each test"""
         LOGGER.debug('Test Setup')
 
+        self.su = User.objects.create_superuser('su', 'su@example.com', 'superstrong')
         self.user1 = User.objects.create_user('user1', 'user1@user1.com', 'user1password')
         self.user2 = User.objects.create_user('user2', 'user2@user2.com', 'user2password')
+        self.user3 = User.objects.create_user('user3', 'user3@user3.com', 'user3password')
         self.terms1 = TermsAndConditions.objects.create(id=1, slug="site-terms", name="Site Terms",
                                                         text="Site Terms and Conditions 1", version_number=1.0,
                                                         date_active="2012-01-01")
@@ -39,6 +43,12 @@ class TermsAndConditionsTests(TestCase):
         self.terms4 = TermsAndConditions.objects.create(id=4, slug="contrib-terms", name="Contributor Terms",
                                                         text="Contributor Terms and Conditions 2", version_number=2.0,
                                                         date_active="2100-01-01")
+
+        # give user3 permission to skip T&Cs
+        content_type = ContentType.objects.get_for_model(type(self.user3))
+        self.skip_perm = Permission.objects.create(content_type=content_type, name='Can skip T&Cs', codename='can_skip_t&c')
+        self.user3.user_permissions.add(self.skip_perm)
+
 
     def tearDown(self):
         """Teardown for each test"""
@@ -68,6 +78,24 @@ class TermsAndConditionsTests(TestCase):
     def test_get_active_terms_not_agreed_to(self):
         """Test get T&Cs not agreed to"""
         active_list = TermsAndConditions.get_active_terms_not_agreed_to(self.user1)
+        self.assertEqual(2, len(active_list))
+        self.assertQuerysetEqual(active_list, [repr(self.terms3), repr(self.terms2)])
+
+    def test_user_is_excluded(self):
+        """Test user3 has perm which excludes them from having to accept T&Cs"""
+        active_list = TermsAndConditions.get_active_terms_not_agreed_to(self.user3)
+        self.assertEqual([], active_list)
+
+    def test_superuser_is_not_implicitly_excluded(self):
+        """Test su should have to accept T&Cs even if they are superuser but don't explicitly have the skip perm"""
+        active_list = TermsAndConditions.get_active_terms_not_agreed_to(self.su)
+        self.assertEqual(2, len(active_list))
+        self.assertQuerysetEqual(active_list, [repr(self.terms3), repr(self.terms2)])
+
+    def test_superuser_cannot_skip(self):
+        """Test su still has to accept even if they are explicitly given the skip perm"""
+        self.su.user_permissions.add(self.skip_perm)
+        active_list = TermsAndConditions.get_active_terms_not_agreed_to(self.su)
         self.assertEqual(2, len(active_list))
         self.assertQuerysetEqual(active_list, [repr(self.terms3), repr(self.terms2)])
 
