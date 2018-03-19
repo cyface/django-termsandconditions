@@ -1,0 +1,131 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-03-19 21:03+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: admin.py:13 apps.py:15 templates/termsandconditions/tc_accept_terms.html:13
+#: templates/termsandconditions/tc_email_terms_form.html:8
+#: templates/termsandconditions/tc_view_terms.html:13
+msgid "Terms and Conditions"
+msgstr ""
+
+#: models.py:25
+msgid "IP Address"
+msgstr ""
+
+#: models.py:26
+msgid "Date Accepted"
+msgstr ""
+
+#: models.py:31 models.py:32
+msgid "User Terms and Conditions"
+msgstr ""
+
+#: models.py:48
+msgid "Provide users with some info about what's changed and why"
+msgstr ""
+
+#: models.py:50
+msgid "Leave Null To Never Make Active"
+msgstr ""
+
+#: templates/termsandconditions/snippets/termsandconditions.html:16
+msgid "Close"
+msgstr ""
+
+#: templates/termsandconditions/snippets/termsandconditions.html:29
+msgid "ACCEPT ALL"
+msgstr ""
+
+#: templates/termsandconditions/tc_accept_terms.html:6
+msgid "Accept Terms and Conditions"
+msgstr ""
+
+#: templates/termsandconditions/tc_accept_terms.html:16
+msgid "Please Accept"
+msgstr ""
+
+#: templates/termsandconditions/tc_accept_terms.html:18
+msgid "Summary of Changes"
+msgstr ""
+
+#: templates/termsandconditions/tc_accept_terms.html:22
+msgid "Full Text"
+msgstr ""
+
+#: templates/termsandconditions/tc_accept_terms.html:31
+#: templates/termsandconditions/tc_view_terms.html:21
+msgid "Print"
+msgstr ""
+
+#: templates/termsandconditions/tc_accept_terms.html:37
+msgid "Accept"
+msgstr ""
+
+#: templates/termsandconditions/tc_accept_terms.html:37
+msgid "All"
+msgstr ""
+
+#: templates/termsandconditions/tc_email_terms.html:5
+#: templates/termsandconditions/tc_print_terms.html:29
+msgid "Version"
+msgstr ""
+
+#: templates/termsandconditions/tc_email_terms_form.html:5
+msgid "Email Terms and Conditions"
+msgstr ""
+
+#: templates/termsandconditions/tc_email_terms_form.html:9
+msgid "Email"
+msgstr ""
+
+#: templates/termsandconditions/tc_email_terms_form.html:12
+msgid "Email To:"
+msgstr ""
+
+#: templates/termsandconditions/tc_email_terms_form.html:14
+msgid "You Requested:"
+msgstr ""
+
+#: templates/termsandconditions/tc_email_terms_form.html:15
+msgid "Send"
+msgstr ""
+
+#: templates/termsandconditions/tc_print_terms.html:6
+msgid "Print Terms and Conditions"
+msgstr ""
+
+#: templates/termsandconditions/tc_view_terms.html:6
+msgid "View Terms and Conditions"
+msgstr ""
+
+#: views.py:171
+msgid "Terms"
+msgstr ""
+
+#: views.py:176
+msgid "Terms and Conditions Sent."
+msgstr ""
+
+#: views.py:178
+msgid "An Error Occurred Sending Your Message."
+msgstr ""
+
+#: views.py:187
+msgid "Invalid Email Address."
+msgstr ""

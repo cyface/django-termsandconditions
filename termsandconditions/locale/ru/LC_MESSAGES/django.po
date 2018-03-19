@@ -1,0 +1,133 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-03-19 21:03+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: admin.py:13 apps.py:15 templates/termsandconditions/tc_accept_terms.html:13
+#: templates/termsandconditions/tc_email_terms_form.html:8
+#: templates/termsandconditions/tc_view_terms.html:13
+msgid "Terms and Conditions"
+msgstr "Условия и Положения"
+
+#: models.py:25
+msgid "IP Address"
+msgstr "IP Адрес"
+
+#: models.py:26
+msgid "Date Accepted"
+msgstr "Дата принятия"
+
+#: models.py:31 models.py:32
+msgid "User Terms and Conditions"
+msgstr "Пользовательское Соглашение"
+
+#: models.py:48
+msgid "Provide users with some info about what's changed and why"
+msgstr "Предоставьте пользователям некоторую информацию о том, что изменилось и почему"
+
+#: models.py:50
+msgid "Leave Null To Never Make Active"
+msgstr "Оставить Null, чтобы никогда не активировать"
+
+#: templates/termsandconditions/snippets/termsandconditions.html:16
+msgid "Close"
+msgstr "Закрыть"
+
+#: templates/termsandconditions/snippets/termsandconditions.html:29
+msgid "ACCEPT ALL"
+msgstr "Принять все"
+
+#: templates/termsandconditions/tc_accept_terms.html:6
+msgid "Accept Terms and Conditions"
+msgstr "Принять Условия и Положения"
+
+#: templates/termsandconditions/tc_accept_terms.html:16
+msgid "Please Accept"
+msgstr "Пожалуйста примите"
+
+#: templates/termsandconditions/tc_accept_terms.html:18
+msgid "Summary of Changes"
+msgstr "Сводка изменений"
+
+#: templates/termsandconditions/tc_accept_terms.html:22
+msgid "Full Text"
+msgstr "Полный текст"
+
+#: templates/termsandconditions/tc_accept_terms.html:31
+#: templates/termsandconditions/tc_view_terms.html:21
+msgid "Print"
+msgstr "Версия для печати"
+
+#: templates/termsandconditions/tc_accept_terms.html:37
+msgid "Accept"
+msgstr "Принять"
+
+#: templates/termsandconditions/tc_accept_terms.html:37
+msgid "All"
+msgstr "Все"
+
+#: templates/termsandconditions/tc_email_terms.html:5
+#: templates/termsandconditions/tc_print_terms.html:29
+msgid "Version"
+msgstr "Версия"
+
+#: templates/termsandconditions/tc_email_terms_form.html:5
+msgid "Email Terms and Conditions"
+msgstr "Отправить Условия и Положения на почту"
+
+#: templates/termsandconditions/tc_email_terms_form.html:9
+msgid "Email"
+msgstr ""
+
+#: templates/termsandconditions/tc_email_terms_form.html:12
+msgid "Email To:"
+msgstr "Отправить:"
+
+#: templates/termsandconditions/tc_email_terms_form.html:14
+msgid "You Requested:"
+msgstr "Вы Запросили:"
+
+#: templates/termsandconditions/tc_email_terms_form.html:15
+msgid "Send"
+msgstr "Отправить"
+
+#: templates/termsandconditions/tc_print_terms.html:6
+msgid "Print Terms and Conditions"
+msgstr "Напечатать Условия и Положения"
+
+#: templates/termsandconditions/tc_view_terms.html:6
+msgid "View Terms and Conditions"
+msgstr "Просмотреть Условия и Предложения"
+
+#: views.py:171
+msgid "Terms"
+msgstr "Условия"
+
+#: views.py:176
+msgid "Terms and Conditions Sent."
+msgstr "Условия и Предложения были отправлены."
+
+#: views.py:178
+msgid "An Error Occurred Sending Your Message."
+msgstr "Во Время Отправки Сообщения Возникла Ошибка."
+
+#: views.py:187
+msgid "Invalid Email Address."
+msgstr "Неверный Email Адрес."
