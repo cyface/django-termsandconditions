@@ -4,3 +4,4 @@ coveralls
 pylint
 sphinx
 sphinx-autobuild
+texlive
