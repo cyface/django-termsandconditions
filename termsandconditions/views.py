@@ -9,6 +9,7 @@ from .forms import UserTermsAndConditionsModelForm, EmailTermsForm
 from .models import TermsAndConditions, UserTermsAndConditions
 from django.conf import settings
 from django.contrib import messages
+from django.utils.translation import gettext as _
 from django.http import HttpResponseRedirect
 from django.views.generic import DetailView, CreateView, FormView
 from django.template.loader import get_template
@@ -168,14 +169,14 @@ class EmailTermsView(FormView, GetTermsViewMixin):
         LOGGER.debug(template_rendered)
 
         try:
-            send_mail(form.cleaned_data.get('email_subject', 'Terms'),
+            send_mail(form.cleaned_data.get('email_subject', _('Terms')),
                       template_rendered,
                       settings.DEFAULT_FROM_EMAIL,
                       [form.cleaned_data.get('email_address')],
                       fail_silently=False)
-            messages.add_message(self.request, messages.INFO, "Terms and Conditions Sent.")
+            messages.add_message(self.request, messages.INFO, _("Terms and Conditions Sent."))
         except SMTPException:  # pragma: no cover
-            messages.add_message(self.request, messages.ERROR, "An Error Occurred Sending Your Message.")
+            messages.add_message(self.request, messages.ERROR, _("An Error Occurred Sending Your Message."))
 
         self.success_url = form.cleaned_data.get('returnTo', '/') or '/'
 
@@ -184,5 +185,5 @@ class EmailTermsView(FormView, GetTermsViewMixin):
     def form_invalid(self, form):
         """Override of CreateView method, logs invalid email form submissions."""
         LOGGER.debug("Invalid Email Form Submitted")
-        messages.add_message(self.request, messages.ERROR, "Invalid Email Address.")
+        messages.add_message(self.request, messages.ERROR, _("Invalid Email Address."))
         return super(EmailTermsView, self).form_invalid(form)
