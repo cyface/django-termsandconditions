@@ -6,7 +6,9 @@ from collections import OrderedDict
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from django.core.cache import cache
+
 import logging
 
 LOGGER = logging.getLogger(name='termsandconditions')
@@ -20,14 +22,14 @@ class UserTermsAndConditions(models.Model):
     """Holds mapping between TermsAndConditions and Users"""
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="userterms", on_delete=models.CASCADE)
     terms = models.ForeignKey("TermsAndConditions", related_name="userterms", on_delete=models.CASCADE)
-    ip_address = models.GenericIPAddressField(null=True, blank=True, verbose_name='IP Address')
-    date_accepted = models.DateTimeField(auto_now_add=True, verbose_name='Date Accepted')
+    ip_address = models.GenericIPAddressField(null=True, blank=True, verbose_name=_('IP Address'))
+    date_accepted = models.DateTimeField(auto_now_add=True, verbose_name=_('Date Accepted'))
 
     class Meta:
         """Model Meta Information"""
         get_latest_by = 'date_accepted'
-        verbose_name = 'User Terms and Conditions'
-        verbose_name_plural = 'User Terms and Conditions'
+        verbose_name = _('User Terms and Conditions')
+        verbose_name_plural = _('User Terms and Conditions')
         unique_together = ('user', 'terms',)
 
     def __str__(self):  # pragma: nocover
@@ -42,8 +44,10 @@ class TermsAndConditions(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, through=UserTermsAndConditions, blank=True)
     version_number = models.DecimalField(default=1.0, decimal_places=2, max_digits=6)
     text = models.TextField(null=True, blank=True)
-    info = models.TextField(null=True, blank=True, help_text="Provide users with some info about what's changed and why")
-    date_active = models.DateTimeField(blank=True, null=True, help_text="Leave Null To Never Make Active")
+    info = models.TextField(
+        null=True, blank=True, help_text=_("Provide users with some info about what's changed and why")
+    )
+    date_active = models.DateTimeField(blank=True, null=True, help_text=_("Leave Null To Never Make Active"))
     date_created = models.DateTimeField(blank=True, auto_now_add=True)
 
     class Meta:
