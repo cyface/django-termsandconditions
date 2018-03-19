@@ -36,8 +36,8 @@ after_success: coveralls
 deploy:
   provider: pypi
   upload_docs: no
-  user: Tim.White
+  user: "Tim.White"
   password:
-    secure: e8H/IHRzcNpZUwohtgDt4srkWZu7Ofa8q5N/w3sg3ZyaL0vbzhQle9D1gn1PwAoiTJQHYfuYvhP0G9HM4aZ19OEbJ/gAPXNFd3bVXD/g8kI1rRA/VN/W4DEAp/53rNly8idH+6BO5OvwH0NlPUjhisv5yCV/FAPHENSpwmdTu5g=
+    secure: "e8H/IHRzcNpZUwohtgDt4srkWZu7Ofa8q5N/w3sg3ZyaL0vbzhQle9D1gn1PwAoiTJQHYfuYvhP0G9HM4aZ19OEbJ/gAPXNFd3bVXD/g8kI1rRA/VN/W4DEAp/53rNly8idH+6BO5OvwH0NlPUjhisv5yCV/FAPHENSpwmdTu5g="
   on:
     repo: cyface/django-termsandconditions
