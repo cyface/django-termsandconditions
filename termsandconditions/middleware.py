@@ -14,6 +14,7 @@ LOGGER = logging.getLogger(name='termsandconditions')
 
 ACCEPT_TERMS_PATH = getattr(settings, 'ACCEPT_TERMS_PATH', '/terms/accept/')
 TERMS_EXCLUDE_URL_PREFIX_LIST = getattr(settings, 'TERMS_EXCLUDE_URL_PREFIX_LIST', {'/admin', '/terms'})
+TERMS_EXCLUDE_URL_CONTAINS_LIST = getattr(settings, 'TERMS_EXCLUDE_URL_CONTAINS_LIST', {})
 TERMS_EXCLUDE_URL_LIST = getattr(settings, 'TERMS_EXCLUDE_URL_LIST', {'/', '/termsrequired/', '/logout/', '/securetoo/'})
 
 
@@ -47,7 +48,7 @@ def is_path_protected(path):
     returns True if given path is to be protected, otherwise False
 
     The path is not to be protected when it appears on:
-    TERMS_EXCLUDE_URL_PREFIX_LIST, TERMS_EXCLUDE_URL_LIST or as
+    TERMS_EXCLUDE_URL_PREFIX_LIST, TERMS_EXCLUDE_URL_LIST, TERMS_EXCLUDE_URL_CONTAINS_LIST or as
     ACCEPT_TERMS_PATH
     """
     protected = True
@@ -56,10 +57,15 @@ def is_path_protected(path):
         if path.startswith(exclude_path):
             protected = False
 
+    for contains_path in TERMS_EXCLUDE_URL_CONTAINS_LIST:
+        if contains_path in path:
+            protected = False
+
     if path in TERMS_EXCLUDE_URL_LIST:
         protected = False
 
     if path.startswith(ACCEPT_TERMS_PATH):
         protected = False
+
 
     return protected

@@ -212,6 +212,7 @@ DEFAULT_TERMS_SLUG = 'site-terms'
 ACCEPT_TERMS_PATH = '/terms/accept/'
 TERMS_EXCLUDE_URL_PREFIX_LIST = {'/admin', '/terms'}
 TERMS_EXCLUDE_URL_LIST = {'/', '/termsrequired/', '/logout/', '/securetoo/'}
+TERMS_EXCLUDE_URL_CONTAINS_LIST = {}  # Useful if you are using internationalization and your URLs could change per language
 TERMS_CACHE_SECONDS = 30
 TERMS_EXCLUDE_USERS_WITH_PERM='auth.can_skip_t&c'
 

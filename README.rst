@@ -142,9 +142,10 @@ By default, some pages are excluded from the middleware, you can configure exclu
     ACCEPT_TERMS_PATH = '/terms/accept/'
     TERMS_EXCLUDE_URL_PREFIX_LIST = {'/admin/',})
     TERMS_EXCLUDE_URL_LIST = {'/', '/terms/required/', '/logout/', '/securetoo/'}
+    TERMS_EXCLUDE_URL_CONTAINS_LIST = {}
 
 TERMS_EXCLUDE_URL_PREFIX_LIST is a list of 'starts with' strings to exclude, while TERMS_EXCLUDE_URL_LIST is a list of
-explicit full paths to exclude.
+explicit full paths to exclude. TERMS_EXCLUDE_URL_CONTAINS_LIST is a list of url fragments to check, if the url 'contains' that string, it is excluded. This can be particularly useful for i18n, where your url could get prepended with a language code.
 
 You can also define a setting TERMS_EXCLUDE_USERS_WITH_PERM to exclude users with a custom permission you create yourself.::
 
