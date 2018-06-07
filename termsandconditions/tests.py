@@ -320,6 +320,10 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
             '{% load terms_tags %}'
             '{% show_terms_if_not_agreed slug="specific-terms" %}'
         )
+        self.template_string_3 = (
+            '{% load terms_tags %}'
+            '{% include terms.text|as_template %}'
+        )
         self.terms1 = TermsAndConditions.objects.create(id=1, slug="site-terms", name="Site Terms",
                                                         text="Site Terms and Conditions 1", version_number=1.0,
                                                         date_active="2012-01-01")
