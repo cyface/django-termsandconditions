@@ -28,3 +28,23 @@ def show_terms_if_not_agreed(context, field=TERMS_HTTP_PATH_FIELD):
         return {'not_agreed_terms': not_agreed_terms, 'returnTo': url.path}
     else:
         return {}
+
+
+@register.filter
+def as_template(obj):
+    """Converts objects to a Template instance
+
+    This is useful in cases when a template variable contains html-like text,
+    which includes also django template language tags and should be rendered.
+
+    For instance, in case of termsandconditions object, its text field may
+    include a string such as `<a href="{% url 'my-url' %}">My url</a>`,
+    which should be properly rendered.
+
+    To achieve this goal, one can use template `include` with `as_template`
+    filter:
+    ...
+        {% include your_variable|as_template %}
+    ...
+    """
+    return template.Template(obj)

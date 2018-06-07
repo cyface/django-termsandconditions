@@ -367,3 +367,9 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
         context = self._make_context('/')
         result = show_terms_if_not_agreed(context)
         self.assertDictEqual(result, {})
+
+    def test_as_template(self):
+        """Test as_template template tag"""
+        terms = TermsAndConditions.get_active()
+        rendered = Template(self.template_string_3).render(Context({'terms': terms}))
+        self.assertIn(terms.text, rendered)
