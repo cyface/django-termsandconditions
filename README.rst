@@ -238,18 +238,18 @@ The following configuration setting applies for the template tag::
 
 which defaults to ``PATH_INFO``. When needed (e.g. while using a separate AJAX view to take care for the modal) this can be changed to ``HTTP_REFERER``.
 
-Handling terms text containing tags
+Using terms with as_template filter
 -----------------------------------
-If you happen to use termsandconditions which text field includes some template tags, you may want to render its content,
-before including it into your template. To achieve this goal, use ``include`` with the ``as_template`` filter, instead of
-using the ``terms.text`` object as template variable, i.e.::
+If you happen to use termsandconditions which text field includes some template tags (e.g. ``{% url 'you-url' %}``),
+you may want to render its content, before including it into your template. To achieve this goal, use ``include`` with the
+``as_template`` filter, i.e.::
 
     {% load terms_tags %}
     .... your template here ....
 
     {% include terms|as_template %}
 
-You need to modify the default termsandconditions templates, as the default ones use terms as template variable.
+Note, that you need to modify the default termsandconditions templates, as the default ones use terms as template variable.
 
 Terms and Conditions Pipeline
 -----------------------------
