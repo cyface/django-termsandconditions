@@ -1,7 +1,7 @@
 -r requirements.txt
 coverage==4.5.1
 coveralls==1.3.0
-pylint
+pylint==1.9.2
 sphinx
 sphinx-autobuild
 texlive
