@@ -4,4 +4,4 @@ coveralls
 future
 pylint
 psycopg2
-sphinx
+sphinx==1.7.5
