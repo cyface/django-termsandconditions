@@ -1,7 +1,7 @@
-django-jenkins
-coverage
-coveralls
-future
-pylint
-psycopg2
-sphinx
+django-jenkins==0.110.0
+coverage==4.5.1
+coveralls==1.3.0
+future==0.16.0
+pylint==1.9.2
+psycopg2==2.7.4
+sphinx==1.7.5
