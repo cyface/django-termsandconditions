@@ -1,5 +1,5 @@
 django-jenkins==0.110.0
-coverage
+coverage==4.5.1
 coveralls
 future
 pylint
