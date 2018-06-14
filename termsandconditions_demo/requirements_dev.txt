@@ -1,6 +1,6 @@
 -r requirements.txt
 coverage
-coveralls
+coveralls==1.3.0
 pylint
 sphinx
 sphinx-autobuild
