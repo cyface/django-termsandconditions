@@ -3,5 +3,5 @@ coverage
 coveralls
 future
 pylint
-psycopg2
+psycopg2==2.7.4
 sphinx
