@@ -1,4 +1,4 @@
-django-jenkins
+django-jenkins==0.110.0
 coverage
 coveralls
 future
