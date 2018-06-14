@@ -2,6 +2,6 @@
 coverage
 coveralls
 pylint==1.9.2
-sphinx
-sphinx-autobuild
+sphinx==1.7.5
+sphinx-autobuild==0.7.1
 texlive
