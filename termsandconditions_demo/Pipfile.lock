@@ -207,7 +207,7 @@
                 "sha256:f57008eaff597c69cf692c3518f6d4800f0309253bb138b526a37fe9ef0c7471",
                 "sha256:f6c821ac253c19f2ad4c8691633ae1d1a17f120d5b01ea1d256d7b602bc59887"
             ],
-            "version": "==2.2.2"
+            "version": "==2.3"
         },
         "django": {
             "hashes": [
