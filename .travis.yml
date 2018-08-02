@@ -3,7 +3,7 @@ git:
 language: python
 python:
   - '2.7.14'
-  - '3.6.3'
+  - '3.6.6'
 services:
   - postgresql
 cache: pip
@@ -15,12 +15,18 @@ env:
     - DJANGO="Django<1.12,>=1.11" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
     - DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings"
     - DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
+    - DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings"
+    - DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
 matrix:
   exclude:
     - python: '2.7.14'
       env: DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings"
     - python: '2.7.14'
       env: DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
+    - python: '2.7.14'
+      env: DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings"
+    - python: '2.7.14'
+      env: DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
 install:
   - pip install $DJANGO
   - pip install -r termsandconditions_demo/requirements_ci.txt
