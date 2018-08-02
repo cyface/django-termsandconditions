@@ -3,6 +3,8 @@
 # pylint: disable=E1120,W0613
 
 from django import forms
+from django.db.models import QuerySet
+
 from termsandconditions.models import TermsAndConditions
 
 
@@ -19,13 +21,16 @@ class UserTermsAndConditionsModelForm(forms.Form):
 
         terms_list = kwargs.get('initial', {}).get('terms', None)
 
-        if terms_list is None:   # pragma: nocover
+        if terms_list is None:  # pragma: nocover
             terms_list = TermsAndConditions.get_active_terms_list()
 
-        self.terms = forms.ModelMultipleChoiceField(
-            terms_list,
-            widget=forms.MultipleHiddenInput
-        )
+        if terms_list is QuerySet:
+            self.terms = forms.ModelMultipleChoiceField(
+                terms_list,
+                widget=forms.MultipleHiddenInput
+            )
+        else:
+            self.terms = terms_list
 
         super(UserTermsAndConditionsModelForm, self).__init__(*args, **kwargs)
 
