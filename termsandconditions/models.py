@@ -7,7 +7,7 @@ from django.db import models
 from django.conf import settings
 from django import VERSION as DJANGO_VERSION
 
-if DJANGO_VERSION < 2:
+if DJANGO_VERSION <= (2, 0, 0):
     from django.core.urlresolvers import reverse
 else:
     from django.urls import reverse
