@@ -5,7 +5,12 @@ from collections import OrderedDict
 
 from django.db import models
 from django.conf import settings
-from django.urls import reverse
+from django import VERSION as DJANGO_VERSION
+
+if DJANGO_VERSION < 2:
+    from django.core.urlresolvers import reverse
+else:
+    from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.core.cache import cache
