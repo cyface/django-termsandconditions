@@ -5,6 +5,7 @@ from collections import OrderedDict
 
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.core.cache import cache
@@ -60,9 +61,10 @@ class TermsAndConditions(models.Model):
     def __str__(self):  # pragma: nocover
         return "{0}-{1:.2f}".format(self.slug, self.version_number)
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('tc_view_specific_version_page', [self.slug, self.version_number])  # pylint: disable=E1101
+        return reverse(
+            'tc_view_specific_version_page',
+            args=[self.slug, self.version_number])  # pylint: disable=E1101
 
     @staticmethod
     def get_active(slug=DEFAULT_TERMS_SLUG):
@@ -76,7 +78,7 @@ class TermsAndConditions(models.Model):
                     date_active__lte=timezone.now(),
                     slug=slug).latest('date_active')
                 cache.set('tandc.active_terms_' + slug, active_terms, TERMS_CACHE_SECONDS)
-            except TermsAndConditions.DoesNotExist:   # pragma: nocover
+            except TermsAndConditions.DoesNotExist:  # pragma: nocover
                 LOGGER.error("Requested Terms and Conditions that Have Not Been Created.")
                 return None
 
@@ -137,4 +139,3 @@ class TermsAndConditions(models.Model):
                 return []
 
         return not_agreed_terms
-
