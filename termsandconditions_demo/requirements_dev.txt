@@ -1,6 +1,6 @@
 -r requirements.txt
 coverage==4.5.1
-coveralls==1.5.0
+coveralls==1.5.1
 pylint==2.1.1
 sphinx==1.8.1
 sphinx-autobuild==0.7.1
