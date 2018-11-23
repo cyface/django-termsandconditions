@@ -2,50 +2,49 @@ git:
   depth: 1
 language: python
 python:
-  - '2.7.14'
-  - '3.6.5'
+- 2.7.14
+- 3.6.5
 services:
-  - postgresql
+- postgresql
 cache: pip
 env:
-    - DJANGO="Django<1.9,>=1.8" SETTINGS="termsandconditions_demo.settings"
-    - DJANGO="Django<1.10,>=1.9" SETTINGS="termsandconditions_demo.settings"
-    - DJANGO="Django<1.11,>=1.10" SETTINGS="termsandconditions_demo.settings"
-    - DJANGO="Django<1.12,>=1.11" SETTINGS="termsandconditions_demo.settings"
-    - DJANGO="Django<1.12,>=1.11" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
-    - DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings"
-    - DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
-    - DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings"
-    - DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
+- DJANGO="Django<1.9,>=1.8" SETTINGS="termsandconditions_demo.settings"
+- DJANGO="Django<1.10,>=1.9" SETTINGS="termsandconditions_demo.settings"
+- DJANGO="Django<1.11,>=1.10" SETTINGS="termsandconditions_demo.settings"
+- DJANGO="Django<1.12,>=1.11" SETTINGS="termsandconditions_demo.settings"
+- DJANGO="Django<1.12,>=1.11" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
+- DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings"
+- DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
+- DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings"
+- DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
 matrix:
   exclude:
-    - python: '2.7.14'
-      env: DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings"
-    - python: '2.7.14'
-      env: DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
-    - python: '2.7.14'
-      env: DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings"
-    - python: '2.7.14'
-      env: DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
+  - python: 2.7.14
+    env: DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings"
+  - python: 2.7.14
+    env: DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
+  - python: 2.7.14
+    env: DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings"
+  - python: 2.7.14
+    env: DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
 install:
-  - pip install $DJANGO
-  - pip install -r termsandconditions_demo/requirements_ci.txt
+- pip install $DJANGO
+- pip install -r termsandconditions_demo/requirements_ci.txt
 before_script:
-  - psql -c 'CREATE DATABASE termsandconditions;' -U postgres
-  - psql -c "CREATE USER termsandconditions WITH PASSWORD '';" -U postgres
-  - psql -c "ALTER USER termsandconditions CREATEDB;" -U postgres
-script:
-  coverage run --source=termsandconditions,termsandconditions_demo --rcfile=devscripts/checkers/coveragerc
+- psql -c 'CREATE DATABASE termsandconditions;' -U postgres
+- psql -c "CREATE USER termsandconditions WITH PASSWORD '';" -U postgres
+- psql -c "ALTER USER termsandconditions CREATEDB;" -U postgres
+script: coverage run --source=termsandconditions,termsandconditions_demo --rcfile=devscripts/checkers/coveragerc
   manage.py test --settings=$SETTINGS
 sudo: false
 after_success: coveralls
 deploy:
   provider: pypi
   skip_existing: true
-  upload_docs: no
-  user: "Tim.White"
+  upload_docs: false
+  user: Tim.White
   password:
-    secure: "e8H/IHRzcNpZUwohtgDt4srkWZu7Ofa8q5N/w3sg3ZyaL0vbzhQle9D1gn1PwAoiTJQHYfuYvhP0G9HM4aZ19OEbJ/gAPXNFd3bVXD/g8kI1rRA/VN/W4DEAp/53rNly8idH+6BO5OvwH0NlPUjhisv5yCV/FAPHENSpwmdTu5g="
+    secure: EnmVvUnhnNhCpWQBpU2BcwyBe3VM+BL3Ijrwfkubw89WjwXrMgDdvy+UIivkgBz5exgNoT2lGcsxIyAfvPimRVs8I018AMu3lNSPGmRUJAHMFi25kmtrI4m/XzMsR0TNv4KD9X5FAIW2noC0wMHpldzffVg24gZRMjrpAti6d3c=
   on:
     tags: true
     repo: cyface/django-termsandconditions
