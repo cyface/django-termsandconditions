@@ -41,6 +41,7 @@ sudo: false
 after_success: coveralls
 deploy:
   provider: pypi
+  skip_existing: true
   upload_docs: no
   user: "Tim.White"
   password:
