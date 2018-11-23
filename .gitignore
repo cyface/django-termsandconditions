@@ -33,3 +33,4 @@ static_root/*
 *.virtualenv3
 *.virtualenv36
 *.venv*
+venv*
