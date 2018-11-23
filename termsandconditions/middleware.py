@@ -38,6 +38,9 @@ class TermsAndConditionsRedirectMiddleware(MiddlewareMixin):
 
         if user_authenticated and is_path_protected(current_path):
             for term in TermsAndConditions.get_active_terms_not_agreed_to(request.user):
+                # Check for querystring and include it if there is one
+                qs = request.META['QUERY_STRING']
+                current_path += '?' + qs if qs else ''
                 return redirect_to_terms_accept(current_path, term.slug)
 
         return None
