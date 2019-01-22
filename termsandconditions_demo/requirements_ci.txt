@@ -4,5 +4,5 @@ coverage==4.5.2
 coveralls==1.5.1
 future==0.17.1
 pylint==1.9.4  # pyup: <2.0 # (2.0 requires Python 3)
-psycopg2==2.7.6.1
+psycopg2==2.7.7
 sphinx==1.8.3
