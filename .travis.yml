@@ -2,8 +2,8 @@ git:
   depth: 1
 language: python
 python:
-- 2.7.14
-- 3.6.5
+- 2.7
+- 3.6
 services:
 - postgresql
 cache: pip
@@ -19,13 +19,13 @@ env:
 - DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
 matrix:
   exclude:
-  - python: 2.7.14
+  - python: 2.7
     env: DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings"
-  - python: 2.7.14
+  - python: 2.7
     env: DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
-  - python: 2.7.14
+  - python: 2.7
     env: DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings"
-  - python: 2.7.14
+  - python: 2.7
     env: DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
 install:
 - pip install $DJANGO
