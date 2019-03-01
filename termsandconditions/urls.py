@@ -10,6 +10,8 @@ from django.contrib import admin
 from .views import TermsView, AcceptTermsView, EmailTermsView
 from .models import DEFAULT_TERMS_SLUG
 
+app_name = 'terms_and_conditions'
+
 admin.autodiscover()
 
 urlpatterns = (
