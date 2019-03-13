@@ -11,6 +11,7 @@ omit =
 	*/devscripts*
 	*/docs/*
 	*/local_settings_template.py
+	*/run_tests.py
 	*/wsgi.py
 	*/app.py
 	*/__init__.py
