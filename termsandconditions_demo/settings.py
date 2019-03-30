@@ -26,7 +26,7 @@ ALLOWED_HOSTS = ('localhost', '127.0.0.1')
 # Cache Settings
 CACHES = {
     'default': {
-        #'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        # 'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
@@ -63,15 +63,15 @@ ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 # DB settings
 if os.environ.get('TERMS_DATABASE', "sqlite") == 'postgresql':
     DATABASES = {
-       'default': {
-           'ENGINE': 'django.db.backends.postgresql_psycopg2',
-           'NAME': 'termsandconditions',
-           'USER': 'termsandconditions',
-           'PASSWORD': '',
-           'HOST': '127.0.0.1',
-           'PORT': '',  # Set to empty string for default.
-           'SUPPORTS_TRANSACTIONS': 'true',
-       },
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'termsandconditions',
+            'USER': 'termsandconditions',
+            'PASSWORD': '',
+            'HOST': '127.0.0.1',
+            'PORT': '',  # Set to empty string for default.
+            'SUPPORTS_TRANSACTIONS': 'true',
+        },
     }
 else:
     DATABASES = {
@@ -189,7 +189,6 @@ if VERSION < (1, 10):
     # For use Pre Django 1.10
     MIDDLEWARE_CLASSES = MIDDLEWARE
 
-
 ROOT_URLCONF = 'termsandconditions_demo.urls'
 
 INSTALLED_APPS = (
@@ -214,7 +213,9 @@ TERMS_EXCLUDE_URL_PREFIX_LIST = {'/admin', '/terms'}
 TERMS_EXCLUDE_URL_LIST = {'/', '/termsrequired/', '/logout/', '/securetoo/'}
 TERMS_EXCLUDE_URL_CONTAINS_LIST = {}  # Useful if you are using internationalization and your URLs could change per language
 TERMS_CACHE_SECONDS = 30
-TERMS_EXCLUDE_USERS_WITH_PERM='auth.can_skip_t&c'
+TERMS_EXCLUDE_USERS_WITH_PERM = 'auth.can_skip_t&c'
+TERMS_IP_HEADER_NAME = 'REMOTE_ADDR'
+TERMS_STORE_IP_ADDRESS = True
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
