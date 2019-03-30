@@ -92,7 +92,11 @@ Configuration
 =============
 
 Configuration is minimal for termsandconditions itself, A quick guide to a basic setup
-is below, take a look at the demo app for more details.
+is below, take a look at the demo app's settings.py for more details.
+
+Some useful settings:
+    * `TERMS_IP_HEADER_NAME` Name of header to check for IP address.  Defaults to 'REMOTE_ADDR'. You might need to use 'HTTP_X_FORWARDED_FOR', or other headers in proxy setups.
+    * `TERMS_STORE_IP_ADDRESS` - True/False whether to store IPs with Terms Acceptance
 
 Requirements
 ------------
@@ -153,7 +157,7 @@ explicit full paths to exclude. TERMS_EXCLUDE_URL_CONTAINS_LIST is a list of url
 
 You can also define a setting TERMS_EXCLUDE_USERS_WITH_PERM to exclude users with a custom permission you create yourself.::
 
-    TERMS_EXCLUDE_USERS_WITH_PERM 'MyModel.can_skip_terms'
+    TERMS_EXCLUDE_USERS_WITH_PERM = 'MyModel.can_skip_terms'
 
 This can be useful if you need to run continuous login integration tests or simply exclude specific users from having to accept your T&Cs.
 Note that we exclude superusers from this check due to Django's has_perm() method returning True for any permission check, so adding this

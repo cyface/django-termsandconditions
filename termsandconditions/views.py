@@ -19,6 +19,7 @@ from smtplib import SMTPException
 
 LOGGER = logging.getLogger(name='termsandconditions')
 DEFAULT_TERMS_BASE_TEMPLATE = 'base.html'
+DEFAULT_TERMS_IP_HEADER_NAME = 'REMOTE_ADDR'
 
 
 class GetTermsViewMixin(object):
@@ -114,7 +115,7 @@ class AcceptTermsView(CreateView, GetTermsViewMixin):
 
         store_ip_address = getattr(settings, 'TERMS_STORE_IP_ADDRESS', True)
         if store_ip_address:
-            ip_address = request.META['REMOTE_ADDR']
+            ip_address = request.META.get(getattr(settings, 'TERMS_IP_HEADER_NAME', DEFAULT_TERMS_IP_HEADER_NAME))
         else:
             ip_address = ""
 
