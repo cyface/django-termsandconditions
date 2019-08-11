@@ -1,6 +1,6 @@
 -r requirements.txt
+coveralls==1.8.2
 coverage==4.5.4
-coveralls==1.8.1
 pylint==1.9.5  # pyup: <2.0  # (2.0 requires Python 3)
 sphinx==1.8.5 # pyup: <2.0 # (2.0 requires Python 3)
 sphinx-autobuild==0.7.1
