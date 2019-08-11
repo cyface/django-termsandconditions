@@ -27,7 +27,7 @@ def show_terms_if_not_agreed(context, field=TERMS_HTTP_PATH_FIELD):
     if not_agreed_terms and is_path_protected(url.path):
         return {'not_agreed_terms': not_agreed_terms, 'returnTo': url.path}
     else:
-        return {}
+        return {'not_agreed_terms': False}
 
 
 @register.filter
