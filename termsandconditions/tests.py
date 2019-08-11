@@ -370,7 +370,7 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
         """Check terms on unprotected url if not agreed"""
         context = self._make_context('/')
         result = show_terms_if_not_agreed(context)
-        self.assertDictEqual(result, {})
+        self.assertDictEqual(result, {'not_agreed_terms': False})
 
     def test_as_template(self):
         """Test as_template template tag"""
