@@ -1,6 +1,7 @@
 """View Decorators for termsandconditions module"""
+from urllib.parse import urlparse, urlunparse
+
 from django import VERSION as DJANGO_VERSION
-from future.moves.urllib.parse import urlparse, urlunparse
 from functools import wraps
 from django.http import HttpResponseRedirect, QueryDict
 from django.utils.decorators import available_attrs

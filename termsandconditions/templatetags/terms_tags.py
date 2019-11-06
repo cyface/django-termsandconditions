@@ -1,9 +1,10 @@
 """Django Tags"""
+from urllib.parse import urlparse
+
 from django import template
 from ..models import TermsAndConditions
 from ..middleware import is_path_protected
 from django.conf import settings
-from future.moves.urllib.parse import urlparse
 
 register = template.Library()
 DEFAULT_HTTP_PATH_FIELD = 'PATH_INFO'
