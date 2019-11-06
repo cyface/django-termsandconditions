@@ -2,31 +2,20 @@ git:
   depth: 1
 language: python
 python:
-- 2.7
-- 3.6
+- 3.7
 services:
 - postgresql
 cache: pip
 env:
-- DJANGO="Django<1.9,>=1.8" SETTINGS="termsandconditions_demo.settings"
-- DJANGO="Django<1.10,>=1.9" SETTINGS="termsandconditions_demo.settings"
-- DJANGO="Django<1.11,>=1.10" SETTINGS="termsandconditions_demo.settings"
-- DJANGO="Django<1.12,>=1.11" SETTINGS="termsandconditions_demo.settings"
-- DJANGO="Django<1.12,>=1.11" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
 - DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings"
 - DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
 - DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings"
 - DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
-matrix:
-  exclude:
-  - python: 2.7
-    env: DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings"
-  - python: 2.7
-    env: DJANGO="Django<2.1,>=2.0" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
-  - python: 2.7
-    env: DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings"
-  - python: 2.7
-    env: DJANGO="Django<2.2,>=2.1" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
+- DJANGO="Django<2.3,>=2.2" SETTINGS="termsandconditions_demo.settings"
+- DJANGO="Django<2.3,>=2.2" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
+- DJANGO="Django<3.1,>=2.2" SETTINGS="termsandconditions_demo.settings"
+- DJANGO="Django<3.1,>=2.2" SETTINGS="termsandconditions_demo.settings" TERMS_DATABASE="postgresql"
+
 install:
 - pip install $DJANGO
 - pip install -r termsandconditions_demo/requirements_ci.txt
