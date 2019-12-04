@@ -2,7 +2,7 @@
 import os
 import sys
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'termsandconditions_demo.settings'
+os.environ["DJANGO_SETTINGS_MODULE"] = "termsandconditions_demo.settings"
 test_dir = os.path.dirname(__file__)
 sys.path.insert(0, test_dir)
 
@@ -16,5 +16,5 @@ def run_tests():
     sys.exit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_tests()
