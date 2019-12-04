@@ -5,15 +5,10 @@ from collections import OrderedDict
 
 from django.db import models
 from django.conf import settings
-from django import VERSION as DJANGO_VERSION
-
-if DJANGO_VERSION <= (2, 0, 0):
-    from django.core.urlresolvers import reverse
-else:
-    from django.urls import reverse
+from django.core.cache import cache
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.core.cache import cache
+from django.urls import reverse
 
 import logging
 
@@ -98,7 +93,9 @@ class TermsAndConditions(models.Model):
             active_terms_dict = {}
             active_terms_ids = []
 
-            active_terms_set = TermsAndConditions.objects.filter(date_active__isnull=False, date_active__lte=timezone.now()).order_by('date_active')
+            active_terms_set = TermsAndConditions.objects.filter(date_active__isnull=False,
+                                                                 date_active__lte=timezone.now()).order_by(
+                'date_active')
             for active_terms in active_terms_set:
                 active_terms_dict[active_terms.slug] = active_terms.id
 
@@ -117,7 +114,8 @@ class TermsAndConditions(models.Model):
 
         active_terms_list = cache.get('tandc.active_terms_list')
         if active_terms_list is None:
-            active_terms_list = TermsAndConditions.objects.filter(id__in=TermsAndConditions.get_active_terms_ids()).order_by('slug')
+            active_terms_list = TermsAndConditions.objects.filter(
+                id__in=TermsAndConditions.get_active_terms_ids()).order_by('slug')
             cache.set('tandc.active_terms_list', active_terms_list, TERMS_CACHE_SECONDS)
 
         return active_terms_list

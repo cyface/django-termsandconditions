@@ -1,7 +1,7 @@
 -r requirements.txt
+black==19.10b0
 coveralls==1.9.1
 coverage==4.5.4
 pylint==2.4.3
-sphinx==2.2.3
+sphinx==2.2.2
 sphinx-autobuild==0.7.1
-texlive

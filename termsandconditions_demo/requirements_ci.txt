@@ -1,7 +1,6 @@
-django-jenkins==0.110.0
 coveralls==1.9.1
-django-jenkins==0.110.0
 coverage==4.5.4
+django-jenkins==0.110.0
 pylint==2.4.3
 psycopg2==2.8.4
-sphinx==2.2.1
+sphinx==2.2.2

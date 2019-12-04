@@ -1,19 +1,18 @@
 """Django Views for the termsandconditions module"""
 
 # pylint: disable=E1120,R0901,R0904
-from django import VERSION as DJANGO_VERSION
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 
 from .forms import UserTermsAndConditionsModelForm, EmailTermsForm
 from .models import TermsAndConditions, UserTermsAndConditions
 from django.conf import settings
+from django.core.mail import send_mail
 from django.contrib import messages
-from django.utils.translation import gettext as _
 from django.http import HttpResponseRedirect
+from django.utils.translation import gettext as _
 from django.views.generic import DetailView, CreateView, FormView
 from django.template.loader import get_template
-from django.core.mail import send_mail
 import logging
 from smtplib import SMTPException
 
@@ -98,12 +97,7 @@ class AcceptTermsView(CreateView, GetTermsViewMixin):
         if not terms_ids:  # pragma: nocover
             return HttpResponseRedirect(return_url)
 
-        if DJANGO_VERSION <= (2, 0, 0):
-            user_authenticated = request.user.is_authenticated()
-        else:
-            user_authenticated = request.user.is_authenticated
-
-        if user_authenticated:
+        if request.user.is_authenticated:
             user = request.user
         else:
             # Get user out of saved pipeline from django-socialauth
