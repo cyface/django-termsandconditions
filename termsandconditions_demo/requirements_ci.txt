@@ -1,7 +1,6 @@
 django-jenkins==0.110.0
-django-jenkins==0.110.0
-coveralls==1.9.1
 coverage==5.0.1
+coveralls==1.9.2
 future==0.18.2
 pylint==1.9.5  # pyup: <2.0 # (2.0 requires Python 3)
 psycopg2==2.8.4
