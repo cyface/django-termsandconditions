@@ -1,6 +1,6 @@
-coveralls==1.9.1
-coverage==4.5.4
+coveralls==1.9.2
+coverage==5.0.1
 django-jenkins==0.110.0
-pylint==2.4.3
+pylint==2.4.4
 psycopg2==2.8.4
 sphinx==2.2.2
