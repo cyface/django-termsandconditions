@@ -14,10 +14,6 @@ Django Terms and Conditions
     :target: https://coveralls.io/github/cyface/django-termsandconditions?branch=master
     :alt: Coveralls Code Coverage
 
-.. image:: https://scrutinizer-ci.com/g/cyface/django-termsandconditions/badges/quality-score.png?b=master
-    :target: https://scrutinizer-ci.com/g/cyface/django-termsandconditions/
-    :alt: Scrutinizer Code Quality
-
 .. image:: https://readthedocs.org/projects/django-termsandconditions/badge/?version=latest
     :target: http://django-termsandconditions.readthedocs.org/en/latest/?badge=latest
     :alt: Documentation Status
