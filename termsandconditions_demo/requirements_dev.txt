@@ -1,4 +1,5 @@
 -r requirements.txt
+black==19.10b0
 coverage==5.0.1
 coveralls==1.9.2
 pylint>=1.9.4  # pyup: <2.0  # (2.0 requires Python 3)

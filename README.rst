@@ -51,6 +51,8 @@ This module is meant to be as quick to integrate as possible, and thus extensive
 Installation
 ============
 
+** Note that version 2.0+ of django-termsandconditions only works with Python 3 and Django 2+ **
+
 From `pypi <https://pypi.python.org>`_::
 
     $ pip install django-termsandconditions
