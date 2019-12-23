@@ -12,7 +12,7 @@ setup(
     packages=find_packages(exclude=("termsandconditions_demo", "tests", "devscripts")),
     include_package_data=True,
     zip_safe=False,
-    install_requires=["django>=2.0"],
+    install_requires=["django>=2.2"],
     test_suite="termsandconditions_demo.run_tests.run_tests",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
