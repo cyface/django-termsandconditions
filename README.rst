@@ -25,7 +25,7 @@ Django Terms and Conditions
 Django Terms and Conditions gives you an configurable way to send users to a T&C acceptance page before they
 can access the site.
 
-*Note that version 2.0+ requires Python 3 and Django 2.2+.*
+*Note that version 2.0+ requires Python 3.5+ and Django 2.2+.*
 
 Contributors:
 
@@ -49,7 +49,7 @@ This module is meant to be as quick to integrate as possible, and thus extensive
 Installation
 ============
 
-** Note that version 2.0+ of django-termsandconditions only works with Python 3 and Django 2+ **
+** Note that version 2.0+ of django-termsandconditions only works with Python 3.5+ and Django 2.2+ **
 
 From `pypi <https://pypi.python.org>`_::
 
@@ -101,7 +101,7 @@ Some useful settings:
 Requirements
 ------------
 
-The app needs ``django>=1.8.3,<2.1``.
+The app needs ``django>=2.2``.
 
 Add INSTALLED_APPS
 ------------------
