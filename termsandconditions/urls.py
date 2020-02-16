@@ -5,53 +5,70 @@
 
 # pylint: disable=W0401, W0614, E1120
 
-from django.conf.urls import url
 from django.contrib import admin
+from django.urls import path, register_converter
+
 from .views import TermsView, AcceptTermsView, EmailTermsView
 from .models import DEFAULT_TERMS_SLUG
 
 admin.autodiscover()
 
+
+class TermsVersionConverter:
+    """
+    Registers Django URL path converter for Terms Version Numbers
+    """
+    regex = "[0-9.]+"
+
+    def to_python(self, value):
+        return value
+
+    def to_url(self, value):
+        return value
+
+
+register_converter(TermsVersionConverter, 'termsversion')
+
 urlpatterns = (
     # View Default Terms
-    url(r"^$", TermsView.as_view(), {"slug": DEFAULT_TERMS_SLUG}, name="tc_view_page"),
+    path("", TermsView.as_view(), {"slug": DEFAULT_TERMS_SLUG}, name="tc_view_page"),
     # View Specific Active Terms
-    url(
-        r"^view/(?P<slug>[a-zA-Z0-9_.-]+)/$",
+    path(
+        "view/<slug:slug>/",
         TermsView.as_view(),
         name="tc_view_specific_page",
     ),
     # View Specific Version of Terms
-    url(
-        r"^view/(?P<slug>[a-zA-Z0-9_.-]+)/(?P<version>[0-9.]+)/$",
+    path(
+        "view/<slug:slug>/<termsversion:version>/",
         TermsView.as_view(),
         name="tc_view_specific_version_page",
     ),
     # Print Specific Version of Terms
-    url(
-        r"^print/(?P<slug>[a-zA-Z0-9_.-]+)/(?P<version>[0-9.]+)/$",
+    path(
+        "print/<slug:slug>/<termsversion:version>/",
         TermsView.as_view(template_name="termsandconditions/tc_print_terms.html"),
         name="tc_print_page",
     ),
     # Accept Terms
-    url(r"^accept/$", AcceptTermsView.as_view(), name="tc_accept_page"),
+    path("accept/", AcceptTermsView.as_view(), name="tc_accept_page"),
     # Accept Specific Terms
-    url(
-        r"^accept/(?P<slug>[a-zA-Z0-9_.-]+)$",
+    path(
+        "accept/<termsversion:slug>/",
         AcceptTermsView.as_view(),
         name="tc_accept_specific_page",
     ),
     # Accept Specific Terms Version
-    url(
-        r"^accept/(?P<slug>[a-zA-Z0-9_.-]+)/(?P<version>[0-9\.]+)/$",
+    path(
+        "accept/<slug:slug>/<termsversion:version>/",
         AcceptTermsView.as_view(),
         name="tc_accept_specific_version_page",
     ),
     # Email Terms
-    url(r"^email/$", EmailTermsView.as_view(), name="tc_email_page"),
+    path("email/", EmailTermsView.as_view(), name="tc_email_page"),
     # Email Specific Terms Version
-    url(
-        r"^email/(?P<slug>[a-zA-Z0-9_.-]+)/(?P<version>[0-9\.]+)/$",
+    path(
+        "email/<slug:slug>/<termsversion:version>/",
         EmailTermsView.as_view(),
         name="tc_specific_version_page",
     ),
