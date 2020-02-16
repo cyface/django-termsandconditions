@@ -54,7 +54,7 @@ urlpatterns = (
     path("accept/", AcceptTermsView.as_view(), name="tc_accept_page"),
     # Accept Specific Terms
     path(
-        "accept/<termsversion:slug>/",
+        "accept/<slug:slug>/",
         AcceptTermsView.as_view(),
         name="tc_accept_specific_page",
     ),
