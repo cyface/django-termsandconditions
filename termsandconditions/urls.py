@@ -31,7 +31,7 @@ register_converter(TermsVersionConverter, 'termsversion')
 
 urlpatterns = (
     # View Default Terms
-    path("", TermsView.as_view(), {"slug": DEFAULT_TERMS_SLUG}, name="tc_view_page"),
+    path("", TermsView.as_view(), name="tc_view_page"),
     # View Specific Active Terms
     path(
         "view/<slug:slug>/",
