@@ -57,9 +57,6 @@ class TermsView(DetailView, GetTermsViewMixin):
     def get_context_data(self, **kwargs):
         """Pass additional context data"""
         context = super(TermsView, self).get_context_data(**kwargs)
-        if context["terms_list"][0] is None:
-            # TODO: Raise Terms No Defined Instead
-            raise Http404
         context["terms_base_template"] = getattr(
             settings, "TERMS_BASE_TEMPLATE", DEFAULT_TERMS_BASE_TEMPLATE
         )
