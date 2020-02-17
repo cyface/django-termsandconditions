@@ -173,7 +173,7 @@ class TermsAndConditionsTests(TestCase):
         LOGGER.debug("Test /secure/ after login")
         logged_in_response = self.client.get("/secure/", follow=True)
         self.assertRedirects(
-            logged_in_response, "/terms/accept/contrib-terms?returnTo=/secure/"
+            logged_in_response, "/terms/accept/contrib-terms/?returnTo=/secure/"
         )
 
     def test_terms_required_redirect(self):
@@ -289,7 +289,7 @@ class TermsAndConditionsTests(TestCase):
         LOGGER.debug("Test user1 is redirected when changing pages")
         post_upgrade_response = self.client.get("/secure/", follow=True)
         self.assertRedirects(
-            post_upgrade_response, "/terms/accept/site-terms?returnTo=/secure/"
+            post_upgrade_response, "/terms/accept/site-terms/?returnTo=/secure/"
         )
 
     def test_no_middleware(self):
