@@ -1,6 +1,7 @@
 """Unit Tests for the termsandconditions module"""
 
 # pylint: disable=R0904, C0103
+import time
 from importlib import import_module
 import logging
 
@@ -309,20 +310,69 @@ class TermsAndConditionsTests(TestCase):
         admin_response = self.client.get("/admin", follow=True)
         self.assertContains(admin_response, "administration")
 
-    def test_terms_view(self):
-        """Test Accessing the View Terms and Conditions Functions"""
+    def test_anonymous_terms_view(self):
+        """Test Accessing the View Terms and Conditions for Anonymous User"""
+        active_terms = TermsAndConditions.get_active_terms_list()
 
-        LOGGER.debug("Test /terms/")
+        LOGGER.debug("Test /terms/ with anon")
         root_response = self.client.get("/terms/", follow=True)
+        for terms in active_terms:
+            self.assertContains(root_response, terms.name)
+            self.assertContains(root_response, terms.text)
         self.assertContains(root_response, "Terms and Conditions")
 
-        LOGGER.debug("Test /terms/view/site-terms")
-        slug_response = self.client.get("/terms/view/site-terms", follow=True)
+        LOGGER.debug("Test /terms/view/site-terms with anon")
+        slug_response = self.client.get(self.terms2.get_absolute_url(), follow=True)
+        self.assertContains(slug_response, self.terms2.name)
+        self.assertContains(slug_response, self.terms2.text)
         self.assertContains(slug_response, "Terms and Conditions")
 
-        LOGGER.debug("Test /terms/view/site-terms/1.5")
+        LOGGER.debug("Test /terms/view/contributor-terms/1.5 with anon")
         version_response = self.client.get(self.terms3.get_absolute_url(), follow=True)
+        self.assertContains(version_response, self.terms3.name)
+        self.assertContains(version_response, self.terms3.text)
+
+    def test_user_terms_view(self):
+        """Test Accessing the View Terms and Conditions Page for Logged In User"""
+        login_response = self.client.login(username="user1", password="user1password")
+        self.assertTrue(login_response)
+
+        user1_not_agreed_terms = TermsAndConditions.get_active_terms_not_agreed_to(self.user1)
+        self.assertEqual(len(user1_not_agreed_terms), 2)
+
+        LOGGER.debug("Test /terms/ with user1")
+        root_response = self.client.get("/terms/", follow=True)
+        for terms in user1_not_agreed_terms:
+            self.assertContains(root_response, terms.text)
+        self.assertContains(root_response, "Terms and Conditions")
+        self.assertContains(root_response, "Sign Out")
+
+        # Accept terms and check again
+        UserTermsAndConditions.objects.create(user=self.user1, terms=self.terms3)
+        user1_not_agreed_terms = TermsAndConditions.get_active_terms_not_agreed_to(self.user1)
+        self.assertEqual(len(user1_not_agreed_terms), 1)
+        LOGGER.debug("Test /terms/ with user1 after accept")
+        post_accept_response = self.client.get("/terms/", follow=True)
+        for terms in user1_not_agreed_terms:
+            self.assertContains(post_accept_response, terms.text)
+        self.assertNotContains(post_accept_response, self.terms3.name)
+        self.assertContains(post_accept_response, "Terms and Conditions")
+        self.assertContains(post_accept_response, "Sign Out")
+
+        # Check by slug and version while logged in
+        LOGGER.debug("Test /terms/view/site-terms as user1")
+        slug_response = self.client.get(self.terms2.get_absolute_url(), follow=True)
+        self.assertContains(slug_response, self.terms2.name)
+        self.assertContains(slug_response, self.terms2.text)
+        self.assertContains(slug_response, "Terms and Conditions")
+        self.assertContains(slug_response, "Sign Out")
+
+        LOGGER.debug("Test /terms/view/site-terms/1.5 as user1")
+        version_response = self.client.get(self.terms3.get_absolute_url(), follow=True)
+        self.assertContains(version_response, self.terms3.name)
+        self.assertContains(version_response, self.terms3.text)
         self.assertContains(version_response, "Terms and Conditions")
+        self.assertContains(slug_response, "Sign Out")
 
     def test_user_pipeline(self):
         """Test the case of a user being partially created via the django-socialauth pipeline"""

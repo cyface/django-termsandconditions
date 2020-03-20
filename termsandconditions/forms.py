@@ -31,7 +31,7 @@ class UserTermsAndConditionsModelForm(forms.Form):
         else:
             self.terms = terms_list
 
-        super(UserTermsAndConditionsModelForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class EmailTermsForm(forms.Form):

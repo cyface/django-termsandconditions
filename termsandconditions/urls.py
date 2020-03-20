@@ -7,6 +7,7 @@
 
 from django.contrib import admin
 from django.urls import path, register_converter
+from django.views.decorators.cache import never_cache
 
 from .views import TermsView, AcceptTermsView, EmailTermsView
 from .models import DEFAULT_TERMS_SLUG
@@ -31,23 +32,23 @@ register_converter(TermsVersionConverter, 'termsversion')
 
 urlpatterns = (
     # View Default Terms
-    path("", TermsView.as_view(), name="tc_view_page"),
+    path("", never_cache(TermsView.as_view()), name="tc_view_page"),
     # View Specific Active Terms
     path(
         "view/<slug:slug>/",
-        TermsView.as_view(),
+        never_cache(TermsView.as_view()),
         name="tc_view_specific_page",
     ),
     # View Specific Version of Terms
     path(
         "view/<slug:slug>/<termsversion:version>/",
-        TermsView.as_view(),
+        never_cache(TermsView.as_view()),
         name="tc_view_specific_version_page",
     ),
     # Print Specific Version of Terms
     path(
         "print/<slug:slug>/<termsversion:version>/",
-        TermsView.as_view(template_name="termsandconditions/tc_print_terms.html"),
+        never_cache(TermsView.as_view(template_name="termsandconditions/tc_print_terms.html")),
         name="tc_print_page",
     ),
     # Accept Terms
@@ -69,7 +70,7 @@ urlpatterns = (
     # Email Specific Terms Version
     path(
         "email/<slug:slug>/<termsversion:version>/",
-        EmailTermsView.as_view(),
+        never_cache(EmailTermsView.as_view()),
         name="tc_specific_version_page",
     ),
 )

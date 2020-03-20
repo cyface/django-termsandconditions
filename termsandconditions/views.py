@@ -56,7 +56,7 @@ class TermsView(DetailView, GetTermsViewMixin):
 
     def get_context_data(self, **kwargs):
         """Pass additional context data"""
-        context = super(TermsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["terms_base_template"] = getattr(
             settings, "TERMS_BASE_TEMPLATE", DEFAULT_TERMS_BASE_TEMPLATE
         )
@@ -81,7 +81,7 @@ class AcceptTermsView(CreateView, GetTermsViewMixin):
 
     def get_context_data(self, **kwargs):
         """Pass additional context data"""
-        context = super(AcceptTermsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["terms_base_template"] = getattr(
             settings, "TERMS_BASE_TEMPLATE", DEFAULT_TERMS_BASE_TEMPLATE
         )
@@ -151,7 +151,7 @@ class EmailTermsView(FormView, GetTermsViewMixin):
 
     def get_context_data(self, **kwargs):
         """Pass additional context data"""
-        context = super(EmailTermsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["terms_base_template"] = getattr(
             settings, "TERMS_BASE_TEMPLATE", DEFAULT_TERMS_BASE_TEMPLATE
         )
@@ -197,10 +197,10 @@ class EmailTermsView(FormView, GetTermsViewMixin):
 
         self.success_url = form.cleaned_data.get("returnTo", "/") or "/"
 
-        return super(EmailTermsView, self).form_valid(form)
+        return super().form_valid(form)
 
     def form_invalid(self, form):
         """Override of CreateView method, logs invalid email form submissions."""
         LOGGER.debug("Invalid Email Form Submitted")
         messages.add_message(self.request, messages.ERROR, _("Invalid Email Address."))
-        return super(EmailTermsView, self).form_invalid(form)
+        return super().form_invalid(form)

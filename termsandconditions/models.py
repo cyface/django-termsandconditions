@@ -157,6 +157,9 @@ class TermsAndConditions(models.Model):
     def get_active_terms_not_agreed_to(user):
         """Checks to see if a specified user has agreed to all the latest terms and conditions"""
 
+        if not user.is_authenticated:
+            return TermsAndConditions.get_active_terms_list()
+
         if TERMS_EXCLUDE_USERS_WITH_PERM is not None:
             if user.has_perm(TERMS_EXCLUDE_USERS_WITH_PERM) and not user.is_superuser:
                 # Django's has_perm() returns True if is_superuser, we don't want that
