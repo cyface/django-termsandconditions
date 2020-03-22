@@ -9,8 +9,7 @@ from django.contrib import admin
 from django.urls import path, register_converter
 from django.views.decorators.cache import never_cache
 
-from .views import TermsView, AcceptTermsView, EmailTermsView
-from .models import DEFAULT_TERMS_SLUG
+from .views import AcceptTermsView, EmailTermsView, TermsActiveView, TermsView
 
 admin.autodiscover()
 
@@ -31,7 +30,7 @@ class TermsVersionConverter:
 register_converter(TermsVersionConverter, 'termsversion')
 
 urlpatterns = (
-    # View Default Terms
+    # View Unaccepted Terms
     path("", never_cache(TermsView.as_view()), name="tc_view_page"),
     # View Specific Active Terms
     path(
@@ -45,6 +44,8 @@ urlpatterns = (
         never_cache(TermsView.as_view()),
         name="tc_view_specific_version_page",
     ),
+    # View All Active Terms
+    path("active/", never_cache(TermsActiveView.as_view()), name="tc_view_active_page"),
     # Print Specific Version of Terms
     path(
         "print/<slug:slug>/<termsversion:version>/",

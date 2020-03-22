@@ -44,30 +44,6 @@ class GetTermsViewMixin(object):
         return terms
 
 
-class TermsView(DetailView, GetTermsViewMixin):
-    """
-    View Terms and Conditions View
-
-    url: /terms/view
-    """
-
-    template_name = "termsandconditions/tc_view_terms.html"
-    context_object_name = "terms_list"
-
-    def get_context_data(self, **kwargs):
-        """Pass additional context data"""
-        context = super().get_context_data(**kwargs)
-        context["terms_base_template"] = getattr(
-            settings, "TERMS_BASE_TEMPLATE", DEFAULT_TERMS_BASE_TEMPLATE
-        )
-        return context
-
-    def get_object(self, queryset=None):
-        """Override of DetailView method, queries for which T&C to return"""
-        LOGGER.debug("termsandconditions.views.TermsView.get_object")
-        return self.get_terms(self.kwargs)
-
-
 class AcceptTermsView(CreateView, GetTermsViewMixin):
     """
     Terms and Conditions Acceptance view
@@ -204,3 +180,40 @@ class EmailTermsView(FormView, GetTermsViewMixin):
         LOGGER.debug("Invalid Email Form Submitted")
         messages.add_message(self.request, messages.ERROR, _("Invalid Email Address."))
         return super().form_invalid(form)
+
+
+class TermsView(DetailView, GetTermsViewMixin):
+    """
+    View Unaccepted Terms and Conditions View
+
+    url: /terms/
+    """
+
+    template_name = "termsandconditions/tc_view_terms.html"
+    context_object_name = "terms_list"
+
+    def get_context_data(self, **kwargs):
+        """Pass additional context data"""
+        context = super().get_context_data(**kwargs)
+        context["terms_base_template"] = getattr(
+            settings, "TERMS_BASE_TEMPLATE", DEFAULT_TERMS_BASE_TEMPLATE
+        )
+        return context
+
+    def get_object(self, queryset=None):
+        """Override of DetailView method, queries for which T&C to return"""
+        LOGGER.debug("termsandconditions.views.TermsView.get_object")
+        return self.get_terms(self.kwargs)
+
+
+class TermsActiveView(TermsView):
+    """
+    View Active Terms and Conditions View
+
+    url: /terms/active/
+    """
+
+    def get_object(self, queryset=None):
+        """Override of DetailView method, queries for which T&C to return"""
+        LOGGER.debug("termsandconditions.views.AllTermsView.get_object")
+        return TermsAndConditions.get_active_terms_list()

@@ -27,9 +27,10 @@ can access the site.
 
 *Note that version 2.0+ requires Python 3.5+ and Django 2.2+.*
 
-Contributors:
-
+Maintainer:
 - Tim White (tim@cyface.com)
+
+Contributors:
 - Adibo (https://github.com/adibo)
 - Nathan Swain (https://github.com/swainn)
 
@@ -132,6 +133,20 @@ Terms and Conditions Versioning
 Note that the versions and dates of T&Cs are important. You can create a new version of a T&C with a future date,
 and once that date is in the past, it will force users to accept that new version of the T&Cs.
 
+Terms and Conditions Default URLs
+---------------------------------
+If you have included the terms urls under **/terms**, these URLs would all be prefixed by that (e.g. /terms/accept/).
+
+* **/** - List all terms that have not been accepted
+* **/accept/** - List all terms that have not been accepted with accept links
+* **/accept/<slug>/** - Show page to accept latest version of a specific terms
+* **/accept/<slug>/<version>/** - Show page to accept a specific version of a specific terms
+* **/active/** - List all active terms
+* **/email/** - Show page to email all unaccepted terms
+* **/email/<slug>/<version>/** - Show page to email specific version of specific terms
+* **/view/<slug>/** - View the latest version of a specific terms
+* **/view/<slug>/<version>/** - View a specific version of a specific terms
+
 Terms and Conditions Middleware
 -------------------------------
 You can force protection of your whole site by using the T&C middleware. Once activated, any attempt to access an
@@ -162,6 +177,14 @@ You can also define a setting TERMS_EXCLUDE_USERS_WITH_PERM to exclude users wit
 This can be useful if you need to run continuous login integration tests or simply exclude specific users from having to accept your T&Cs.
 Note that we exclude superusers from this check due to Django's has_perm() method returning True for any permission check, so adding this
 permission to a superuser has no effect.
+
+Terms and Conditions Useful Methods
+-----------------------------------
+
+* **TermsAndConditions.get_active_terms_list()** - Returns a list of all active terms (accepted by current user or not)
+* **TermsAndConditions.get_active_terms_not_agreed_to(<User>)** - Returns a list of terms the specified user has not agreed to
+* **TermsAndConditions.get_active(<slug>)** - Returns the active terms of the specified terms slug
+
 
 Terms and Conditions Cache
 --------------------------
