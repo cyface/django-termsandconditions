@@ -18,6 +18,7 @@ class TermsVersionConverter:
     """
     Registers Django URL path converter for Terms Version Numbers
     """
+
     regex = "[0-9.]+"
 
     def to_python(self, value):
@@ -27,7 +28,7 @@ class TermsVersionConverter:
         return value
 
 
-register_converter(TermsVersionConverter, 'termsversion')
+register_converter(TermsVersionConverter, "termsversion")
 
 urlpatterns = (
     # View Unaccepted Terms
@@ -49,7 +50,9 @@ urlpatterns = (
     # Print Specific Version of Terms
     path(
         "print/<slug:slug>/<termsversion:version>/",
-        never_cache(TermsView.as_view(template_name="termsandconditions/tc_print_terms.html")),
+        never_cache(
+            TermsView.as_view(template_name="termsandconditions/tc_print_terms.html")
+        ),
         name="tc_print_page",
     ),
     # Accept Terms
