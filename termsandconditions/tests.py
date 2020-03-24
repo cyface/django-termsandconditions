@@ -17,7 +17,6 @@ from .models import TermsAndConditions, UserTermsAndConditions, DEFAULT_TERMS_SL
 from .pipeline import user_accept_terms
 from .templatetags.terms_tags import show_terms_if_not_agreed
 
-
 LOGGER = logging.getLogger(name="termsandconditions")
 
 
@@ -248,6 +247,20 @@ class TermsAndConditionsTests(TestCase):
         self.assertEqual(user_terms.terms, self.terms2)
         self.assertTrue(user_terms.ip_address)
 
+    def test_accept_store_ip_address_multiple(self):
+        """Test storing IP address when it is a list"""
+        self.client.login(username="user1", password="user1password")
+        self.client.post(
+            "/terms/accept/",
+            {"terms": 2, "returnTo": "/secure/"},
+            follow=True,
+            REMOTE_ADDR="0.0.0.0, 1.1.1.1",
+        )
+        user_terms = UserTermsAndConditions.objects.all()[0]
+        self.assertEqual(user_terms.user, self.user1)
+        self.assertEqual(user_terms.terms, self.terms2)
+        self.assertTrue(user_terms.ip_address)
+
     def test_accept_no_ip_address(self):
         """Test with IP address storage setting false"""
         self.client.login(username="user1", password="user1password")
@@ -337,7 +350,9 @@ class TermsAndConditionsTests(TestCase):
         login_response = self.client.login(username="user1", password="user1password")
         self.assertTrue(login_response)
 
-        user1_not_agreed_terms = TermsAndConditions.get_active_terms_not_agreed_to(self.user1)
+        user1_not_agreed_terms = TermsAndConditions.get_active_terms_not_agreed_to(
+            self.user1
+        )
         self.assertEqual(len(user1_not_agreed_terms), 2)
 
         LOGGER.debug("Test /terms/ with user1")
@@ -349,7 +364,9 @@ class TermsAndConditionsTests(TestCase):
 
         # Accept terms and check again
         UserTermsAndConditions.objects.create(user=self.user1, terms=self.terms3)
-        user1_not_agreed_terms = TermsAndConditions.get_active_terms_not_agreed_to(self.user1)
+        user1_not_agreed_terms = TermsAndConditions.get_active_terms_not_agreed_to(
+            self.user1
+        )
         self.assertEqual(len(user1_not_agreed_terms), 1)
         LOGGER.debug("Test /terms/ with user1 after accept")
         post_accept_response = self.client.get("/terms/", follow=True)

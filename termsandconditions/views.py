@@ -97,6 +97,8 @@ class AcceptTermsView(CreateView, GetTermsViewMixin):
             ip_address = request.META.get(
                 getattr(settings, "TERMS_IP_HEADER_NAME", DEFAULT_TERMS_IP_HEADER_NAME)
             )
+            if "," in ip_address:
+                ip_address = ip_address.split(",")[0].strip()
         else:
             ip_address = ""
 
