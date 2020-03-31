@@ -27,8 +27,10 @@
                 </div>
             </div>
 
-            <p><a href="{% url "tc_print_page" terms.slug|safe terms.version_number|safe %}"
-                  target="_blank">{% trans 'Print' %} {{ terms.name|safe }}</a></p>
+            <p>
+                <a href="{% url "tc_print_page" terms.slug|safe terms.version_number|safe %}"
+                  target="_blank" rel="noopener noreferrer">{% trans 'Print' %} {{ terms.name|safe }}</a>
+            </p>
         {% endfor %}
         <form action="{% url 'tc_accept_page' %}" method="post" id="tc-terms-form" data-ajax="false">
             {% csrf_token %}

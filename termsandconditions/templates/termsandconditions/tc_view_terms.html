@@ -19,7 +19,7 @@
                     {{ terms.text|safe }}
                 </div>
                 <p><a href="{% url 'tc_print_page' terms.slug|safe terms.version_number|safe %}"
-                      target="_blank">{% trans 'Print' %} {{ terms.name|safe }}</a></p>
+                      target="_blank" rel="noopener noreferrer">{% trans 'Print' %} {{ terms.name|safe }}</a></p>
             {% else %}
                 <h1>No terms defined.</h1>
             {% endif %}
