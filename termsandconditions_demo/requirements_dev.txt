@@ -3,5 +3,5 @@ black==19.10b0
 coverage==5.0.4
 coveralls==1.11.1
 pylint>=2.4.4
-sphinx==2.4.4
+sphinx==3.0.0
 sphinx-autobuild==0.7.1
