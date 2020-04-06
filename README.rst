@@ -28,11 +28,11 @@ can access the site.
 *Note that version 2.0+ requires Python 3.5+ and Django 2.2+.*
 
 Maintainer:
-- Tim White (tim@cyface.com)
+    - Tim White (tim@cyface.com)
 
 Contributors:
-- Adibo (https://github.com/adibo)
-- Nathan Swain (https://github.com/swainn)
+    - Adibo (https://github.com/adibo)
+    - Nathan Swain (https://github.com/swainn)
 
 .. contents:: Table of Contents
 
