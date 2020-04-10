@@ -3,4 +3,4 @@ coverage==5.0.4
 coveralls==2.0.0
 pylint==2.4.4
 psycopg2==2.8.5
-sphinx==3.0.0
+sphinx==3.0.1
