@@ -1,5 +1,5 @@
 django-jenkins==0.110.0
-coverage==5.1
+coverage==5.2
 coveralls==2.0.0
 pylint==2.5.3
 psycopg2==2.8.5
