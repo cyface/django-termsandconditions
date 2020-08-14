@@ -17,7 +17,6 @@
 .tmp_*
 .tox
 build/*
-dist
 local_settings.py
 nosetests.xml
 pylint.txt
