@@ -414,6 +414,7 @@ After that you just need to make migrations again (to account for new
 fields due to modeltranslation):
 
     python manage.py makemigrations termsandconditions
+    python manage.py migrate termsandconditions
 
 That's it. Your model is now ready to cover the translations! Just as
 hint we suggest to also include some data migration in order to populate
