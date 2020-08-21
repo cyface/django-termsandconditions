@@ -1,15 +1,15 @@
 Django Terms and Conditions
 ===========================
 
-![image](https://badge.fury.io/py/django-termsandconditions.svg:target:http://badge.fury.io/py/django-termsandconditions:alt:PyPi%20Package%20Version)
+[![PyPi Package Version](https://badge.fury.io/py/django-termsandconditions.svg)](http://badge.fury.io/py/django-termsandconditions)
 
-![image](https://travis-ci.org/cyface/django-termsandconditions.svg?branch=master:target:https://travis-ci.org/cyface/django-termsandconditions:alt:Travis%20Build%20Status)
+[![Travis Build Status](https://travis-ci.org/cyface/django-termsandconditions.svg?branch=master)](target:https://travis-ci.org/cyface/django-termsandconditions)
 
-![image](https://coveralls.io/repos/github/cyface/django-termsandconditions/badge.svg?branch=master:target:https://coveralls.io/github/cyface/django-termsandconditions?branch=master:alt:Coveralls%20Code%20Coverage)
+[![Coveralls Code Coverage](https://coveralls.io/repos/github/cyface/django-termsandconditions/badge.svg?branch=master)](https://coveralls.io/github/cyface/django-termsandconditions?branch=master)
 
-![image](https://readthedocs.org/projects/django-termsandconditions/badge/?version=latest:target:http://django-termsandconditions.readthedocs.org/en/latest/?badge=latest:alt:Documentation%20Status)
+[![Documentation Status](https://readthedocs.org/projects/django-termsandconditions/badge/?version=latest)](http://django-termsandconditions.readthedocs.org/en/latest/?badge=latest)
 
-![image](https://badgen.net/dependabot/cyface/django-termsandconditions?icon=dependabot:target:https://badgen.net/dependabot/cyface/django-termsandconditions?icon=dependabot:alt:Updates)
+[![Updates](https://badgen.net/dependabot/cyface/django-termsandconditions?icon=dependabot)](https://badgen.net/dependabot/cyface/django-termsandconditions?icon=dependabot)
 
 Django Terms and Conditions gives you an configurable way to send users
 to a T&C acceptance page before they can access the site.
