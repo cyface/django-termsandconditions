@@ -1,15 +1,15 @@
 Django Terms and Conditions
 ===========================
 
-![image](https://badge.fury.io/py/django-termsandconditions.svg%0A%20:target:%20http://badge.fury.io/py/django-termsandconditions%0A%20:alt:%20PyPi%20Package%20Version)
+![image](https://badge.fury.io/py/django-termsandconditions.svg:target:http://badge.fury.io/py/django-termsandconditions:alt:PyPi%20Package%20Version)
 
-![image](https://travis-ci.org/cyface/django-termsandconditions.svg?branch=master%0A%20:target:%20https://travis-ci.org/cyface/django-termsandconditions%0A%20:alt:%20Travis%20Build%20Status)
+![image](https://travis-ci.org/cyface/django-termsandconditions.svg?branch=master:target:https://travis-ci.org/cyface/django-termsandconditions:alt:Travis%20Build%20Status)
 
-![image](https://coveralls.io/repos/github/cyface/django-termsandconditions/badge.svg?branch=master%0A%20:target:%20https://coveralls.io/github/cyface/django-termsandconditions?branch=master%0A%20:alt:%20Coveralls%20Code%20Coverage)
+![image](https://coveralls.io/repos/github/cyface/django-termsandconditions/badge.svg?branch=master:target:https://coveralls.io/github/cyface/django-termsandconditions?branch=master:alt:Coveralls%20Code%20Coverage)
 
-![image](https://readthedocs.org/projects/django-termsandconditions/badge/?version=latest%0A%20:target:%20http://django-termsandconditions.readthedocs.org/en/latest/?badge=latest%0A%20:alt:%20Documentation%20Status)
+![image](https://readthedocs.org/projects/django-termsandconditions/badge/?version=latest:target:http://django-termsandconditions.readthedocs.org/en/latest/?badge=latest:alt:Documentation%20Status)
 
-![image](https://pyup.io/repos/github/cyface/django-termsandconditions/shield.svg%0A%20%20:target:%20https://pyup.io/repos/github/cyface/django-termsandconditions/%0A%20%20:alt:%20Updates)
+![image](https://badgen.net/dependabot/cyface/django-termsandconditions?icon=dependabot:target:https://badgen.net/dependabot/cyface/django-termsandconditions?icon=dependabot:alt:Updates)
 
 Django Terms and Conditions gives you an configurable way to send users
 to a T&C acceptance page before they can access the site.
