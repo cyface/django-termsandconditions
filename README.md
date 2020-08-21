@@ -9,8 +9,6 @@ Django Terms and Conditions
 
 [![Documentation Status](https://readthedocs.org/projects/django-termsandconditions/badge/?version=latest)](http://django-termsandconditions.readthedocs.org/en/latest/?badge=latest)
 
-[![Updates](https://badgen.net/dependabot/cyface/django-termsandconditions?icon=dependabot)](https://badgen.net/dependabot/cyface/django-termsandconditions?icon=dependabot)
-
 Django Terms and Conditions gives you an configurable way to send users
 to a T&C acceptance page before they can access the site.
 
