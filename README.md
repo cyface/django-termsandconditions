@@ -416,8 +416,15 @@ fields due to modeltranslation):
     python manage.py makemigrations termsandconditions
     python manage.py migrate termsandconditions
 
-That's it. Your model is now ready to cover the translations! Just as
+Your model is now ready to cover the translations! Just as
 hint we suggest to also include some data migration in order to populate
 newly created, translated fields (i.e. `name_en`, `name_pl`, etc.) with
 the initial data (e.g. by copying the content of the base field, i.e.
 `name`, etc.)
+
+### 4. Add ``/terms/`` to the ``TERMS_EXCLUDE_URL_CONTAINS_LIST`` setting.
+In order to prevent redirect loops, if you are using internationalized URLs, you will need to add add:
+
+``TERMS_EXCLUDE_URL_CONTAINS_LIST = ['/terms/']``
+
+to your ``settings.py`` to prevent redirect loops with the language-code-prepended URLs (e.g. ``/en/terms/``)
