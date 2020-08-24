@@ -425,6 +425,6 @@ the initial data (e.g. by copying the content of the base field, i.e.
 ### 4. Add ``/terms/`` to the ``TERMS_EXCLUDE_URL_CONTAINS_LIST`` setting.
 In order to prevent redirect loops, if you are using internationalized URLs, you will need to add add:
 
-``TERMS_EXCLUDE_URL_CONTAINS_LIST = ['/terms/']``
+``TERMS_EXCLUDE_URL_CONTAINS_LIST = {'/terms/', '/i18n/setlang/', }``
 
 to your ``settings.py`` to prevent redirect loops with the language-code-prepended URLs (e.g. ``/en/terms/``)
