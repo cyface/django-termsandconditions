@@ -1,0 +1,131 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Django Terms and Conditions\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-30 16:16-0300\n"
+"PO-Revision-Date: 2020-09-30 16:27-0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: .\termsandconditions\admin.py:19 .\termsandconditions\apps.py:16
+#: .\termsandconditions\templates\termsandconditions\tc_accept_terms.html:13
+#: .\termsandconditions\templates\termsandconditions\tc_email_terms_form.html:8
+#: .\termsandconditions\templates\termsandconditions\tc_view_terms.html:13
+msgid "Terms and Conditions"
+msgstr "Termos e Condições"
+
+#: .\termsandconditions\models.py:32
+msgid "IP Address"
+msgstr "Endereço de IP"
+
+#: .\termsandconditions\models.py:35
+msgid "Date Accepted"
+msgstr "Data do Aceite"
+
+#: .\termsandconditions\models.py:42 .\termsandconditions\models.py:43
+msgid "User Terms and Conditions"
+msgstr "Aceite dos Termos e Condições Pelos Usuários"
+
+#: .\termsandconditions\models.py:69
+msgid "Provide users with some info about what's changed and why"
+msgstr "Forneça aos usuários algumas informações sobre o que mudou e por quê"
+
+#: .\termsandconditions\models.py:72
+msgid "Leave Null To Never Make Active"
+msgstr "Deixar Nulo Para Nunca Ativar"
+
+#: .\termsandconditions\templates\termsandconditions\snippets\termsandconditions.html:16
+msgid "Close"
+msgstr "Fechar"
+
+#: .\termsandconditions\templates\termsandconditions\snippets\termsandconditions.html:29
+msgid "ACCEPT ALL"
+msgstr "ACEITAR TODOS"
+
+#: .\termsandconditions\templates\termsandconditions\tc_accept_terms.html:6
+msgid "Accept Terms and Conditions"
+msgstr "Aceitar Termos e Condições"
+
+#: .\termsandconditions\templates\termsandconditions\tc_accept_terms.html:16
+msgid "Please Accept"
+msgstr "Por Favor Aceite"
+
+#: .\termsandconditions\templates\termsandconditions\tc_accept_terms.html:18
+msgid "Summary of Changes"
+msgstr "Sumário de Alterações"
+
+#: .\termsandconditions\templates\termsandconditions\tc_accept_terms.html:22
+msgid "Full Text"
+msgstr "Texto Completo"
+
+#: .\termsandconditions\templates\termsandconditions\tc_accept_terms.html:32
+#: .\termsandconditions\templates\termsandconditions\tc_view_terms.html:22
+msgid "Print"
+msgstr "Imprimir"
+
+#: .\termsandconditions\templates\termsandconditions\tc_accept_terms.html:39
+msgid "Accept"
+msgstr "Aceitar"
+
+#: .\termsandconditions\templates\termsandconditions\tc_accept_terms.html:39
+msgid "All"
+msgstr "Todos"
+
+#: .\termsandconditions\templates\termsandconditions\tc_email_terms.html:5
+#: .\termsandconditions\templates\termsandconditions\tc_print_terms.html:29
+msgid "Version"
+msgstr "Versão"
+
+#: .\termsandconditions\templates\termsandconditions\tc_email_terms_form.html:5
+msgid "Email Terms and Conditions"
+msgstr "Enviar Termos e Condições por Email"
+
+#: .\termsandconditions\templates\termsandconditions\tc_email_terms_form.html:9
+msgid "Email"
+msgstr "Email"
+
+#: .\termsandconditions\templates\termsandconditions\tc_email_terms_form.html:12
+msgid "Email To:"
+msgstr "Email Para:"
+
+#: .\termsandconditions\templates\termsandconditions\tc_email_terms_form.html:14
+msgid "You Requested:"
+msgstr "Você Solicitou:"
+
+#: .\termsandconditions\templates\termsandconditions\tc_email_terms_form.html:15
+msgid "Send"
+msgstr "Enviar"
+
+#: .\termsandconditions\templates\termsandconditions\tc_print_terms.html:6
+msgid "Print Terms and Conditions"
+msgstr "Imprimir Termos e Condições"
+
+#: .\termsandconditions\templates\termsandconditions\tc_view_terms.html:6
+msgid "View Terms and Conditions"
+msgstr "Visualizar Termos e Condições"
+
+#: .\termsandconditions\views.py:160
+msgid "Terms"
+msgstr "Termos"
+
+#: .\termsandconditions\views.py:167
+msgid "Terms and Conditions Sent."
+msgstr "Termos e Condições Enviados."
+
+#: .\termsandconditions\views.py:173
+msgid "An Error Occurred Sending Your Message."
+msgstr "Ocorreu Um Erro Ao Enviar Sua Mensagem."
+
+#: .\termsandconditions\views.py:183
+msgid "Invalid Email Address."
+msgstr "Endereço de Email Inválido."
