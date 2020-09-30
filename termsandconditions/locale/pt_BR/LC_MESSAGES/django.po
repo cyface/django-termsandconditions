@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Django Terms and Conditions\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-30 18:05-0300\n"
+"POT-Creation-Date: 2020-09-30 18:21-0300\n"
 "PO-Revision-Date: 2020-09-30 16:27-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -73,9 +73,17 @@ msgstr "Deixar Nulo Para Nunca Ativar"
 msgid "date active"
 msgstr "data de ativação"
 
+#: .\termsandconditions\templates\termsandconditions\snippets\termsandconditions.html:15
+msgid "Our Terms and Conditions Have Changed"
+msgstr "Nossos Termos e Condições Mudaram"
+
 #: .\termsandconditions\templates\termsandconditions\snippets\termsandconditions.html:16
 msgid "Close"
 msgstr "Fechar"
+
+#: .\termsandconditions\templates\termsandconditions\snippets\termsandconditions.html:26
+msgid "Please, review and accept the changes to prevent future interruptions."
+msgstr "Por favor, revise e aceite as alterações para evitar interrupções futuras."
 
 #: .\termsandconditions\templates\termsandconditions\snippets\termsandconditions.html:29
 msgid "ACCEPT ALL"
@@ -142,6 +150,14 @@ msgstr "Imprimir Termos e Condições"
 #: .\termsandconditions\templates\termsandconditions\tc_view_terms.html:6
 msgid "View Terms and Conditions"
 msgstr "Visualizar Termos e Condições"
+
+#: .\termsandconditions\templates\termsandconditions\tc_view_terms.html:24
+msgid "No terms defined."
+msgstr "Nenhum termo definido."
+
+#: .\termsandconditions\templates\termsandconditions\tc_view_terms.html:27
+msgid "No terms for you to accept."
+msgstr "Nenhum termo pendente de aceitação."
 
 #: .\termsandconditions\views.py:160
 msgid "Terms"
