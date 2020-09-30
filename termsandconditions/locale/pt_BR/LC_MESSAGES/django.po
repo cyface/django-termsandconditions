@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Django Terms and Conditions\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-30 16:16-0300\n"
+"POT-Creation-Date: 2020-09-30 18:21-0300\n"
 "PO-Revision-Date: 2020-09-30 16:27-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,35 +18,72 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: .\termsandconditions\admin.py:19 .\termsandconditions\apps.py:16
+#: .\termsandconditions\models.py:97 .\termsandconditions\models.py:98
 #: .\termsandconditions\templates\termsandconditions\tc_accept_terms.html:13
 #: .\termsandconditions\templates\termsandconditions\tc_email_terms_form.html:8
 #: .\termsandconditions\templates\termsandconditions\tc_view_terms.html:13
 msgid "Terms and Conditions"
 msgstr "Termos e Condições"
 
-#: .\termsandconditions\models.py:32
+#: .\termsandconditions\models.py:29
+msgid "user"
+msgstr "usuário"
+
+#: .\termsandconditions\models.py:35
+msgid "terms"
+msgstr "termos"
+
+#: .\termsandconditions\models.py:38
 msgid "IP Address"
 msgstr "Endereço de IP"
 
-#: .\termsandconditions\models.py:35
+#: .\termsandconditions\models.py:41
 msgid "Date Accepted"
 msgstr "Data do Aceite"
 
-#: .\termsandconditions\models.py:42 .\termsandconditions\models.py:43
+#: .\termsandconditions\models.py:48 .\termsandconditions\models.py:49
 msgid "User Terms and Conditions"
 msgstr "Aceite dos Termos e Condições Pelos Usuários"
 
-#: .\termsandconditions\models.py:69
+#: .\termsandconditions\models.py:66
+msgid "name"
+msgstr "nome"
+
+#: .\termsandconditions\models.py:74
+msgid "version number"
+msgstr "número da versão"
+
+#: .\termsandconditions\models.py:76
+msgid "text"
+msgstr "texto"
+
+#: .\termsandconditions\models.py:80
 msgid "Provide users with some info about what's changed and why"
 msgstr "Forneça aos usuários algumas informações sobre o que mudou e por quê"
 
-#: .\termsandconditions\models.py:72
+#: .\termsandconditions\models.py:81
+msgid "info"
+msgstr "informações"
+
+#: .\termsandconditions\models.py:85
 msgid "Leave Null To Never Make Active"
 msgstr "Deixar Nulo Para Nunca Ativar"
+
+#: .\termsandconditions\models.py:86
+msgid "date active"
+msgstr "data de ativação"
+
+#: .\termsandconditions\templates\termsandconditions\snippets\termsandconditions.html:15
+msgid "Our Terms and Conditions Have Changed"
+msgstr "Nossos Termos e Condições Mudaram"
 
 #: .\termsandconditions\templates\termsandconditions\snippets\termsandconditions.html:16
 msgid "Close"
 msgstr "Fechar"
+
+#: .\termsandconditions\templates\termsandconditions\snippets\termsandconditions.html:26
+msgid "Please, review and accept the changes to prevent future interruptions."
+msgstr "Por favor, revise e aceite as alterações para evitar interrupções futuras."
 
 #: .\termsandconditions\templates\termsandconditions\snippets\termsandconditions.html:29
 msgid "ACCEPT ALL"
@@ -113,6 +150,14 @@ msgstr "Imprimir Termos e Condições"
 #: .\termsandconditions\templates\termsandconditions\tc_view_terms.html:6
 msgid "View Terms and Conditions"
 msgstr "Visualizar Termos e Condições"
+
+#: .\termsandconditions\templates\termsandconditions\tc_view_terms.html:24
+msgid "No terms defined."
+msgstr "Nenhum termo definido."
+
+#: .\termsandconditions\templates\termsandconditions\tc_view_terms.html:27
+msgid "No terms for you to accept."
+msgstr "Nenhum termo pendente de aceitação."
 
 #: .\termsandconditions\views.py:160
 msgid "Terms"

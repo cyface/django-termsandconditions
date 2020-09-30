@@ -23,10 +23,16 @@ class UserTermsAndConditions(models.Model):
     """Holds mapping between TermsAndConditions and Users"""
 
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, related_name="userterms", on_delete=models.CASCADE
+        settings.AUTH_USER_MODEL,
+        related_name="userterms",
+        on_delete=models.CASCADE,
+        verbose_name=_('user'),
     )
     terms = models.ForeignKey(
-        "TermsAndConditions", related_name="userterms", on_delete=models.CASCADE
+        "TermsAndConditions",
+        related_name="userterms",
+        on_delete=models.CASCADE,
+        verbose_name=_('terms'),
     )
     ip_address = models.GenericIPAddressField(
         null=True, blank=True, verbose_name=_("IP Address")
@@ -57,19 +63,27 @@ class TermsAndConditions(models.Model):
     Active one for a given slug is: date_active is not Null and is latest not in future"""
 
     slug = models.SlugField(default=DEFAULT_TERMS_SLUG)
-    name = models.TextField(max_length=255)
+    name = models.TextField(max_length=255, verbose_name=_("name"))
     users = models.ManyToManyField(
         settings.AUTH_USER_MODEL, through=UserTermsAndConditions, blank=True
     )
-    version_number = models.DecimalField(default=1.0, decimal_places=2, max_digits=6)
-    text = models.TextField(null=True, blank=True)
+    version_number = models.DecimalField(
+        default=1.0,
+        decimal_places=2,
+        max_digits=6,
+        verbose_name=_("version number"),
+    )
+    text = models.TextField(null=True, blank=True, verbose_name=_("text"))
     info = models.TextField(
         null=True,
         blank=True,
         help_text=_("Provide users with some info about what's changed and why"),
+        verbose_name=_("info"),
     )
     date_active = models.DateTimeField(
-        blank=True, null=True, help_text=_("Leave Null To Never Make Active")
+        blank=True, null=True,
+        help_text=_("Leave Null To Never Make Active"),
+        verbose_name=_("date active"),
     )
     date_created = models.DateTimeField(blank=True, auto_now_add=True)
 
@@ -80,8 +94,8 @@ class TermsAndConditions(models.Model):
             "-date_active",
         ]
         get_latest_by = "date_active"
-        verbose_name = "Terms and Conditions"
-        verbose_name_plural = "Terms and Conditions"
+        verbose_name = _("Terms and Conditions")
+        verbose_name_plural = _("Terms and Conditions")
 
     def __str__(self):  # pragma: nocover
         return "{0}-{1:.2f}".format(self.slug, self.version_number)

@@ -12,7 +12,7 @@
 
     <div id="termsandconditions" class="termsandconditions-modal">
         <div id="toc-header">
-            <h6>Our Terms and Conditions Have Changed</h6>
+            <h6>{% trans "Our Terms and Conditions Have Changed" %}</h6>
             <a href='javascript:void(0)' onclick='termsandconditions_overlay();' title="{% trans 'Close' %}" class="toc-close">&times;</a>
         </div>
         <div id="toc-content">
@@ -23,7 +23,7 @@
                     {% if forloop.last and not_agreed_terms|length > 2 %}<span>, and </span>{% elif forloop.last and not_agreed_terms|length > 1 %}<span> and </span>{% endif %}
                     <a class="terms-link" href="{% url 'tc_accept_specific_page' terms.slug %}{% if returnTo %}?returnTo={{ returnTo }}{% endif %}">{% if terms.name %}{{ terms.name|safe }}{% endif %}</a>
                 {% endfor %}
-                <span> document{{ not_agreed_terms|length|pluralize }}. Please, review and accept the changes to prevent future interruptions.</span>
+                <span> document{{ not_agreed_terms|length|pluralize }}. {% trans "Please, review and accept the changes to prevent future interruptions." %}</span>
             </div>
             <div id="toc-footer">
                 <a class="toc-accept-all-btn" href="{% url 'tc_accept_page' %}{% if returnTo %}?returnTo={{ returnTo }}{% endif %}">{% trans 'ACCEPT ALL' %}</a>
