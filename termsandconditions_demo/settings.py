@@ -24,21 +24,9 @@ INTERNAL_IPS = ("127.0.0.1",)
 ALLOWED_HOSTS = ("localhost", "127.0.0.1")
 
 # Cache Settings
-CACHES = {
-    "default": {
-        # 'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-    }
-}
 CACHE_MIDDLEWARE_SECONDS = 30
 CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 CACHE_MIDDLEWARE_KEY_PREFIX = "tc"
-
-# List of Admin users to be emailed by error system
-MANAGERS = (
-    # ('Your Name', 'you@you.com'),
-)
-ADMINS = MANAGERS
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -92,22 +80,11 @@ WSGI_APPLICATION = "termsandconditions_demo.wsgi.application"
 # system time zone.
 TIME_ZONE = "America/Denver"
 
-# Language code for this installation. All choices can be found here:
-# http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = "en-us"
-
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = False
-
-# If you set this to False, Django will not format dates, numbers and
-# calendars according to the current locale.
-USE_L10N = False
-
-# If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = False
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = "zv$+w7juz@(g!^53o0ai1uF82)=jkz9my_r=3)fglrj5t8l$2#"
@@ -175,12 +152,12 @@ if VERSION < (1, 8):
 
 # For use Django 1.10+
 MIDDLEWARE = (
+    "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.gzip.GZipMiddleware",
     "django.middleware.http.ConditionalGetMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "termsandconditions.middleware.TermsAndConditionsRedirectMiddleware",
-    "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.cache.FetchFromCacheMiddleware",
