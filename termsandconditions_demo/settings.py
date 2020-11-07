@@ -194,8 +194,6 @@ TERMS_EXCLUDE_USERS_WITH_PERM = "auth.can_skip_t&c"
 TERMS_IP_HEADER_NAME = "REMOTE_ADDR"
 TERMS_STORE_IP_ADDRESS = True
 
-TEST_RUNNER = "django.test.runner.DiscoverRunner"
-
 # LOGGING ######
 # Catch Python warnings (e.g. deprecation warnings) into the logger
 try:
