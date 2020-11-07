@@ -1,13 +1,7 @@
 Django Terms and Conditions
 ===========================
 
-[![PyPi Package Version](https://badge.fury.io/py/django-termsandconditions.svg)](http://badge.fury.io/py/django-termsandconditions)
-
-[![Actions Status](https://github.com/cyface/django-termsandconditions/workflows/Python%20package/badge.svg)](https://github.com/cyface/django-termsandconditions/actions)
-
-[![Coveralls Code Coverage](https://coveralls.io/repos/github/cyface/django-termsandconditions/badge.svg?branch=master)](https://coveralls.io/github/cyface/django-termsandconditions?branch=master)
-
-[![Documentation Status](https://readthedocs.org/projects/django-termsandconditions/badge/?version=latest)](http://django-termsandconditions.readthedocs.org/en/latest/?badge=latest)
+[![PyPi Package Version](https://badge.fury.io/py/django-termsandconditions.svg)](http://badge.fury.io/py/django-termsandconditions) [![Actions Status](https://github.com/cyface/django-termsandconditions/workflows/Python%20package/badge.svg)](https://github.com/cyface/django-termsandconditions/actions) [![Coveralls Code Coverage](https://coveralls.io/repos/github/cyface/django-termsandconditions/badge.svg?branch=master)](https://coveralls.io/github/cyface/django-termsandconditions?branch=master) [![Documentation Status](https://readthedocs.org/projects/django-termsandconditions/badge/?version=latest)](http://django-termsandconditions.readthedocs.org/en/latest/?badge=latest)
 
 Django Terms and Conditions gives you an configurable way to send users
 to a T&C acceptance page before they can access the site.
