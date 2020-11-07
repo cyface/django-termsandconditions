@@ -73,9 +73,9 @@ class TermsAndConditions(models.Model):
         max_digits=6,
         verbose_name=_("version number"),
     )
-    text = models.TextField(null=True, blank=True, verbose_name=_("text"))
+    text = models.TextField(default='', blank=True, verbose_name=_("text"))
     info = models.TextField(
-        null=True,
+        default='',
         blank=True,
         help_text=_("Provide users with some info about what's changed and why"),
         verbose_name=_("info"),
