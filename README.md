@@ -3,7 +3,7 @@ Django Terms and Conditions
 
 [![PyPi Package Version](https://badge.fury.io/py/django-termsandconditions.svg)](http://badge.fury.io/py/django-termsandconditions)
 
-[![Travis Build Status](https://travis-ci.org/cyface/django-termsandconditions.svg?branch=master)](target:https://travis-ci.org/cyface/django-termsandconditions)
+[![Github Build Status][![Actions Status](https://github.com/cyface/django-termsandconditions/workflows/Python%20package/badge.svg)](https://github.com/cyface/django-termsandconditions/actions)
 
 [![Coveralls Code Coverage](https://coveralls.io/repos/github/cyface/django-termsandconditions/badge.svg?branch=master)](https://coveralls.io/github/cyface/django-termsandconditions?branch=master)
 
