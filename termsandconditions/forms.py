@@ -13,7 +13,8 @@ class UserTermsAndConditionsModelForm(forms.Form):
 
     returnTo = forms.CharField(required=False, initial="/", widget=forms.HiddenInput())
     terms = forms.ModelMultipleChoiceField(
-        TermsAndConditions.objects.none(), widget=forms.MultipleHiddenInput,
+        TermsAndConditions.objects.none(),
+        widget=forms.MultipleHiddenInput,
     )
 
     def __init__(self, *args, **kwargs):

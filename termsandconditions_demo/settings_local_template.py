@@ -23,7 +23,11 @@ DATABASES = {
 
 # Cache Settings
 CACHES = {
-    "default": {"BACKEND": "dummy:///", "LOCATION": "", "OPTIONS": {"PASSWORD": ""},},
+    "default": {
+        "BACKEND": "dummy:///",
+        "LOCATION": "",
+        "OPTIONS": {"PASSWORD": ""},
+    },
 }
 CACHE_MIDDLEWARE_SECONDS = 30
 CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True

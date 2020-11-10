@@ -26,13 +26,13 @@ class UserTermsAndConditions(models.Model):
         settings.AUTH_USER_MODEL,
         related_name="userterms",
         on_delete=models.CASCADE,
-        verbose_name=_('user'),
+        verbose_name=_("user"),
     )
     terms = models.ForeignKey(
         "TermsAndConditions",
         related_name="userterms",
         on_delete=models.CASCADE,
-        verbose_name=_('terms'),
+        verbose_name=_("terms"),
     )
     ip_address = models.GenericIPAddressField(
         null=True, blank=True, verbose_name=_("IP Address")
@@ -73,15 +73,16 @@ class TermsAndConditions(models.Model):
         max_digits=6,
         verbose_name=_("version number"),
     )
-    text = models.TextField(default='', blank=True, verbose_name=_("text"))
+    text = models.TextField(default="", blank=True, verbose_name=_("text"))
     info = models.TextField(
-        default='',
+        default="",
         blank=True,
         help_text=_("Provide users with some info about what's changed and why"),
         verbose_name=_("info"),
     )
     date_active = models.DateTimeField(
-        blank=True, null=True,
+        blank=True,
+        null=True,
         help_text=_("Leave Null To Never Make Active"),
         verbose_name=_("date active"),
     )
