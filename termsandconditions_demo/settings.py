@@ -173,7 +173,6 @@ INSTALLED_APPS = (
     "django.contrib.sessions",
     "django.contrib.sites",
     "django.contrib.staticfiles",
-    "django_jenkins",
     "termsandconditions",
 )
 
@@ -229,7 +228,10 @@ LOGGING = {
             "level": "WARNING",
             "propagate": True,
         },
-        "django.db.backends": {"handlers": ["console"], "level": "DEBUG",},
+        "django.db.backends": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
         "django.request": {
             "handlers": ["mail_admins", "console"],
             "level": "ERROR",

@@ -1,7 +1,7 @@
 Django Terms and Conditions
 ===========================
 
-[![PyPi Package Version](https://badge.fury.io/py/django-termsandconditions.svg)](http://badge.fury.io/py/django-termsandconditions) [![Actions Status](https://github.com/cyface/django-termsandconditions/workflows/Python%20package/badge.svg)](https://github.com/cyface/django-termsandconditions/actions) [![Coveralls Code Coverage](https://coveralls.io/repos/github/cyface/django-termsandconditions/badge.svg?branch=master)](https://coveralls.io/github/cyface/django-termsandconditions?branch=master) [![Documentation Status](https://readthedocs.org/projects/django-termsandconditions/badge/?version=latest)](http://django-termsandconditions.readthedocs.org/en/latest/?badge=latest)
+[![PyPi Package Version](https://badge.fury.io/py/django-termsandconditions.svg)](http://badge.fury.io/py/django-termsandconditions) [![Actions Status](https://github.com/cyface/django-termsandconditions/workflows/Python%20package/badge.svg)](https://github.com/cyface/django-termsandconditions/actions) [![codecov](https://codecov.io/gh/cyface/django-x-robots-tag-middleware/branch/master/graph/badge.svg?token=RvtjZ2bngZ)](https://codecov.io/gh/cyface/django-x-robots-tag-middleware)
 
 Django Terms and Conditions gives you an configurable way to send users
 to a T&C acceptance page before they can access the site.
@@ -10,8 +10,7 @@ to a T&C acceptance page before they can access the site.
 
 Maintainer: - Tim White (<tim@cyface.com>)
 
-Contributors: - Adibo (<https://github.com/adibo>) - Nathan Swain
-(<https://github.com/swainn>)
+Contributors: - Adibo (<https://github.com/adibo>) - Nathan Swain (<https://github.com/swainn>)
 
 Features
 --------
@@ -30,8 +29,7 @@ number of options are available. Currently, the app allows for
 Installation
 ------------
 
-*\* Note that version 2.0+ of django-termsandconditions only works with
-Python 3.5+ and Django 2.2+*\*
+**Note that version 2.0+ of django-termsandconditions only works with Python 3.6+ and Django 2.2+**
 
 From [pypi](https://pypi.python.org):
 
