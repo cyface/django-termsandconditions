@@ -180,9 +180,12 @@ exclude users with a custom permission you create yourself.:
 
 This can be useful if you need to run continuous login integration tests
 or simply exclude specific users from having to accept your T&Cs. Note
-that we exclude superusers from this check due to Django's has\_perm()
-method returning True for any permission check, so adding this
-permission to a superuser has no effect.
+that we exclude superusers by default from this check due to Django's
+has\_perm() method returning True for any permission check, so adding
+this permission to a superuser has no effect. If you want to exclude
+superusers you can set TERMS\_EXCLUDE\_SUPERUSERS:
+
+    TERMS_EXCLUDE_SUPERUSERS = True
 
 ### Terms and Conditions Useful Methods
 

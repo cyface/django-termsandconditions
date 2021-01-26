@@ -126,6 +126,12 @@ class TermsAndConditionsTests(TestCase):
         self.assertEqual(2, len(active_list))
         self.assertQuerysetEqual(active_list, [repr(self.terms3), repr(self.terms2)])
 
+    def test_superuser_excluded(self):
+        """Test su doesn't have to accept with TERMS_EXCLUDE_SUPERUSERS set"""
+        with self.settings(TERMS_EXCLUDE_SUPERUSERS=True):
+            active_list = TermsAndConditions.get_active_terms_not_agreed_to(self.su)
+            self.assertEqual([], active_list)
+
     def test_get_active_terms_ids(self):
         """Test get ids of active T&Cs"""
         active_list = TermsAndConditions.get_active_terms_ids()
