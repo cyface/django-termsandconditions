@@ -180,6 +180,10 @@ class TermsAndConditions(models.Model):
                 # Django's has_perm() returns True if is_superuser, we don't want that
                 return []
 
+        TERMS_EXCLUDE_SUPERUSERS = getattr(settings, "TERMS_EXCLUDE_SUPERUSERS", None)
+        if TERMS_EXCLUDE_SUPERUSERS and user.is_superuser:
+            return []
+
         not_agreed_terms = cache.get("tandc.not_agreed_terms_" + user.get_username())
         if not_agreed_terms is None:
             try:
