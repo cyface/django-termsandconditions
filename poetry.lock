@@ -418,7 +418,7 @@ testing = ["nose", "coverage"]
 
 [[package]]
 name = "poetry"
-version = "1.1.4"
+version = "1.1.5"
 description = "Python dependency management and packaging made easy."
 category = "dev"
 optional = false
@@ -436,7 +436,7 @@ keyring = {version = ">=21.2.0,<22.0.0", markers = "python_version >= \"3.6\" an
 packaging = ">=20.4,<21.0"
 pexpect = ">=4.7.0,<5.0.0"
 pkginfo = ">=1.4,<2.0"
-poetry-core = ">=1.0.0,<2.0.0"
+poetry-core = ">=1.0.2,<1.1.0"
 requests = ">=2.18,<3.0"
 requests-toolbelt = ">=0.9.1,<0.10.0"
 shellingham = ">=1.1,<2.0"
@@ -445,7 +445,7 @@ virtualenv = ">=20.0.26,<21.0.0"
 
 [[package]]
 name = "poetry-core"
-version = "1.0.0"
+version = "1.0.2"
 description = "Poetry PEP 517 Build Backend"
 category = "dev"
 optional = false
@@ -689,7 +689,7 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.6,<4.0"
-content-hash = "bc3ef371c946fc6f69064f45517a1dd8f52f818c78110295cd79a3ba92af3992"
+content-hash = "23940345b8247abf53c563e77f231733b97245cc8e6d04adca4abf1e6511c752"
 
 [metadata.files]
 appdirs = [
@@ -789,6 +789,9 @@ coverage = [
     {file = "coverage-5.5-cp27-cp27mu-manylinux1_x86_64.whl", hash = "sha256:8963a499849a1fc54b35b1c9f162f4108017b2e6db2c46c1bed93a72262ed083"},
     {file = "coverage-5.5-cp27-cp27mu-manylinux2010_i686.whl", hash = "sha256:869a64f53488f40fa5b5b9dcb9e9b2962a66a87dab37790f3fcfb5144b996ef5"},
     {file = "coverage-5.5-cp27-cp27mu-manylinux2010_x86_64.whl", hash = "sha256:4a7697d8cb0f27399b0e393c0b90f0f1e40c82023ea4d45d22bce7032a5d7b81"},
+    {file = "coverage-5.5-cp310-cp310-macosx_10_14_x86_64.whl", hash = "sha256:8d0a0725ad7c1a0bcd8d1b437e191107d457e2ec1084b9f190630a4fb1af78e6"},
+    {file = "coverage-5.5-cp310-cp310-manylinux1_x86_64.whl", hash = "sha256:51cb9476a3987c8967ebab3f0fe144819781fca264f57f89760037a2ea191cb0"},
+    {file = "coverage-5.5-cp310-cp310-win_amd64.whl", hash = "sha256:c0891a6a97b09c1f3e073a890514d5012eb256845c451bd48f7968ef939bf4ae"},
     {file = "coverage-5.5-cp35-cp35m-macosx_10_9_x86_64.whl", hash = "sha256:3487286bc29a5aa4b93a072e9592f22254291ce96a9fbc5251f566b6b7343cdb"},
     {file = "coverage-5.5-cp35-cp35m-manylinux1_i686.whl", hash = "sha256:deee1077aae10d8fa88cb02c845cfba9b62c55e1183f52f6ae6a2df6a2187160"},
     {file = "coverage-5.5-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:f11642dddbb0253cc8853254301b51390ba0081750a8ac03f20ea8103f0c56b6"},
@@ -976,12 +979,12 @@ pkginfo = [
     {file = "pkginfo-1.6.1.tar.gz", hash = "sha256:a6a4ac943b496745cec21f14f021bbd869d5e9b4f6ec06918cffea5a2f4b9193"},
 ]
 poetry = [
-    {file = "poetry-1.1.4-py2.py3-none-any.whl", hash = "sha256:a0fd73af8831f8d8e910fa9c58af71194ed2d17e43e04cbf5db3087305027d38"},
-    {file = "poetry-1.1.4.tar.gz", hash = "sha256:946a5a1173be607c7c5c593358a0fb0c0d6af4400c978929ecdb19c3a37b53a8"},
+    {file = "poetry-1.1.5-py2.py3-none-any.whl", hash = "sha256:161a2517366c55dcb7710decdd5647c1a54cd1a20056812234127853a63dd72f"},
+    {file = "poetry-1.1.5.tar.gz", hash = "sha256:6a326ee0e2c3b5a6699d4075cbea54660499834843ac5688d49697ad27027db7"},
 ]
 poetry-core = [
-    {file = "poetry-core-1.0.0.tar.gz", hash = "sha256:6a664ff389b9f45382536f8fa1611a0cb4d2de7c5a5c885db1f0c600cd11fbd5"},
-    {file = "poetry_core-1.0.0-py2.py3-none-any.whl", hash = "sha256:769288e0e1b88dfcceb3185728f0b7388b26d5f93d6c22d2dcae372da51d200d"},
+    {file = "poetry-core-1.0.2.tar.gz", hash = "sha256:ff505d656a6cf40ffbf84393d8b5bf37b78523a15def3ac473b6fad74261ee71"},
+    {file = "poetry_core-1.0.2-py2.py3-none-any.whl", hash = "sha256:ee0ed4164440eeab27d1b01bc7b9b3afdc3124f68d4ea28d0821a402a9c7c044"},
 ]
 ptyprocess = [
     {file = "ptyprocess-0.6.0-py2.py3-none-any.whl", hash = "sha256:d7cc528d76e76342423ca640335bd3633420dc1366f258cb31d05e865ef5ca1f"},
