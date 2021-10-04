@@ -434,7 +434,7 @@ test = ["appdirs (==1.4.4)", "pytest (>=6)", "pytest-cov (>=2.7)", "pytest-mock 
 
 [[package]]
 name = "poetry"
-version = "1.1.8"
+version = "1.1.10"
 description = "Python dependency management and packaging made easy."
 category = "dev"
 optional = false
@@ -452,7 +452,7 @@ keyring = {version = ">=21.2.0,<22.0.0", markers = "python_version >= \"3.6\" an
 packaging = ">=20.4,<21.0"
 pexpect = ">=4.7.0,<5.0.0"
 pkginfo = ">=1.4,<2.0"
-poetry-core = ">=1.0.4,<1.1.0"
+poetry-core = ">=1.0.6,<1.1.0"
 requests = ">=2.18,<3.0"
 requests-toolbelt = ">=0.9.1,<0.10.0"
 shellingham = ">=1.1,<2.0"
@@ -461,7 +461,7 @@ virtualenv = ">=20.0.26,<21.0.0"
 
 [[package]]
 name = "poetry-core"
-version = "1.0.4"
+version = "1.0.6"
 description = "Poetry PEP 517 Build Backend"
 category = "dev"
 optional = false
@@ -704,7 +704,7 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.6,<4.0"
-content-hash = "2a6a7c965bf6b0197e38daa1766c7e61cafe1c56dac6a747f0305defc692a941"
+content-hash = "ada57de1259d7a9fbc5831989fcf7547763e814a26c7b2efc2a62a16ef0d9ece"
 
 [metadata.files]
 appdirs = [
@@ -998,12 +998,12 @@ platformdirs = [
     {file = "platformdirs-2.2.0.tar.gz", hash = "sha256:632daad3ab546bd8e6af0537d09805cec458dce201bccfe23012df73332e181e"},
 ]
 poetry = [
-    {file = "poetry-1.1.8-py2.py3-none-any.whl", hash = "sha256:44fee7cbb5a8c49b7ca012be589557ac704bfed9733f2e23d63cf4b2e7bc3315"},
-    {file = "poetry-1.1.8.tar.gz", hash = "sha256:6dc82e85d919ab99a0b18baea1933a00a40d85eedce24f80a6099909e387914e"},
+    {file = "poetry-1.1.10-py2.py3-none-any.whl", hash = "sha256:34fa96da801da50e39b57855ebbc89e7b559acbcaf748c2a504e2424940017f9"},
+    {file = "poetry-1.1.10.tar.gz", hash = "sha256:284ab7685a2b0549bd34161db0ee3c51d67991f53054564293391a0c8a346b7c"},
 ]
 poetry-core = [
-    {file = "poetry-core-1.0.4.tar.gz", hash = "sha256:4b3847ad3e7b5deb88a35b23fa19762b9cef26828770cef3a5b47ffb508119c1"},
-    {file = "poetry_core-1.0.4-py2.py3-none-any.whl", hash = "sha256:a99fa921cf84f0521644714bb4b531d9d8f839c64de20aa71fa137f7461a1516"},
+    {file = "poetry-core-1.0.6.tar.gz", hash = "sha256:dd3c97003579242236890306836f2acc86d9741e6bea320dda6f844f16b0d845"},
+    {file = "poetry_core-1.0.6-py2.py3-none-any.whl", hash = "sha256:4ef68b4a55a8a95a60e6a312317e5a2f2af7590cf3d46b6bfe648c1e5f13cc48"},
 ]
 ptyprocess = [
     {file = "ptyprocess-0.6.0-py2.py3-none-any.whl", hash = "sha256:d7cc528d76e76342423ca640335bd3633420dc1366f258cb31d05e865ef5ca1f"},
