@@ -1,4 +1,5 @@
 """Django Views for the termsandconditions module"""
+from urllib.parse import urlparse
 
 # pylint: disable=E1120,R0901,R0904
 from django.contrib.auth.models import User
@@ -78,6 +79,11 @@ class AcceptTermsView(CreateView, GetTermsViewMixin):
         """
         return_url = request.POST.get("returnTo", "/")
         terms_ids = request.POST.getlist("terms")
+
+        parsed = urlparse(return_url)
+        if parsed.hostname and parsed.hostname not in settings.ALLOWED_HOSTS:
+            # Make sure the return url is a relative path or a trusted hostname
+            return_url = '/'
 
         if not terms_ids:  # pragma: nocover
             return HttpResponseRedirect(return_url)
