@@ -89,6 +89,9 @@ USE_I18N = False
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = "zv$+w7juz@(g!^53o0ai1uF82)=jkz9my_r=3)fglrj5t8l$2#"
 
+# Default Auto Field Class
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 # Email Settings
 EMAIL_HOST = "a real smtp server"
 EMAIL_HOST_USER = "your_mailbox_username"
@@ -132,20 +135,6 @@ TEMPLATES = [
     },
 ]
 
-# Need to set these raw variables if we are on a pre-1.8 version of Django.
-if VERSION < (1, 8):
-    TEMPLATE_DEBUG = DEBUG
-    TEMPLATE_DIRS = TEMPLATE_DIRS_LIST
-    TEMPLATE_CONTEXT_PROCESSORS_LIST = (
-        "django.contrib.auth.context_processors.auth",
-        "django.core.context_processors.debug",
-        "django.core.context_processors.media",
-        "django.core.context_processors.static",
-        "django.core.context_processors.request",
-        "django.contrib.messages.context_processors.messages",
-    )
-    TEMPLATE_LOADERS = TEMPLATE_LOADERS_LIST
-
 # For use Django 1.10+
 MIDDLEWARE = (
     "django.middleware.cache.UpdateCacheMiddleware",
@@ -158,9 +147,6 @@ MIDDLEWARE = (
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.cache.FetchFromCacheMiddleware",
 )
-if VERSION < (1, 10):
-    # For use Pre Django 1.10
-    MIDDLEWARE_CLASSES = MIDDLEWARE
 
 ROOT_URLCONF = "termsandconditions_demo.urls"
 
