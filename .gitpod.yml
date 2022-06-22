@@ -2,9 +2,10 @@ tasks:
   - init: |
       pip install --upgrade pip wheel setuptools poetry
       poetry install
+      source .venv/bin/activate
       python manage.py migrate
     command: |
-      poetry shell
+      source .venv/bin/activate
       python manage.py runserver
 
 ports:
