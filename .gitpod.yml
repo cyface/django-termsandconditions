@@ -4,6 +4,8 @@ tasks:
       poetry install
       source .venv/bin/activate
       python manage.py migrate
+      export DJANGO_SUPERUSER_PASSWORD=tcadmin
+      python manage.py createsuperuser --username tcadmin --email tcadmin@fake.fake --no-input
     command: |
       source .venv/bin/activate
       python manage.py runserver
