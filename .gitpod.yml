@@ -1,0 +1,17 @@
+tasks:
+  - init: |
+      pip install --upgrade pip wheel setuptools poetry
+      poetry install
+      python manage.py migrate
+    command: |
+      poetry shell
+      python manage.py runserver
+
+ports:
+  - port: 8000
+    visibility: private
+    onOpen: open-preview
+
+vscode:
+  extensions:
+    - ms-python.python
