@@ -29,7 +29,7 @@ def redirect_to_terms_accept(current_path="/", slug="default"):
     """Redirect the user to the terms and conditions accept page."""
     redirect_url_parts = list(urlparse(ACCEPT_TERMS_PATH))
     if slug != "default":
-        redirect_url_parts[2] += slug
+        redirect_url_parts[2] += slug + "/"
     querystring = QueryDict(redirect_url_parts[4], mutable=True)
     querystring[TERMS_RETURNTO_PARAM] = current_path
     redirect_url_parts[4] = querystring.urlencode(safe="/")
