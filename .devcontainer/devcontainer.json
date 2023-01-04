@@ -1,5 +1,5 @@
 {
-	"name": "Python 3 & PostgreSQL",
+	"name": "Django Terms and Conditions DevContainer",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"

@@ -11,9 +11,3 @@ ENV PYTHONUNBUFFERED 1
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
-# Poetry
-ARG POETRY_VERSION="none"
-RUN if [ "${POETRY_VERSION}" != "none" ]; then su vscode -c "umask 0002 && pip3 install poetry==${POETRY_VERSION}"; fi
-
-
-
