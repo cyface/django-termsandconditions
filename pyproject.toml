@@ -54,7 +54,7 @@ python = ">=3.7.2,<4.0"
 Django = ">2.2"
 
 [tool.poetry.dev-dependencies]
-black = "^20.8b1"
+black = "^23.1a1"
 coverage = {extras = ["toml"], version = "^7.0"}
 poetry = "^1.2.2"
 pylint = "^2.15.10"
