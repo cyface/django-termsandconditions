@@ -13,5 +13,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '👋 Hello!'
+              body: `👋 ${github.head_ref}.mycompany.com`
             })
