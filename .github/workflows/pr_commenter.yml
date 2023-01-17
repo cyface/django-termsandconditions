@@ -1,3 +1,5 @@
+name: PR Commenter
+
 on: pull_request
 
 jobs:
