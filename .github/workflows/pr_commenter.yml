@@ -9,6 +9,7 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
+            console.log(context.payload)
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
