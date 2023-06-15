@@ -1,0 +1,5 @@
+site_name: Django Terms and Conditions
+
+theme:
+    name: readthedocs
+    highlightjs: true
