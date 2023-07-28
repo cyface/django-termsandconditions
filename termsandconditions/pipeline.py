@@ -1,6 +1,5 @@
 """This file contains functions used as part of a user creation pipeline, such as django-social-auth."""
 
-# pylint: disable=W0613
 from urllib.parse import urlunparse, urlparse
 
 from .models import TermsAndConditions

@@ -1,7 +1,5 @@
 """Django Admin Site configuration"""
 
-# pylint: disable=R0904
-
 from django.contrib import admin
 from django.utils.translation import gettext as _
 from .models import TermsAndConditions, UserTermsAndConditions

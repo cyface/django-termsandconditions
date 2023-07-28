@@ -1,7 +1,5 @@
 """ Signals for Django """
 
-# pylint: disable=C1001,E0202,W0613
-
 import logging
 from django.core.cache import cache
 from django.dispatch import receiver

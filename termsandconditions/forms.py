@@ -1,7 +1,5 @@
 """Django forms for the termsandconditions application"""
 
-# pylint: disable=E1120,W0613
-
 from django import forms
 from django.db.models import QuerySet
 
