@@ -1,7 +1,5 @@
 """WSGI File that enables Apache/GUnicorn to run Django"""
 
-# pylint: disable=C0103
-
 import os
 import sys
 from django.core.wsgi import get_wsgi_application

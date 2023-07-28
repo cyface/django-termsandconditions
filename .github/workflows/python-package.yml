@@ -42,6 +42,7 @@ jobs:
           poetry install
       - name: Test
         run: |
+          poetry run ruff .
           poetry run coverage run manage.py test
           poetry run coverage xml
       - name: codecov-umbrella

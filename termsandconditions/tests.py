@@ -1,7 +1,5 @@
 """Unit Tests for the termsandconditions module"""
 
-# pylint: disable=R0904, C0103
-import time
 from importlib import import_module
 import logging
 
@@ -145,24 +143,24 @@ class TermsAndConditionsTests(TestCase):
         UserTermsAndConditions.objects.create(user=self.user1, terms=self.terms1)
         UserTermsAndConditions.objects.create(user=self.user2, terms=self.terms3)
 
-        self.assertEquals(1.0, self.user1.userterms.get().terms.version_number)
-        self.assertEquals(1.5, self.user2.userterms.get().terms.version_number)
+        self.assertEqual(1.0, self.user1.userterms.get().terms.version_number)
+        self.assertEqual(1.5, self.user2.userterms.get().terms.version_number)
 
-        self.assertEquals("user1", self.terms1.users.all()[0].get_username())
+        self.assertEqual("user1", self.terms1.users.all()[0].get_username())
 
         # Testing the get_active static method of TermsAndConditions
-        self.assertEquals(
+        self.assertEqual(
             2.0, TermsAndConditions.get_active(slug="site-terms").version_number
         )
-        self.assertEquals(
+        self.assertEqual(
             1.5, TermsAndConditions.get_active(slug="contrib-terms").version_number
         )
 
         # Testing the unicode method of TermsAndConditions
-        self.assertEquals(
+        self.assertEqual(
             "site-terms-2.00", str(TermsAndConditions.get_active(slug="site-terms"))
         )
-        self.assertEquals(
+        self.assertEqual(
             "contrib-terms-1.50",
             str(TermsAndConditions.get_active(slug="contrib-terms")),
         )
@@ -526,7 +524,7 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
 
     def _make_context(self, url):
         """Build Up Context - Used in many tests"""
-        context = dict()
+        context = {}
         context["request"] = RequestFactory()
         context["request"].user = self.user1
         context["request"].META = {"PATH_INFO": url}

@@ -1,6 +1,5 @@
 """Django Models for TermsAndConditions App"""
 
-# pylint: disable=C1001,E0202,W0613
 from collections import OrderedDict
 
 from django.db import models
@@ -53,7 +52,7 @@ class UserTermsAndConditions(models.Model):
         )
 
     def __str__(self):  # pragma: nocover
-        return "{0}:{1}-{2:.2f}".format(
+        return "{}:{}-{:.2f}".format(
             self.user.get_username(), self.terms.slug, self.terms.version_number
         )
 
@@ -99,12 +98,12 @@ class TermsAndConditions(models.Model):
         verbose_name_plural = _("Terms and Conditions")
 
     def __str__(self):  # pragma: nocover
-        return "{0}-{1:.2f}".format(self.slug, self.version_number)
+        return f"{self.slug}-{self.version_number:.2f}"
 
     def get_absolute_url(self):
         return reverse(
             "tc_view_specific_version_page", args=[self.slug, self.version_number]
-        )  # pylint: disable=E1101
+        )
 
     @staticmethod
     def get_active(slug=DEFAULT_TERMS_SLUG):

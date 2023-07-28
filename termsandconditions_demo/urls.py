@@ -3,8 +3,6 @@
     pass-offs to sub-modules, who will have their own paths.py defining actions within.
 """
 
-# pylint: disable=E1120
-
 from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include
@@ -29,7 +27,7 @@ urlpatterns = (
     # Secure Page
     path(
         "secure/",
-        never_cache((login_required(SecureView.as_view()))),
+        never_cache(login_required(SecureView.as_view())),
         name="tc_demo_secure_page",
     ),
     # Secure Page Too

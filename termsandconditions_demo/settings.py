@@ -10,10 +10,8 @@ MADE LOCALLY BY ALL INSTALLATIONS
 local_settings.py, once created, should never be checked into source control
 It is ignored by default by .gitignore, so if you don't mess with that, you should be fine.
 """
-# pylint: disable=R0801, W0611
 import os
 import logging
-from django import VERSION
 
 # Set the root path of the project so it's not hard coded
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))

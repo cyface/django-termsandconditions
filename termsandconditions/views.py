@@ -1,7 +1,5 @@
 """Django Views for the termsandconditions module"""
-from urllib.parse import urlparse
 
-# pylint: disable=E1120,R0901,R0904
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 
@@ -10,7 +8,7 @@ from .models import TermsAndConditions, UserTermsAndConditions
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib import messages
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect
 from django.utils.translation import gettext as _
 from django.views.generic import DetailView, CreateView, FormView
 from django.template.loader import get_template
@@ -23,7 +21,7 @@ DEFAULT_TERMS_BASE_TEMPLATE = "base.html"
 DEFAULT_TERMS_IP_HEADER_NAME = "REMOTE_ADDR"
 
 
-class GetTermsViewMixin(object):
+class GetTermsViewMixin:
     """Checks URL parameters for slug and/or version to pull the right TermsAndConditions object"""
 
     def get_terms(self, kwargs):
@@ -52,7 +50,7 @@ class GetTermsViewMixin(object):
             # Django recommends to use this together with the helper above
             return iri_to_uri(return_to)
 
-        LOGGER.debug("Unsafe URL found: {}".format(return_to))
+        LOGGER.debug(f"Unsafe URL found: {return_to}")
         return "/"
 
     def is_safe_url(self, url):
