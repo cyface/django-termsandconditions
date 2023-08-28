@@ -57,7 +57,7 @@ Django = ">2.2"
 black = "^23.3"
 coverage = {extras = ["toml"], version = "^7.2"}
 poetry = "^1.5.1"
-ruff = "^0.0.285"
+ruff = "^0.0.286"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
