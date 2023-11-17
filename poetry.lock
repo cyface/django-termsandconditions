@@ -849,13 +849,13 @@ test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest (>=7.3.1)", "pytest-
 
 [[package]]
 name = "poetry"
-version = "1.7.0"
+version = "1.7.1"
 description = "Python dependency management and packaging made easy."
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "poetry-1.7.0-py3-none-any.whl", hash = "sha256:cd34af106676bf4224e6aa7aaa31e89d191f7af562d2a0ee08628dea5dc8779b"},
-    {file = "poetry-1.7.0.tar.gz", hash = "sha256:796e2866f35cb57af36280a890f5a5b3f9ef1a2dcf780b945b02be2e82895391"},
+    {file = "poetry-1.7.1-py3-none-any.whl", hash = "sha256:03d3807a0fb3bc1028cc3707dfd646aae629d58e476f7e7f062437680741c561"},
+    {file = "poetry-1.7.1.tar.gz", hash = "sha256:b348a70e7d67ad9c0bd3d0ea255bc6df84c24cf4b16f8d104adb30b425d6ff32"},
 ]
 
 [package.dependencies]
@@ -1355,4 +1355,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.7.2,<4.0"
-content-hash = "dabe0445145e0d2d7da188a2280129ad7e875131a079fd5ad6d884a252c33001"
+content-hash = "67eb42bc79d24584818ea29d4f57a23609b357e8dacc75acdf145f0ccb48af97"
