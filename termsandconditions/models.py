@@ -52,7 +52,7 @@ class UserTermsAndConditions(models.Model):
         )
 
     def __str__(self):
-        return f"{self.user.get_username()}:{self.terms.slug}-{self.terms.version_number}")
+        return f"{self.user.get_username()}:{self.terms.slug}-{self.terms.version_number}"
 
 
 class TermsAndConditions(models.Model):
