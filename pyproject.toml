@@ -61,7 +61,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 extend-exclude = ["migrations"]
-ignore = [
+lint.ignore = [
     "B904",
     "DJ001",
     "DJ008",
@@ -74,7 +74,7 @@ ignore = [
     "N815",
 ]
 line-length = 88
-select = [
+lint.select = [
     "B",
     "B9",
     "C",
@@ -86,8 +86,8 @@ select = [
     "UP",
     "W",
 ]
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 forced-separate = ["django"]
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 25
