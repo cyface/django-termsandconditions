@@ -51,10 +51,8 @@ class UserTermsAndConditions(models.Model):
             "terms",
         )
 
-    def __str__(self):  # pragma: nocover
-        return "{}:{}-{:.2f}".format(
-            self.user.get_username(), self.terms.slug, self.terms.version_number
-        )
+    def __str__(self):
+        return f"{self.user.get_username()}:{self.terms.slug}-{self.terms.version_number}")
 
 
 class TermsAndConditions(models.Model):
