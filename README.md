@@ -8,6 +8,8 @@ to a T&C acceptance page before they can access the site.
 
 *Note that version 2.0+ requires Python 3.6+ and Django 2.2+.*
 
+*Newer releases have higher version requirements*
+
 Creator and Maintainer: - Tim White (<tim@cyface.com>)
 
 Contributors: - Adibo (<https://github.com/adibo>) - Nathan Swain (<https://github.com/swainn>)
