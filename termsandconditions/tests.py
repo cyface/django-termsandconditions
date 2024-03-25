@@ -98,13 +98,13 @@ class TermsAndConditionsTests(TestCase):
         """Test get list of active T&Cs"""
         active_list = TermsAndConditions.get_active_terms_list()
         self.assertEqual(2, len(active_list))
-        self.assertQuerysetEqual(active_list, [repr(self.terms3), repr(self.terms2)])
+        self.assertQuerySetEqual(active_list, [self.terms3, self.terms2])
 
     def test_get_active_terms_not_agreed_to(self):
         """Test get T&Cs not agreed to"""
         active_list = TermsAndConditions.get_active_terms_not_agreed_to(self.user1)
         self.assertEqual(2, len(active_list))
-        self.assertQuerysetEqual(active_list, [repr(self.terms3), repr(self.terms2)])
+        self.assertQuerySetEqual(active_list, [self.terms3, self.terms2])
 
     def test_user_is_excluded(self):
         """Test user3 has perm which excludes them from having to accept T&Cs"""
@@ -115,14 +115,14 @@ class TermsAndConditionsTests(TestCase):
         """Test su should have to accept T&Cs even if they are superuser but don't explicitly have the skip perm"""
         active_list = TermsAndConditions.get_active_terms_not_agreed_to(self.su)
         self.assertEqual(2, len(active_list))
-        self.assertQuerysetEqual(active_list, [repr(self.terms3), repr(self.terms2)])
+        self.assertQuerySetEqual(active_list, [self.terms3, self.terms2])
 
     def test_superuser_cannot_skip(self):
         """Test su still has to accept even if they are explicitly given the skip perm"""
         self.su.user_permissions.add(self.skip_perm)
         active_list = TermsAndConditions.get_active_terms_not_agreed_to(self.su)
         self.assertEqual(2, len(active_list))
-        self.assertQuerysetEqual(active_list, [repr(self.terms3), repr(self.terms2)])
+        self.assertQuerySetEqual(active_list, [self.terms3, self.terms2])
 
     def test_superuser_excluded(self):
         """Test su doesn't have to accept with TERMS_EXCLUDE_SUPERUSERS set"""
