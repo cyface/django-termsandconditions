@@ -50,7 +50,7 @@ python = ">=3.8,<4.0"
 Django = ">2.2"
 
 [tool.poetry.dev-dependencies]
-black = "^24.3"
+black = "^24.4"
 coverage = {extras = ["toml"], version = "^7.4"}
 poetry = "^1.8.2"
 ruff = "^0.3.7"
