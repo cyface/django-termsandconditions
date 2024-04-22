@@ -6,7 +6,7 @@ Django Terms and Conditions
 Django Terms and Conditions gives you an configurable way to send users
 to a T&C acceptance page before they can access the site.
 
-*Note that version 2.0+ requires Python 3.6+ and Django 2.2+.*
+*Note that version 2.0+ requires Python 3.7+ and Django 2.2+.*
 
 *Newer releases have higher version requirements*
 
