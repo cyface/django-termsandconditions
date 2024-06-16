@@ -425,3 +425,9 @@ In order to prevent redirect loops, if you are using internationalized URLs, you
 ``TERMS_EXCLUDE_URL_CONTAINS_LIST = {'/terms/', '/i18n/setlang/', }``
 
 to your ``settings.py`` to prevent redirect loops with the language-code-prepended URLs (e.g. ``/en/terms/``)
+
+### Infrastructure model
+![Infrastructure main model](.infragenie/infrastructure_main_model.svg)
+- [app component model](.infragenie/app_component_model.svg)
+
+---
