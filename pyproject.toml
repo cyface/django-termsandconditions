@@ -52,7 +52,7 @@ Django = ">2.2"
 [tool.poetry.dev-dependencies]
 black = "^24.8"
 coverage = {extras = ["toml"], version = "^7.6"}
-poetry = "^1.8.3"
+poetry = "^1.8.4"
 ruff = "^0.7.2"
 
 [build-system]
