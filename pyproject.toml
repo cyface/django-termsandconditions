@@ -1,3 +1,27 @@
+[project]
+name = "django-termsandconditions"
+version = "2.0.12"
+description = "Django app that enables users to accept terms and conditions of a site."
+authors = [{ name = "Tim White", email = "tim@cyface.com" }]
+requires-python = ">=3.8,<4.0"
+readme = "README.md"
+license = { text = "BSD License" }
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: Django",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Topic :: Internet :: WWW/HTTP",
+]
+dependencies = ["Django>2.2"]
+
+[project.urls]
+Homepage = "https://github.com/cyface/django-termsandconditions"
+
 [tool.black]
 line-length = 88
 target-version = ['py38', 'py39', 'py310', 'py311']
@@ -18,6 +42,14 @@ exclude = '''
 )/
 '''
 
+[dependency-groups]
+dev = [
+    "black~=24.8",
+    "coverage[toml]~=7.6",
+    "ruff>=0.9.0,<0.10",
+    "uv>=0.5"
+]
+
 [tool.coverage.run]
 branch = true
 omit = [
@@ -34,30 +66,15 @@ omit = [
     "*/wsgi.py"
 ]
 
-[tool.poetry]
-authors = ["Tim White <tim@cyface.com>"]
-classifiers = ["Development Status :: 5 - Production/Stable", "Framework :: Django", "Intended Audience :: Developers", "License :: OSI Approved :: MIT License", "Operating System :: OS Independent", "Programming Language :: Python :: 3.6", "Programming Language :: Python :: 3.7", "Programming Language :: Python :: 3.8", "Topic :: Internet :: WWW/HTTP"]
-description = "Django app that enables users to accept terms and conditions of a site."
-homepage = "https://github.com/cyface/django-termsandconditions"
-license = "BSD"
-name = "django-termsandconditions"
-packages = [{ include = "termsandconditions" }, ]
-readme = "README.md"
-version = "2.0.12"
+[tool.hatch.build.targets.sdist]
+include = ["termsandconditions"]
 
-[tool.poetry.dependencies]
-python = ">=3.8,<4.0"
-Django = ">2.2"
-
-[tool.poetry.dev-dependencies]
-black = "^24.8"
-coverage = {extras = ["toml"], version = "^7.6"}
-poetry = "^1.8.5"
-ruff = "^0.9.0"
+[tool.hatch.build.targets.wheel]
+include = ["termsandconditions"]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.ruff]
 extend-exclude = ["migrations"]
@@ -73,7 +90,6 @@ lint.ignore = [
     "N806",
     "N815",
 ]
-line-length = 88
 lint.select = [
     "B",
     "B9",
@@ -86,6 +102,8 @@ lint.select = [
     "UP",
     "W",
 ]
+line-length = 88
+
 [tool.ruff.lint.isort]
 forced-separate = ["django"]
 
