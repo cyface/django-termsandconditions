@@ -16,7 +16,7 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Topic :: Internet :: WWW/HTTP",
 ]
-dependencies = ["Django>2.2"]
+dependencies = ["Django>=4.2"]
 
 [project.urls]
 Homepage = "https://github.com/cyface/django-termsandconditions"

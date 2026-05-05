@@ -13,6 +13,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import DetailView, CreateView, FormView
 from django.template.loader import get_template
 from django.utils.encoding import iri_to_uri
+from django.utils.http import url_has_allowed_host_and_scheme
 import logging
 from smtplib import SMTPException
 
@@ -54,15 +55,6 @@ class GetTermsViewMixin:
         return "/"
 
     def is_safe_url(self, url):
-        # In Django 3.0 is_safe_url is renamed, so we import conditionally:
-        # https://docs.djangoproject.com/en/3.2/releases/3.0/#id3
-        try:
-            from django.utils.http import url_has_allowed_host_and_scheme
-        except ImportError:
-            from django.utils.http import (
-                is_safe_url as url_has_allowed_host_and_scheme,
-            )
-
         return url_has_allowed_host_and_scheme(url, settings.ALLOWED_HOSTS)
 
 
