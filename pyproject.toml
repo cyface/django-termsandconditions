@@ -1,6 +1,6 @@
 [project]
 name = "django-termsandconditions"
-version = "2.1.0"
+version = "2.1.1"
 description = "Django app that enables users to accept terms and conditions of a site."
 authors = [{ name = "Tim White", email = "tim@cyface.com" }]
 requires-python = ">=3.12,<4.0"
