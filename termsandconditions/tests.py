@@ -41,7 +41,7 @@ class TermsAndConditionsTests(TestCase):
             name="Site Terms",
             text="Site Terms and Conditions 1",
             version_number=1.0,
-            date_active="2012-01-01",
+            date_active="2012-01-01T00:00:00+00:00",
         )
         self.terms2 = TermsAndConditions.objects.create(
             id=2,
@@ -49,7 +49,7 @@ class TermsAndConditionsTests(TestCase):
             name="Site Terms",
             text="Site Terms and Conditions 2",
             version_number=2.0,
-            date_active="2012-01-05",
+            date_active="2012-01-05T00:00:00+00:00",
         )
         self.terms3 = TermsAndConditions.objects.create(
             id=3,
@@ -57,7 +57,7 @@ class TermsAndConditionsTests(TestCase):
             name="Contributor Terms",
             text="Contributor Terms and Conditions 1.5",
             version_number=1.5,
-            date_active="2012-01-01",
+            date_active="2012-01-01T00:00:00+00:00",
         )
         self.terms4 = TermsAndConditions.objects.create(
             id=4,
@@ -65,7 +65,7 @@ class TermsAndConditionsTests(TestCase):
             name="Contributor Terms",
             text="Contributor Terms and Conditions 2",
             version_number=2.0,
-            date_active="2100-01-01",
+            date_active="2100-01-01T00:00:00+00:00",
         )
 
         # give user3 permission to skip T&Cs
@@ -336,7 +336,7 @@ class TermsAndConditionsTests(TestCase):
             name="Site Terms",
             text="Terms and Conditions2",
             version_number=2.5,
-            date_active="2012-02-05",
+            date_active="2012-02-05T00:00:00+00:00",
         )
 
         LOGGER.debug("Test user1 is redirected when changing pages")
@@ -518,7 +518,7 @@ class TermsAndConditionsTemplateTagsTestCase(TestCase):
             name="Site Terms",
             text="Site Terms and Conditions 1",
             version_number=1.0,
-            date_active="2012-01-01",
+            date_active="2012-01-01T00:00:00+00:00",
         )
         cache.clear()
 
