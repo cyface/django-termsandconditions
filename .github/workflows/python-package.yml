@@ -26,15 +26,17 @@ jobs:
           cache-dependency-glob: "uv.lock"
           enable-cache: true
           python-version: ${{ matrix.python-version }}
-      - run: uv sync --frozen
-      - run: uv pip install "Django~=${{ matrix.django-version }}"
+      - name: Install dependencies
+        run: uv sync --frozen
+      - name: Override Django version
+        run: uv pip install "Django~=${{ matrix.django-version }}"
       - name: Test
         run: |
           uv run --no-sync ruff check .
           uv run --no-sync coverage run manage.py test
           uv run --no-sync coverage xml
       - name: codecov-umbrella
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
