@@ -1,7 +1,5 @@
 """Django Models for TermsAndConditions App"""
 
-from collections import OrderedDict
-
 from django.db import models
 from django.conf import settings
 from django.core.cache import cache
@@ -141,9 +139,7 @@ class TermsAndConditions(models.Model):
             for active_terms in active_terms_set:
                 active_terms_dict[active_terms.slug] = active_terms.id
 
-            active_terms_dict = OrderedDict(
-                sorted(active_terms_dict.items(), key=lambda t: t[0])
-            )
+            active_terms_dict = dict(sorted(active_terms_dict.items()))
 
             for terms in active_terms_dict:
                 active_terms_ids.append(active_terms_dict[terms])
