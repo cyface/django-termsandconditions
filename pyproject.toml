@@ -3,7 +3,7 @@ name = "django-termsandconditions"
 version = "2.0.12"
 description = "Django app that enables users to accept terms and conditions of a site."
 authors = [{ name = "Tim White", email = "tim@cyface.com" }]
-requires-python = ">=3.10,<4.0"
+requires-python = ">=3.12,<4.0"
 readme = "README.md"
 license = { text = "BSD License" }
 classifiers = [
@@ -12,8 +12,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Internet :: WWW/HTTP",
@@ -25,7 +23,7 @@ Homepage = "https://github.com/cyface/django-termsandconditions"
 
 [tool.black]
 line-length = 88
-target-version = ['py310', 'py311', 'py312', 'py313']
+target-version = ['py312', 'py313']
 include = '\.pyi?$'
 exclude = '''
 /(
