@@ -10,6 +10,8 @@ jobs:
   deploy:
 
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
 
     steps:
     - uses: actions/checkout@v6
@@ -20,4 +22,4 @@ jobs:
     - name: Build and publish
       run: |
         uv build
-        uv publish
+        uv publish --trusted-publishing always
