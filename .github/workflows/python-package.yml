@@ -16,6 +16,7 @@ jobs:
     strategy:
       matrix:
         python-version: [ '3.12', '3.13' ]
+        django-version: [ '5.2', '6.0' ]
 
     steps:
       - uses: actions/checkout@v4
@@ -26,11 +27,12 @@ jobs:
           enable-cache: true
           python-version: ${{ matrix.python-version }}
       - run: uv sync
+      - run: uv pip install "Django~=${{ matrix.django-version }}"
       - name: Test
         run: |
-          uv run ruff check .
-          uv run coverage run manage.py test
-          uv run coverage xml
+          uv run --no-sync ruff check .
+          uv run --no-sync coverage run manage.py test
+          uv run --no-sync coverage xml
       - name: codecov-umbrella
         uses: codecov/codecov-action@v4
         with:
