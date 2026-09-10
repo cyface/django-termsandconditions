@@ -207,18 +207,11 @@ class TermsAndConditions(models.Model):
         cache_key = not_agreed_terms_cache_key(user.get_username())
         not_agreed_terms = cache.get(cache_key)
         if not_agreed_terms is None:
-            try:
-                not_agreed_terms = (
-                    TermsAndConditions.get_active_terms_list()
-                    .exclude(
-                        userterms__in=UserTermsAndConditions.objects.filter(user=user)
-                    )
-                    .order_by("slug")
-                )
-                cache.set(cache_key, not_agreed_terms, app_settings.TERMS_CACHE_SECONDS)
-            except (TypeError, UserTermsAndConditions.DoesNotExist):
-                # Defensive: a cache backend that hands back something other
-                # than a queryset would otherwise 500 the whole request.
-                return []  # pragma: no cover
+            not_agreed_terms = (
+                TermsAndConditions.get_active_terms_list()
+                .exclude(userterms__in=UserTermsAndConditions.objects.filter(user=user))
+                .order_by("slug")
+            )
+            cache.set(cache_key, not_agreed_terms, app_settings.TERMS_CACHE_SECONDS)
 
         return not_agreed_terms

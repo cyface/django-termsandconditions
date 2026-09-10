@@ -57,6 +57,13 @@ up to current Django and Python practice, and a migration ships with it.
 
 ### Fixed
 
+- **The outstanding-terms lookup no longer fails open.** It caught `TypeError`
+  and `UserTermsAndConditions.DoesNotExist` and returned `[]` on either, which
+  reads as "this user has accepted everything" and quietly waves them past the
+  gate. Neither exception was reachable — `.filter()` does not raise
+  `DoesNotExist`, and a cache returning a non-queryset raises `AttributeError`,
+  which was never caught. The handler is gone, so an unexpected error surfaces
+  instead of silently disabling the terms check.
 - **Accepting terms no longer poisons an enclosing transaction.** Each
   acceptance is written inside a savepoint, so a duplicate can no longer break
   the request under `ATOMIC_REQUESTS`.

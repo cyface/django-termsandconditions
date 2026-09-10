@@ -22,8 +22,7 @@ LOGGER = logging.getLogger(__name__)
 def user_terms_updated(sender, instance, **kwargs) -> None:
     """Drop the acceptance cache for the user whose record changed."""
     LOGGER.debug("User T&C updated signal handler")
-    if instance.user:
-        cache.delete(not_agreed_terms_cache_key(instance.user.get_username()))
+    cache.delete(not_agreed_terms_cache_key(instance.user.get_username()))
 
 
 @receiver([post_delete, post_save], sender=TermsAndConditions)
@@ -31,8 +30,7 @@ def terms_updated(sender, instance, **kwargs) -> None:
     """Drop every cached view of the terms, plus per-user acceptance."""
     LOGGER.debug("T&C updated signal handler")
     cache.delete_many([ACTIVE_TERMS_IDS_CACHE_KEY, ACTIVE_TERMS_LIST_CACHE_KEY])
-    if instance.slug:
-        cache.delete(active_terms_cache_key(instance.slug))
+    cache.delete(active_terms_cache_key(instance.slug))
 
     # New or changed terms can invalidate anyone's acceptance, so clear the
     # cache for every user who has ever accepted something.

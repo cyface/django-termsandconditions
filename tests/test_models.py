@@ -159,3 +159,28 @@ class CacheInvalidationTests(TermsTestCase):
         self.assertEqual(
             2, len(TermsAndConditions.get_active_terms_not_agreed_to(self.user1))
         )
+
+    def test_active_terms_are_served_from_cache_on_the_second_call(self):
+        self.assertEqual(
+            2.0, TermsAndConditions.get_active("site-terms").version_number
+        )
+
+        with self.assertNumQueries(0):
+            terms = TermsAndConditions.get_active("site-terms")
+
+        self.assertEqual(2.0, terms.version_number)
+
+    def test_active_terms_ids_are_served_from_cache_on_the_second_call(self):
+        self.assertEqual([3, 2], TermsAndConditions.get_active_terms_ids())
+
+        with self.assertNumQueries(0):
+            self.assertEqual([3, 2], TermsAndConditions.get_active_terms_ids())
+
+    @override_settings(TERMS_CACHE_SECONDS=0)
+    def test_caching_can_be_disabled(self):
+        self.assertEqual(
+            2.0, TermsAndConditions.get_active("site-terms").version_number
+        )
+
+        with self.assertNumQueries(1):
+            TermsAndConditions.get_active("site-terms")
