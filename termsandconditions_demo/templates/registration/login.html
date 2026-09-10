@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 
+{% block headtitle %}Sign In{% endblock %}
+
 {% block content %}
-    <section data-role="content">
-        <form method="post" action="." data-ajax="false">
+    <section aria-label="Sign in">
+        <h1>Sign In</h1>
+        <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
             {{ form.as_p }}
-
-            <input type="submit" value="Log in"/>
-            <input type="hidden" name="next" value="{{ next }}"/>
+            <input type="hidden" name="next" value="{{ next }}">
+            <p><button type="submit">Log in</button></p>
         </form>
     </section>
 {% endblock %}

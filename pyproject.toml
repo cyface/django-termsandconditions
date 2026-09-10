@@ -1,110 +1,124 @@
 [project]
 name = "django-termsandconditions"
-version = "2.1.1"
+version = "3.0.0"
 description = "Django app that enables users to accept terms and conditions of a site."
 authors = [{ name = "Tim White", email = "tim@cyface.com" }]
-requires-python = ">=3.12,<4.0"
+requires-python = ">=3.12"
 readme = "README.md"
-license = { text = "BSD License" }
+license = "BSD-3-Clause"
+license-files = ["LICENSE.txt"]
+keywords = ["django", "terms", "conditions", "tos", "eula", "consent", "gdpr"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
     "Framework :: Django",
+    "Framework :: Django :: 5.2",
+    "Framework :: Django :: 6.0",
+    "Framework :: Django :: 6.1",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
 ]
 dependencies = ["Django>=5.2"]
 
 [project.urls]
 Homepage = "https://github.com/cyface/django-termsandconditions"
-
-[tool.black]
-line-length = 88
-target-version = ['py312', 'py313']
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-  | migrations
-)/
-'''
+Documentation = "https://django-termsandconditions.readthedocs.io/"
+Changelog = "https://github.com/cyface/django-termsandconditions/blob/main/CHANGELOG.md"
+Issues = "https://github.com/cyface/django-termsandconditions/issues"
+Source = "https://github.com/cyface/django-termsandconditions"
 
 [dependency-groups]
 dev = [
-    "black>=26.3.1,<27.0",
     "coverage[toml]~=7.6",
-    "ruff>=0.9.0,<0.17",
-    "uv>=0.5"
+    "ruff>=0.16,<0.17",
+    "uv>=0.5",
 ]
-
-[tool.coverage.run]
-branch = true
-omit = [
-    "*/__init__.py",
-    "*/apps.py",
-    "*/devscripts*",
-    "*/docs/*",
-    "*/local_settings_template.py",
-    "*/manage.py",
-    "*/migrations/*",
-    "*/settings*",
-    "*/setup.py",
-    "*/tests*",
-    "*/wsgi.py"
-]
-
-[tool.hatch.build.targets.sdist]
-include = ["termsandconditions"]
-
-[tool.hatch.build.targets.wheel]
-include = ["termsandconditions"]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build.targets.sdist]
+include = [
+    "termsandconditions",
+    "tests",
+    "manage.py",
+    "CHANGELOG.md",
+    "README.md",
+]
+
+[tool.hatch.build.targets.wheel]
+include = ["termsandconditions"]
+
+[tool.coverage.run]
+branch = true
+source = ["termsandconditions"]
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+]
+
+[tool.coverage.report]
+exclude_also = [
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
+
 [tool.ruff]
-extend-exclude = ["migrations"]
-lint.ignore = [
-    "B904",
-    "DJ001",
-    "DJ008",
-    "DJ012",
-    "E501",
-    "E722",
-    "F403",
-    "F405",
-    "N806",
-    "N815",
-]
-lint.select = [
-    "B",
-    "B9",
-    "C",
-    "DJ",
-    "DTZ",
-    "E",
-    "F",
-    "N",
-    "UP",
-    "W",
-]
 line-length = 88
+target-version = "py312"
+extend-exclude = ["termsandconditions/migrations"]
+
+[tool.ruff.lint]
+select = [
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "DJ",   # flake8-django
+    "DTZ",  # flake8-datetimez
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "G",    # flake8-logging-format
+    "I",    # isort
+    "LOG",  # flake8-logging
+    "N",    # pep8-naming
+    "PIE",  # flake8-pie
+    "PTH",  # flake8-use-pathlib
+    "RUF",  # ruff-specific
+    "SIM",  # flake8-simplify
+    "UP",   # pyupgrade
+    "W",    # pycodestyle warnings
+]
+ignore = [
+    "E501",   # line length is the formatter's job
+    "N815",   # `returnTo` is a wire-format field name, not a Python one
+    "RUF012", # Django class attrs are conventionally plain mutables
+]
+
+[tool.ruff.lint.per-file-ignores]
+"termsandconditions_demo/settings_local_template.py" = ["F403", "F405"]
 
 [tool.ruff.lint.isort]
-forced-separate = ["django"]
+known-first-party = ["termsandconditions", "termsandconditions_demo", "tests"]
+section-order = [
+    "future",
+    "standard-library",
+    "django",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
 
-[tool.ruff.lint.mccabe]
-max-complexity = 25
+[tool.ruff.lint.isort.sections]
+django = ["django"]
+
+[tool.ruff.format]
+docstring-code-format = true
+# README snippets are excerpts (a urlpatterns entry keeps its trailing comma),
+# not modules; formatting them as standalone Python mangles the docs.
+exclude = ["*.md"]

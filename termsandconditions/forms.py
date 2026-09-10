@@ -1,40 +1,22 @@
-"""Django forms for the termsandconditions application"""
+"""Forms for the termsandconditions app."""
 
 from django import forms
-from django.db.models import QuerySet
 
-from termsandconditions.models import TermsAndConditions
+from .models import TermsAndConditions
 
 
-class UserTermsAndConditionsModelForm(forms.Form):
-    """Form used when accepting Terms and Conditions - returnTo is used to catch where to end up."""
+class UserTermsAndConditionsForm(forms.Form):
+    """Carries the terms being accepted and where to send the user afterwards."""
 
     returnTo = forms.CharField(required=False, initial="/", widget=forms.HiddenInput())
     terms = forms.ModelMultipleChoiceField(
-        TermsAndConditions.objects.none(),
+        queryset=TermsAndConditions.objects.all(),
         widget=forms.MultipleHiddenInput,
     )
 
-    def __init__(self, *args, **kwargs):
-        kwargs.pop("instance", None)
-
-        terms_list = kwargs.get("initial", {}).get("terms", None)
-
-        if terms_list is None:  # pragma: nocover
-            terms_list = TermsAndConditions.get_active_terms_list()
-
-        if terms_list is QuerySet:
-            self.terms = forms.ModelMultipleChoiceField(
-                terms_list, widget=forms.MultipleHiddenInput
-            )
-        else:
-            self.terms = terms_list
-
-        super().__init__(*args, **kwargs)
-
 
 class EmailTermsForm(forms.Form):
-    """Form used to collect email address to send terms and conditions to."""
+    """Collects the address to email a copy of the terms to."""
 
     email_subject = forms.CharField(widget=forms.HiddenInput())
     email_address = forms.EmailField()

@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 
+{% block headtitle %}Signed Out{% endblock %}
+
 {% block content %}
-    <section data-role="content">
-        <h3>You have been logged out.</h3>
+    <section aria-label="Signed out">
+        <h1>You have been logged out.</h1>
+        <p><a href="{% url 'tc_demo_home_page' %}">Return home</a></p>
     </section>
 {% endblock %}

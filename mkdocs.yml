@@ -1,4 +1,18 @@
 site_name: Django Terms and Conditions
+site_description: Django app that enables users to accept terms and conditions of a site.
+site_url: https://django-termsandconditions.readthedocs.io/
+repo_url: https://github.com/cyface/django-termsandconditions
+edit_uri: ""
 
 theme:
-    name: readthedocs
+  name: readthedocs
+
+markdown_extensions:
+  - tables
+  - fenced_code
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Changelog: changelog.md

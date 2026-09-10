@@ -1,34 +1,31 @@
-"""
-    Master URL Pattern List for the application.  Most of the patterns here should be top-level
-    pass-offs to sub-modules, who will have their own urls.py defining actions within.
+"""URLs for the termsandconditions app.
+
+Include these under a prefix of your choosing, for example::
+
+    (path("terms/", include("termsandconditions.urls")),)
 """
 
-from django.contrib import admin
 from django.urls import path, register_converter
 from django.views.decorators.cache import never_cache
 
 from .views import AcceptTermsView, EmailTermsView, TermsActiveView, TermsView
 
-admin.autodiscover()
-
 
 class TermsVersionConverter:
-    """
-    Registers Django URL path converter for Terms Version Numbers
-    """
+    """Matches a terms version number such as ``1`` or ``2.50``."""
 
     regex = "[0-9.]+"
 
-    def to_python(self, value):
+    def to_python(self, value: str) -> str:
         return value
 
-    def to_url(self, value):
+    def to_url(self, value: str) -> str:
         return value
 
 
 register_converter(TermsVersionConverter, "termsversion")
 
-urlpatterns = (
+urlpatterns = [
     # View Unaccepted Terms
     path("", never_cache(TermsView.as_view()), name="tc_view_page"),
     # View Specific Active Terms
@@ -75,4 +72,4 @@ urlpatterns = (
         never_cache(EmailTermsView.as_view()),
         name="tc_specific_version_page",
     ),
-)
+]

@@ -1,173 +1,155 @@
-"""Django Views for the termsandconditions module"""
+"""Views for the termsandconditions app."""
 
-from django.contrib.auth.models import User
-from django.db import IntegrityError
+import logging
+from collections.abc import Sequence
+from smtplib import SMTPException
 
-from .forms import UserTermsAndConditionsModelForm, EmailTermsForm
-from .models import TermsAndConditions, UserTermsAndConditions
 from django.conf import settings
-from django.core.mail import send_mail
 from django.contrib import messages
-from django.http import HttpResponseRedirect
-from django.utils.translation import gettext as _
-from django.views.generic import DetailView, CreateView, FormView
+from django.core.mail import send_mail
+from django.db import IntegrityError, transaction
+from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.template.loader import get_template
 from django.utils.encoding import iri_to_uri
 from django.utils.http import url_has_allowed_host_and_scheme
-import logging
-from smtplib import SMTPException
+from django.utils.translation import gettext as _
+from django.views.generic import DetailView, FormView
 
-LOGGER = logging.getLogger(name="termsandconditions")
-DEFAULT_TERMS_BASE_TEMPLATE = "base.html"
-DEFAULT_TERMS_IP_HEADER_NAME = "REMOTE_ADDR"
+from .conf import app_settings
+from .forms import EmailTermsForm, UserTermsAndConditionsForm
+from .models import TermsAndConditions, UserTermsAndConditions
+
+LOGGER = logging.getLogger(__name__)
 
 
 class GetTermsViewMixin:
-    """Checks URL parameters for slug and/or version to pull the right TermsAndConditions object"""
+    """Resolves which terms a request is about, and where to return afterwards."""
 
-    def get_terms(self, kwargs):
-        """Checks URL parameters for slug and/or version to pull the right TermsAndConditions object"""
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        context["terms_base_template"] = app_settings.TERMS_BASE_TEMPLATE
+        return context
 
+    def get_terms(self, kwargs: dict) -> Sequence["TermsAndConditions | None"]:
+        """Pick the terms named by the URL, falling back to the user's outstanding ones."""
         slug = kwargs.get("slug")
         version = kwargs.get("version")
 
         if slug and version:
-            terms = [
-                TermsAndConditions.objects.filter(
-                    slug=slug, version_number=version
-                ).latest("date_active")
-            ]
-        elif slug:
-            terms = [TermsAndConditions.get_active(slug)]
-        else:
-            # Return a list of not agreed to terms for the current user for the list view
-            terms = TermsAndConditions.get_active_terms_not_agreed_to(self.request.user)
-        return terms
+            try:
+                return [
+                    TermsAndConditions.objects.filter(
+                        slug=slug, version_number=version
+                    ).latest("date_active")
+                ]
+            except TermsAndConditions.DoesNotExist:
+                raise Http404(
+                    f"No terms with slug {slug!r} at version {version!r}."
+                ) from None
 
-    def get_return_to(self, from_dict):
-        return_to = from_dict.get("returnTo", "/")
+        if slug:
+            return [TermsAndConditions.get_active(slug)]
 
-        if self.is_safe_url(return_to):
-            # Django recommends to use this together with the helper above
+        return TermsAndConditions.get_active_terms_not_agreed_to(self.request.user)
+
+    def get_return_to(self, from_dict) -> str:
+        """Read the redirect target out of ``from_dict``, rejecting off-site URLs.
+
+        The configured ``TERMS_RETURNTO_PARAM`` wins, but the form field is
+        always named ``returnTo``, so that name is honoured as a fallback.
+        """
+        return_to = from_dict.get(app_settings.TERMS_RETURNTO_PARAM) or from_dict.get(
+            "returnTo", "/"
+        )
+
+        if url_has_allowed_host_and_scheme(return_to, settings.ALLOWED_HOSTS):
             return iri_to_uri(return_to)
 
-        LOGGER.debug(f"Unsafe URL found: {return_to}")
+        LOGGER.debug("Unsafe URL found: %s", return_to)
         return "/"
 
-    def is_safe_url(self, url):
-        return url_has_allowed_host_and_scheme(url, settings.ALLOWED_HOSTS)
 
+class AcceptTermsView(GetTermsViewMixin, FormView):
+    """Show outstanding terms and record the user's acceptance.
 
-class AcceptTermsView(CreateView, GetTermsViewMixin):
-    """
-    Terms and Conditions Acceptance view
-
-    url: /terms/accept
+    url: /terms/accept/
     """
 
-    model = UserTermsAndConditions
-    form_class = UserTermsAndConditionsModelForm
+    form_class = UserTermsAndConditionsForm
     template_name = "termsandconditions/tc_accept_terms.html"
 
-    def get_context_data(self, **kwargs):
-        """Pass additional context data"""
-        context = super().get_context_data(**kwargs)
-        context["terms_base_template"] = getattr(
-            settings, "TERMS_BASE_TEMPLATE", DEFAULT_TERMS_BASE_TEMPLATE
-        )
-        return context
+    def get_initial(self) -> dict:
+        return {
+            "terms": self.get_terms(self.kwargs),
+            "returnTo": self.get_return_to(self.request.GET),
+        }
 
-    def get_initial(self):
-        """Override of CreateView method, queries for which T&C to accept and catches returnTo from URL"""
-        LOGGER.debug("termsandconditions.views.AcceptTermsView.get_initial")
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        return_url = self.get_return_to(request.POST)
 
-        terms = self.get_terms(self.kwargs)
-        return_to = self.get_return_to(self.request.GET)
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect("/")
 
-        return {"terms": terms, "returnTo": return_to}
-
-    def post(self, request, *args, **kwargs):
-        """
-        Handles POST request.
-        """
-        return_url = self.get_return_to(self.request.POST)
-        terms_ids = request.POST.getlist("terms")
-
-        if not terms_ids:  # pragma: nocover
+        try:
+            terms_pks = [int(pk) for pk in request.POST.getlist("terms")]
+        except ValueError:
+            LOGGER.debug("Non-numeric terms id posted to accept view")
             return HttpResponseRedirect(return_url)
 
-        if request.user.is_authenticated:
-            user = request.user
-        else:
-            # Get user out of saved pipeline from django-socialauth
-            if "partial_pipeline" in request.session:
-                user_pk = request.session["partial_pipeline"]["kwargs"]["user"]["pk"]
-                user = User.objects.get(id=user_pk)
-            else:
-                return HttpResponseRedirect("/")
+        if not terms_pks:  # pragma: nocover
+            return HttpResponseRedirect(return_url)
 
-        store_ip_address = getattr(settings, "TERMS_STORE_IP_ADDRESS", True)
-        if store_ip_address:
-            ip_address = request.META.get(
-                getattr(settings, "TERMS_IP_HEADER_NAME", DEFAULT_TERMS_IP_HEADER_NAME)
-            )
-            if "," in ip_address:
-                ip_address = ip_address.split(",")[0].strip()
-        else:
-            ip_address = ""
+        ip_address = self.get_ip_address(request)
 
-        for terms_id in terms_ids:
+        for terms in TermsAndConditions.objects.filter(pk__in=terms_pks):
             try:
-                new_user_terms = UserTermsAndConditions(
-                    user=user,
-                    terms=TermsAndConditions.objects.get(pk=int(terms_id)),
-                    ip_address=ip_address,
-                )
-                new_user_terms.save()
-            except IntegrityError:  # pragma: nocover
-                pass
+                # Saved one at a time so the cache-clearing signals fire, and
+                # inside a savepoint so a duplicate does not poison an
+                # enclosing transaction (ATOMIC_REQUESTS, say).
+                with transaction.atomic():
+                    UserTermsAndConditions.objects.create(
+                        user=request.user, terms=terms, ip_address=ip_address
+                    )
+            except IntegrityError:
+                # Already accepted, possibly concurrently. Nothing to record.
+                LOGGER.debug("Terms %s already accepted by this user", terms.pk)
 
         return HttpResponseRedirect(return_url)
 
+    @staticmethod
+    def get_ip_address(request: HttpRequest) -> str | None:
+        """The client IP to store, or None when disabled or unavailable."""
+        if not app_settings.TERMS_STORE_IP_ADDRESS:
+            return None
 
-class EmailTermsView(FormView, GetTermsViewMixin):
-    """
-    Email Terms and Conditions View
+        ip_address = request.META.get(app_settings.TERMS_IP_HEADER_NAME)
+        if not ip_address:
+            return None
 
-    url: /terms/email
+        # Proxy headers such as X-Forwarded-For hold a chain; the client is first.
+        return ip_address.split(",")[0].strip()
+
+
+class EmailTermsView(GetTermsViewMixin, FormView):
+    """Email a copy of the terms.
+
+    url: /terms/email/
     """
 
     template_name = "termsandconditions/tc_email_terms_form.html"
-
     form_class = EmailTermsForm
 
-    def get_context_data(self, **kwargs):
-        """Pass additional context data"""
-        context = super().get_context_data(**kwargs)
-        context["terms_base_template"] = getattr(
-            settings, "TERMS_BASE_TEMPLATE", DEFAULT_TERMS_BASE_TEMPLATE
-        )
-        return context
+    def get_initial(self) -> dict:
+        return {
+            "terms": self.get_terms(self.kwargs),
+            "returnTo": self.get_return_to(self.request.GET),
+        }
 
-    def get_initial(self):
-        """Override of CreateView method, queries for which T&C send, catches returnTo from URL"""
-        LOGGER.debug("termsandconditions.views.EmailTermsView.get_initial")
-
-        terms = self.get_terms(self.kwargs)
-
-        return_to = self.get_return_to(self.request.GET)
-
-        return {"terms": terms, "returnTo": return_to}
-
-    def form_valid(self, form):
-        """Override of CreateView method, sends the email."""
-        LOGGER.debug("termsandconditions.views.EmailTermsView.form_valid")
-
+    def form_valid(self, form: EmailTermsForm) -> HttpResponse:
         template = get_template("termsandconditions/tc_email_terms.html")
         template_rendered = template.render({"terms": form.cleaned_data.get("terms")})
 
-        LOGGER.debug("Email Terms Body:")
-        LOGGER.debug(template_rendered)
+        LOGGER.debug("Email terms body: %s", template_rendered)
 
         try:
             send_mail(
@@ -188,19 +170,16 @@ class EmailTermsView(FormView, GetTermsViewMixin):
             )
 
         self.success_url = self.get_return_to(form.cleaned_data)
-
         return super().form_valid(form)
 
-    def form_invalid(self, form):
-        """Override of CreateView method, logs invalid email form submissions."""
-        LOGGER.debug("Invalid Email Form Submitted")
+    def form_invalid(self, form: EmailTermsForm) -> HttpResponse:
+        LOGGER.debug("Invalid email form submitted")
         messages.add_message(self.request, messages.ERROR, _("Invalid Email Address."))
         return super().form_invalid(form)
 
 
-class TermsView(DetailView, GetTermsViewMixin):
-    """
-    View Unaccepted Terms and Conditions View
+class TermsView(GetTermsViewMixin, DetailView):
+    """Show the terms the current user still has to accept.
 
     url: /terms/
     """
@@ -208,28 +187,15 @@ class TermsView(DetailView, GetTermsViewMixin):
     template_name = "termsandconditions/tc_view_terms.html"
     context_object_name = "terms_list"
 
-    def get_context_data(self, **kwargs):
-        """Pass additional context data"""
-        context = super().get_context_data(**kwargs)
-        context["terms_base_template"] = getattr(
-            settings, "TERMS_BASE_TEMPLATE", DEFAULT_TERMS_BASE_TEMPLATE
-        )
-        return context
-
     def get_object(self, queryset=None):
-        """Override of DetailView method, queries for which T&C to return"""
-        LOGGER.debug("termsandconditions.views.TermsView.get_object")
         return self.get_terms(self.kwargs)
 
 
 class TermsActiveView(TermsView):
-    """
-    View Active Terms and Conditions View
+    """Show every currently active set of terms.
 
     url: /terms/active/
     """
 
     def get_object(self, queryset=None):
-        """Override of DetailView method, queries for which T&C to return"""
-        LOGGER.debug("termsandconditions.views.AllTermsView.get_object")
         return TermsAndConditions.get_active_terms_list()

@@ -1,3 +1,134 @@
-#tc-terms-html {width:80%;margin: auto;border: 1px solid #666;background-color: #ccc;padding: 8px;}
-#tc-terms-form {text-align: center;}
-.errorlist li {font-weight: bold;margin: 15px 15px 15px 15px;color:#ff0000;}
+/* Demo styling. Deliberately small and dependency-free. */
+
+:root {
+    --tc-accent: #0a62a9;
+    --tc-border: #d3d3d3;
+    --tc-text: #222222;
+    --tc-bg: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+    color: var(--tc-text);
+    background: var(--tc-bg);
+}
+
+header {
+    background: var(--tc-accent);
+    padding: 0 1rem;
+}
+
+header nav ul {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0.75rem 0;
+}
+
+header nav a,
+header nav .link-button {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+header nav a:hover,
+header nav .link-button:hover {
+    text-decoration: underline;
+}
+
+header nav form {
+    margin: 0;
+}
+
+.link-button {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+}
+
+main {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+}
+
+footer {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 1rem;
+    border-top: 1px solid var(--tc-border);
+    color: #666666;
+    font-size: 0.875rem;
+}
+
+button,
+.button {
+    display: inline-block;
+    background: var(--tc-accent);
+    color: #ffffff;
+    border: 0;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+button:hover,
+.button:hover {
+    filter: brightness(1.1);
+}
+
+.messages {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+}
+
+.messages .message {
+    border-left: 4px solid var(--tc-accent);
+    background: #f4f7fa;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.messages .error {
+    border-left-color: #c0392b;
+    background: #fdf1f0;
+}
+
+/* .toc-container from the app already draws the border around this. */
+#tc-terms-html {
+    padding: 0.25rem;
+}
+
+#tc-terms-form {
+    text-align: center;
+}
+
+.errorlist {
+    list-style: none;
+    padding: 0;
+}
+
+.errorlist li {
+    font-weight: bold;
+    margin: 1rem 0;
+    color: #c0392b;
+}
+
+label {
+    display: inline-block;
+    margin-right: 0.5rem;
+}
