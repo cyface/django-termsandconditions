@@ -1,425 +1,379 @@
-Django Terms and Conditions
-===========================
+# Django Terms and Conditions
 
-[![PyPi Package Version](https://badge.fury.io/py/django-termsandconditions.svg)](http://badge.fury.io/py/django-termsandconditions) [![Actions Status](https://github.com/cyface/django-termsandconditions/workflows/Python%20package/badge.svg)](https://github.com/cyface/django-termsandconditions/actions) [![codecov](https://codecov.io/gh/cyface/django-termsandconditions/branch/master/graph/badge.svg?token=RvtjZ2bngZ)](https://codecov.io/gh/cyface/django-termsandconditions) [![docs](https://readthedocs.org/projects/django-termsandconditions/badge/)](https://django-termsandconditions.readthedocs.io/)
+[![PyPi Package Version](https://badge.fury.io/py/django-termsandconditions.svg)](http://badge.fury.io/py/django-termsandconditions)
+[![Actions Status](https://github.com/cyface/django-termsandconditions/workflows/Python%20package/badge.svg)](https://github.com/cyface/django-termsandconditions/actions)
+[![codecov](https://codecov.io/gh/cyface/django-termsandconditions/branch/main/graph/badge.svg?token=RvtjZ2bngZ)](https://codecov.io/gh/cyface/django-termsandconditions)
+[![docs](https://readthedocs.org/projects/django-termsandconditions/badge/)](https://django-termsandconditions.readthedocs.io/)
 
-Django Terms and Conditions gives you an configurable way to send users
-to a T&C acceptance page before they can access the site.
+Django Terms and Conditions gives you a configurable way to send users to a
+T&C acceptance page before they can access the site.
 
-*Note that version 2.1+ requires Python 3.12+ and Django 5.2+.*
+**Version 3.0 requires Python 3.12+ and Django 5.2+.** It removes
+django-social-auth pipeline support and ships a migration — see
+[CHANGELOG.md](CHANGELOG.md) before upgrading from 2.x.
 
-Creator and Maintainer: - Tim White (<tim@cyface.com>)
+Creator and maintainer: Tim White (<tim@cyface.com>)
 
-Contributors: - Adibo (<https://github.com/adibo>) - Nathan Swain (<https://github.com/swainn>)
+Contributors: [Adibo](https://github.com/adibo), [Nathan Swain](https://github.com/swainn)
 
-Features
---------
+## Features
 
-This module is meant to be as quick to integrate as possible, and thus
-extensive customization will likely benefit from a fork. That said, a
-number of options are available. Currently, the app allows for
+This module is meant to be quick to integrate, so extensive customization will
+likely benefit from a fork. That said, a number of options are available:
 
--   terms-and-conditions versioning (via version\_number)
--   multiple terms-and-conditions allowed (via slug field)
--   per-user terms-and-conditions acceptance
--   middleware to take care of redirecting to proper
-    terms-and-conditions acceptance page upon the version change
--   multi-language support
+- terms-and-conditions versioning (via `version_number`)
+- multiple sets of terms-and-conditions (via the `slug` field)
+- per-user acceptance, recorded with a timestamp and optionally an IP address
+- middleware that redirects to the acceptance page when a version changes
+- a decorator and a template tag for finer-grained control
+- multi-language support
 
-Installation
-------------
+## Installation
 
-**Note that version 2.1+ of django-termsandconditions only works with Python 3.12+ and Django 5.2+**
+```console
+$ pip install django-termsandconditions
+```
 
-From [pypi](https://pypi.python.org):
+Add the app to `INSTALLED_APPS`:
 
-    $ pip install django-termsandconditions
+```python
+INSTALLED_APPS = [
+    ...
+    "termsandconditions",
+]
+```
 
-or:
+And include the URLs:
 
-    $ easy_install django-termsandconditions
+```python
+path("terms/", include("termsandconditions.urls")),
+```
 
-or clone from [github](http://github.com):
+Then run `python manage.py migrate` and create a `TermsAndConditions` entry in
+the admin for users to accept.
 
-    $ git clone git://github.com/cyface/django-termsandconditions.git
+## Demo app
 
-and add django-termsandconditions to the `PYTHONPATH`:
+The `termsandconditions_demo` project shows a working installation. It is plain
+Django with no front-end dependencies.
 
-    $ export PYTHONPATH=$PYTHONPATH:$(pwd)/django-termsandconditions/
+```console
+$ uv sync
+$ uv run python manage.py migrate
+$ uv run python manage.py createsuperuser
+$ uv run python manage.py runserver
+```
 
-or:
+`termsandconditions_demo/settings.py` has a working configuration to crib from,
+and the templates in `termsandconditions/templates/` and
+`termsandconditions_demo/templates/` show what a custom interface needs.
 
-    $ cd django-termsandconditions
-    $ sudo python setup.py install
+## Terms and Conditions
 
-Demo App
---------
+### Versioning
 
-The termsandconditions\_demo app is included to quickly let you see how
-to get a working installation going.
+The version and date of each T&C matter. Create a new version with a future
+`date_active`, and once that date passes users will be asked to accept it.
 
-The demo is built as a mobile app using
-[jQueryMobile](http://jquerymobile.com/) loaded from the jQuery CDN.
+### Default URLs
 
-Take a look at the `requirements.txt` file in the
-`termsandconditions_demo` directory for a quick way to use pip to
-install all the needed dependencies:
+Prefixed by wherever you included the URLs (e.g. `/terms/accept/`):
 
-    $ pip install -r requirements.txt
+| URL | Description |
+| --- | --- |
+| `/` | List all terms that have not been accepted |
+| `/accept/` | List all unaccepted terms, with accept links |
+| `/accept/<slug>/` | Accept the latest version of a specific terms |
+| `/accept/<slug>/<version>/` | Accept a specific version |
+| `/active/` | List all active terms |
+| `/email/` | Email all unaccepted terms |
+| `/email/<slug>/<version>/` | Email a specific version |
+| `/view/<slug>/` | View the latest version of a specific terms |
+| `/view/<slug>/<version>/` | View a specific version |
+| `/print/<slug>/<version>/` | Printable view of a specific version |
 
-The `settings_main.py`, file has a working configuration you can crib
-from.
+Requesting a slug that does not exist renders an empty state; requesting a
+*version* that does not exist returns a 404.
 
-The templates in the `termsandconditions/templates`, and
-`termsandconditions_demo/templates` directories give you a good idea of
-the kinds of things you will need to do if you want to provide a custom
-interface.
+### Middleware
 
-Configuration
--------------
+Protect the whole site with the middleware. Once active, any attempt to reach
+an authenticated page first checks whether the user has accepted the active
+T&Cs. That has a performance cost, so you can instead use the decorator to
+protect specific views.
 
-Configuration is minimal for termsandconditions itself, A quick guide to
-a basic setup is below, take a look at the demo app's settings.py for
-more details.
+```python
+MIDDLEWARE = [
+    ...
+    "termsandconditions.middleware.TermsAndConditionsRedirectMiddleware",
+]
+```
 
-Some useful settings:
-:   -   TERMS\_IP\_HEADER\_NAME Name of header to check for IP address.
-        Defaults to 'REMOTE\_ADDR'. You might need to use
-        'HTTP\_X\_FORWARDED\_FOR', or other headers in proxy setups.
-    -   TERMS\_STORE\_IP\_ADDRESS - True/False whether to store IPs with
-        Terms Acceptance
+The admin, this app's own URLs and `/` are excluded by default. Configure
+exclusions with:
 
-### Requirements
+```python
+ACCEPT_TERMS_PATH = "/terms/accept/"
+TERMS_EXCLUDE_URL_PREFIX_LIST = {"/admin", "/terms"}
+TERMS_EXCLUDE_URL_LIST = {"/", "/accounts/logout/"}
+TERMS_EXCLUDE_URL_CONTAINS_LIST = set()
+```
 
-The app needs `django>=2.2`.
+`TERMS_EXCLUDE_URL_PREFIX_LIST` is a set of "starts with" strings;
+`TERMS_EXCLUDE_URL_LIST` is a set of exact paths; and
+`TERMS_EXCLUDE_URL_CONTAINS_LIST` is a set of fragments — useful for i18n,
+where a language code can be prepended to your URLs.
+
+Add your logout URL to `TERMS_EXCLUDE_URL_LIST` at whatever path you mounted
+`django.contrib.auth.urls` on. There is no default for it, because there is no
+default place to mount it — and without the exclusion a user with outstanding
+terms cannot sign out.
 
-### Add INSTALLED\_APPS
+Each of these may be written as a plain string when you only have one path;
+it is read as the single path it names rather than as a sequence of
+characters.
 
-Add termsandconditions to installed applications:
+You can also exclude users holding a permission you define yourself:
 
-    INSTALLED_APPS = (
-        ...
-        'termsandconditions',
-    )
+```python
+TERMS_EXCLUDE_USERS_WITH_PERM = "myapp.can_skip_terms"
+```
 
-### Add urls to urls.py
-
-In your urls.py, you need to pull in the termsandconditions and/or
-termsandconditions urls:
+That is a permission string, so it is `"<app_label>.<codename>"` — the app the
+permission lives in, not the model it was declared on.
+
+This is useful for continuous login integration tests, or to exempt specific
+users. Superusers are *not* excluded by this, because Django's `has_perm()`
+returns `True` for any permission check on a superuser. To exclude them:
 
-    # Terms and Conditions
-    url(r'^terms/', include('termsandconditions.urls')),
+```python
+TERMS_EXCLUDE_SUPERUSERS = True
+```
 
-Terms and Conditions
---------------------
+### View decorator
 
-You will need to set up a Terms and Conditions entry in the admin (or
-via direct DB load) for users to accept if you want to use the T&C
-module.
+```python
+from termsandconditions.decorators import terms_required
 
-### Terms and Conditions Versioning
+@login_required
+@terms_required
+def terms_required_view(request):
+    ...
+```
 
-Note that the versions and dates of T&Cs are important. You can create a
-new version of a T&C with a future date, and once that date is in the
-past, it will force users to accept that new version of the T&Cs.
+You can skip `@login_required` only if the view is authenticated some other
+way. Requiring T&Cs for anonymous users is not supported.
 
-### Terms and Conditions Default URLs
+### Template tag
 
-If you have included the terms urls under **/terms**, these URLs would
-all be prefixed by that (e.g. /terms/accept/).
+Instead of redirecting, show a modal and let users keep browsing:
 
--   **/** - List all terms that have not been accepted
--   **/accept/** - List all terms that have not been accepted with
-    accept links
--   **/accept/\<slug\>/** - Show page to accept latest version of a
-    specific terms
--   **/accept/\<slug\>/\<version\>/** - Show page to accept a specific
-    version of a specific terms
--   **/active/** - List all active terms
--   **/email/** - Show page to email all unaccepted terms
--   **/email/\<slug\>/\<version\>/** - Show page to email specific
-    version of specific terms
--   **/view/\<slug\>/** - View the latest version of a specific terms
--   **/view/\<slug\>/\<version\>/** - View a specific version of a
-    specific terms
+```django
+{% load terms_tags %}
+{% show_terms_if_not_agreed %}
+```
 
-### Terms and Conditions Middleware
+The modal links to the acceptance page. A user may dismiss it, in which case it
+reappears on the next page that includes the tag. This nags users about new
+T&Cs without interrupting them.
 
-You can force protection of your whole site by using the T&C middleware.
-Once activated, any attempt to access an authenticated page will first
-check to see if the user has accepted the active T&Cs. This can be a
-performance impact, so you can also use the
-\_TermsAndConditionsDecorator to protect specific views, or the pipeline
-setup to only check on account creation.
+Pass `field` to read the current path from a different `request.META` key —
+useful when a separate AJAX view renders the modal:
 
-Here is the middleware configuration:
+```django
+{% show_terms_if_not_agreed field='HTTP_REFERER' %}
+```
 
-    MIDDLEWARE_CLASSES = (
-        ...
-        'termsandconditions.middleware.TermsAndConditionsRedirectMiddleware',
+The default comes from `TERMS_HTTP_PATH_FIELD` (`PATH_INFO`).
 
-By default, some pages are excluded from the middleware, you can
-configure exclusions with these settings:
-
-    ACCEPT_TERMS_PATH = '/terms/accept/'
-    TERMS_EXCLUDE_URL_PREFIX_LIST = {'/admin/',})
-    TERMS_EXCLUDE_URL_LIST = {'/', '/terms/required/', '/logout/', '/securetoo/'}
-    TERMS_EXCLUDE_URL_CONTAINS_LIST = {}
+### Rendering terms that contain template tags
 
-TERMS\_EXCLUDE\_URL\_PREFIX\_LIST is a list of 'starts with' strings to
-exclude, while TERMS\_EXCLUDE\_URL\_LIST is a list of explicit full
-paths to exclude. TERMS\_EXCLUDE\_URL\_CONTAINS\_LIST is a list of url
-fragments to check, if the url 'contains' that string, it is excluded.
-This can be particularly useful for i18n, where your url could get
-prepended with a language code.
+If your terms text includes template syntax (e.g. `{% url 'your-url' %}`),
+render it with the `as_template` filter:
 
-You can also define a setting TERMS\_EXCLUDE\_USERS\_WITH\_PERM to
-exclude users with a custom permission you create yourself.:
+```django
+{% load terms_tags %}
+{% include terms.text|as_template %}
+```
 
-    TERMS_EXCLUDE_USERS_WITH_PERM = 'MyModel.can_skip_terms'
+You will need to adapt the default templates, which use `terms` as a template
+variable.
 
-This can be useful if you need to run continuous login integration tests
-or simply exclude specific users from having to accept your T&Cs. Note
-that we exclude superusers by default from this check due to Django's
-has\_perm() method returning True for any permission check, so adding
-this permission to a superuser has no effect. If you want to exclude
-superusers you can set TERMS\_EXCLUDE\_SUPERUSERS:
+### Base template
 
-    TERMS_EXCLUDE_SUPERUSERS = True
+Most templates extend `base.html`. Point `TERMS_BASE_TEMPLATE` at a different
+one:
 
-### Terms and Conditions Useful Methods
+```python
+TERMS_BASE_TEMPLATE = "page.html"
+```
 
--   **TermsAndConditions.get\_active\_terms\_list()** - Returns a list
-    of all active terms (accepted by current user or not)
--   **TermsAndConditions.get\_active\_terms\_not\_agreed\_to(\<User\>)**
-    - Returns a list of terms the specified user has not agreed to
--   **TermsAndConditions.get\_active(\<slug\>)** - Returns the active
-    terms of the specified terms slug
+A bare minimum base template:
 
-### Terms and Conditions Cache
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>[My Title]</title>
+    {% block styles %}{% endblock %}
+  </head>
+  <body>
+    <main>
+      <h2>{% block title %}{% endblock %}</h2>
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>
+```
 
-To speed performance, especially for the middleware, the terms and their
-acceptance are cached.
+### Rich-text editing in the admin
 
-You can control how long they are cached (or if they are cached at all)
-with this setting:
+The terms `text` and `info` fields are plain textareas by default and rendered
+with `|safe`, so they can hold HTML. To edit them as rich text, install any
+editor that provides a Django form widget and point this setting at it:
 
-    TERMS_CACHE_SECONDS = 30
+```python
+# pip install django-ckeditor-5
+TERMS_ADMIN_TEXT_WIDGET = "django_ckeditor_5.widgets.CKEditor5Widget"
+```
 
-A numeric value is the number of seconds that the terms and their
-acceptance should be cached (default 30). If set to 0, values will never
-be cached.
+```python
+# pip install django-tinymce
+TERMS_ADMIN_TEXT_WIDGET = "tinymce.widgets.TinyMCE"
+```
 
-### Terms and Conditions View Decorator
+django-termsandconditions does not depend on either — you choose the editor and
+its version. Leave the setting unset to keep Django's default textarea.
 
-You can protect only specific views with T&Cs using the
-@terms\_required() decorator at the top of a function like this:
+Note that this field is rendered unescaped, so only trust it to staff you would
+trust with raw HTML on your site.
 
-    from termsandconditions.decorators import terms_required
+### Useful methods
 
-    @login_required
-    @terms_required
-    def terms_required_view(request):
-        ...
+- `TermsAndConditions.get_active_terms_list()` — every active terms, accepted or not
+- `TermsAndConditions.get_active_terms_not_agreed_to(user)` — terms `user` has not accepted
+- `TermsAndConditions.get_active(slug)` — the active terms for `slug`
 
-Note that you can skip @login\_required only if you are forcing auth on
-that view in some other way.
+### Caching
 
-Requiring T&Cs for Anonymous Users is not supported.
+Terms and their acceptance are cached to keep the middleware cheap:
 
-Many of the templates extend the 'base.html' template by default. The
-TERMS\_BASE\_TEMPLATE setting can be used to specify a different
-template to extend:
+```python
+TERMS_CACHE_SECONDS = 30
+```
 
-    TERMS_BASE_TEMPLATE = 'page.html'
+Seconds to cache (default 30). Set to 0 to disable caching.
 
-A bare minimum template that can be used is the following:
+### Pruning old acceptance records
 
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>[My Title]</title>
-        {% block styles %}{% endblock %}
-        <link href='<path-to-my-css>' rel='stylesheet' type='text/css' />
-      </head>
-      <body>
-        <main>
-          <h2>{% block title %}{% endblock %}</h2>
-          {% block content %}{% endblock %}
-        </main>
-      </body>
-    </html>
+```console
+$ python manage.py remove_old_version_acceptance
+```
 
-### Terms and Conditions Template Tag
+Deletes acceptance records for every superseded version, keeping only the
+active one for each slug.
 
-To facilitate support of terms changes without a direct redirection to
-the `/terms/accept` url, a template tag is supplied for convenience.
-Thus, instead of using e.g. the `TermsAndConditionsRedirectMiddleware`
-one can use the template tag. The template tag will take care that a
-proper modal is shown to the user informing a user that new terms have
-been set and need to be accepted. To use the template tag, do the
-following. In your template (for example in base.html), include the
-following lines:
+## Settings reference
 
-    {% load terms_tags %}
-    .... your template here ....
+Every setting is optional and read at access time, so `override_settings` works
+in tests. `termsandconditions.conf.DEFAULTS` is the canonical list.
 
-    {% show_terms_if_not_agreed %}
+| Setting | Default | Description |
+| --- | --- | --- |
+| `ACCEPT_TERMS_PATH` | `"/terms/accept/"` | Where users are sent to accept |
+| `DEFAULT_TERMS_SLUG` | `"site-terms"` | Slug used when none is given |
+| `TERMS_ADMIN_TEXT_WIDGET` | `None` | Dotted path to a widget for `text`/`info` in the admin |
+| `TERMS_BASE_TEMPLATE` | `"base.html"` | Template the shipped templates extend |
+| `TERMS_CACHE_SECONDS` | `30` | Cache lifetime; 0 disables |
+| `TERMS_EXCLUDE_SUPERUSERS` | `False` | Skip the check for superusers |
+| `TERMS_EXCLUDE_USERS_WITH_PERM` | `None` | Skip the check for holders of this permission |
+| `TERMS_EXCLUDE_URL_CONTAINS_LIST` | `frozenset()` | Path fragments to skip |
+| `TERMS_EXCLUDE_URL_LIST` | `{"/"}` | Exact paths to skip |
+| `TERMS_EXCLUDE_URL_PREFIX_LIST` | `{"/admin", "/terms"}` | Path prefixes to skip |
+| `TERMS_HTTP_PATH_FIELD` | `"PATH_INFO"` | `request.META` key the template tag reads |
+| `TERMS_IP_HEADER_NAME` | `"REMOTE_ADDR"` | `request.META` key holding the client IP |
+| `TERMS_RETURNTO_PARAM` | `"returnTo"` | Query parameter for the redirect target |
+| `TERMS_STORE_IP_ADDRESS` | `True` | Record the accepting user's IP |
 
-Alternatively use:
+Behind a proxy, set `TERMS_IP_HEADER_NAME` to `"HTTP_X_FORWARDED_FOR"` (or
+whichever header your proxy sets). Only the first address in the chain is
+stored.
 
-    {% load terms_tags %}
-    .... your template here ....
+## Multi-language support
 
-    {% show_terms_if_not_agreed field='HTTP_REFERER' %}
+To translate the terms themselves, use
+[django-modeltranslation](https://github.com/deschler/django-modeltranslation)
+or similar. With django-modeltranslation the setup is:
 
-if you want other than default `TERMS_HTTP_PATH_FIELD` to be used (this
-can also be controlled via settings, see below). This will ensure that
-on every page using the template (that is on each page using base.html
-in this case), respective T&C css and js are loaded to take care for
-handling the modal.
+### 1. Modify your settings
 
-The modal will show the basic information about the new terms as well as
-a link to page which enables the user to accept these terms. Please note
-that a user may wish not to accept terms and close the modal. In such a
-case, the modal will be shown again as soon as another view with the
-template including the template tag is called. This simple mechanism
-allows to nag users with new T&C while still allowing them to use the
-service, without instant redirections.
+Specify `LANGUAGES` and point `MIGRATION_MODULES` at a local migration
+directory for this app, where the modeltranslation migration will live:
 
-The following configuration setting applies for the template tag:
+```python
+LANGUAGES = (
+    ("en", "English"),
+    ("pl", "Polish"),
+)
 
-    TERMS_HTTP_PATH_FIELD = 'PATH_INFO'
+MIGRATION_MODULES = {
+    "termsandconditions": "your_app.migrations.migrations_termsandconditions",
+}
+```
 
-which defaults to `PATH_INFO`. When needed (e.g. while using a separate
-AJAX view to take care for the modal) this can be changed to
-`HTTP_REFERER`.
+Create that directory with an `__init__.py`. The name
+`migrations_termsandconditions` avoids confusion with the app name.
 
-### Using terms with as\_template filter
+Add `modeltranslation` to `INSTALLED_APPS`, along with the module containing
+your `translation.py`.
 
-If you happen to use termsandconditions which text field includes some
-template tags (e.g. `{% url 'you-url' %}`), you may want to render its
-content, before including it into your template. To achieve this goal,
-use `include` with the `as_template` filter, i.e.:
+### 2. Make the initial local migration
 
-    {% load terms_tags %}
-    .... your template here ....
+```console
+$ python manage.py makemigrations termsandconditions
+$ python manage.py migrate termsandconditions
+```
 
-    {% include terms|as_template %}
+### 3. Add the translation options
 
-Note, that you need to modify the default termsandconditions templates,
-as the default ones use terms as template variable.
+Create a `translation.py` in your project:
 
-### Terms and Conditions Pipeline
+```python
+from modeltranslation.translator import TranslationOptions, translator
 
-You can force T&C acceptance when a new user account is created using
-the django-socialauth pipeline:
+from termsandconditions.models import TermsAndConditions
 
-    SOCIAL_AUTH_PIPELINE = (
-        'social_auth.backends.pipeline.social.social_auth_user',
-        'social_auth.backends.pipeline.associate.associate_by_email',
-        'social_auth.backends.pipeline.user.get_username',
-        'social_auth.backends.pipeline.user.create_user',
-        'social_auth.backends.pipeline.social.associate_user',
-        'social_auth.backends.pipeline.social.load_extra_data',
-        'social_auth.backends.pipeline.misc.save_status_to_session',
-        'termsandconditions.pipeline.user_accept_terms',
-    )
 
-Note that the configuration above also prevents django-socialauth from
-updating profile data from the social backends once a profile is
-created, due to:
+class TermsAndConditionsTranslationOptions(TranslationOptions):
+    fields = ("name", "text", "info")
 
-    'social_auth.backends.pipeline.user.update_user_details'
 
-...not being included in the pipeline. This is wise behavior when you
-are letting users update their own profile details.
+translator.register(TermsAndConditions, TermsAndConditionsTranslationOptions)
+```
 
-This pipeline configuration will send users to the '/terms/accept' page
-right before sending them on to whatever you have set
-SOCIAL\_AUTH\_NEW\_USER\_REDIRECT\_URL to. However, it will not, without
-the middleware or decorators described above, check that the user has
-accepted the latest T&Cs before letting them continue on to viewing the
-site.
+Then make and run migrations again to add the translated fields. Consider a
+data migration to populate `name_en`, `name_pl` and so on from the base fields.
 
-You can use the various T&C methods in concert depending on your needs.
+### 4. Exclude `/terms/` from the middleware
 
-Multi-Language Support
-----------------------
+With internationalized URLs, add this to prevent redirect loops with
+language-code-prefixed URLs (e.g. `/en/terms/`):
 
-In case you are in need of your `termsandconditions` objects to handle
-multiple languages, we recommend to use
-`django-modeltranslation <https://github.com/deschler/django-modeltranslation>`
-(or similar) module. In case of django-modeltranslation the setup is
-rather straight forward, but needs several steps. Here they are.
+```python
+TERMS_EXCLUDE_URL_CONTAINS_LIST = {"/terms/", "/i18n/setlang/"}
+```
 
-### 1. Modify your `settings.py`
+## Contributing
 
-In your `settings.py` file, you need to specify the `LANGUAGES` and set
-`MIGRATION_MODULES` to point to a local migration directory for the
-`termsandconditions` module (the migration due to modeltranslation will
-live there):
+```console
+$ uv sync
+$ uv run ruff check .
+$ uv run ruff format .
+$ uv run coverage run manage.py test
+```
 
-    LANGUAGES = (
-        ('en', 'English'),
-        ('pl', 'Polish'),
-    )
+CI runs against Python 3.12–3.14 with Django 5.2 LTS and 6.1.
 
-    MIGRATION_MODULES = {
-        # local path for migration for the termsandconditions
-        'termsandconditions': 'your_app.migrations.migrations_termsandconditions',
-    }
+## License
 
-Don't forget to create the respective directory and the `__init__.py`
-file there! Please note that `migrations_termsandconditions` directory
-name is used to avoid confusion with the T&C app name.
-
-You will also need to add `modeltranslation` to `INSTALLED_APPS` in your
-`settings.py`.  You also need to ensure the module that you added your translations.py file to is in ``INSTALLED_APPS``.
-
-### 2. Make initial local migration
-
-As we switch to the local migration for the `termsandconditions` module,
-we need to execute initial migration for the module (as a starting
-point). Thus:
-
-    python manage.py makemigrations termsandconditions
-
-The relevant initial migration file should now be in
-`your_app/migrations/migrations_termsandconditions` directory. Now, just
-execute the migration:
-
-    python manage.py migrate termsandconditions
-
-### 3. Add translation
-
-To translate terms-and-conditions model to other languages (as specified
-in `settings.py`), create a `translation.py` file in your project, with
-the following content:
-
-    from modeltranslation.translator import translator, TranslationOptions
-    from termsandconditions.models import TermsAndConditions
-
-    class TermsAndConditionsTranslationOptions(TranslationOptions):
-        fields = ('name', 'text', 'info')
-    translator.register(TermsAndConditions, TermsAndConditionsTranslationOptions)
-
-This assumes you want to have 3 most relevant model fields translated.
-After that you just need to make migrations again (to account for new
-fields due to modeltranslation):
-
-    python manage.py makemigrations termsandconditions
-    python manage.py migrate termsandconditions
-
-Your model is now ready to cover the translations! Just as
-hint we suggest to also include some data migration in order to populate
-newly created, translated fields (i.e. `name_en`, `name_pl`, etc.) with
-the initial data (e.g. by copying the content of the base field, i.e.
-`name`, etc.)
-
-### 4. Add ``/terms/`` to the ``TERMS_EXCLUDE_URL_CONTAINS_LIST`` setting.
-In order to prevent redirect loops, if you are using internationalized URLs, you will need to add add:
-
-``TERMS_EXCLUDE_URL_CONTAINS_LIST = {'/terms/', '/i18n/setlang/', }``
-
-to your ``settings.py`` to prevent redirect loops with the language-code-prepended URLs (e.g. ``/en/terms/``)
+BSD-3-Clause. See [LICENSE.txt](LICENSE.txt).

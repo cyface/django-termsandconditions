@@ -1,33 +1,33 @@
-"""View Decorators for termsandconditions module"""
-from urllib.parse import urlparse, urlunparse
+"""View decorators for the termsandconditions app."""
 
+from collections.abc import Callable
 from functools import wraps
-from django.http import HttpResponseRedirect, QueryDict
+
+from django.http import HttpRequest, HttpResponse
+
 from .models import TermsAndConditions
-from .middleware import ACCEPT_TERMS_PATH
+from .utils import redirect_to_terms_accept
 
 
-def terms_required(view_func):
-    """
-    This decorator checks to see if the user is logged in, and if so, if they have accepted the site terms.
+def terms_required(
+    view_func: Callable[..., HttpResponse],
+) -> Callable[..., HttpResponse]:
+    """Send logged-in users to accept outstanding terms before running the view.
+
+    Anonymous users pass straight through, so pair this with
+    ``@login_required`` (or equivalent) when the view must be authenticated.
     """
 
     @wraps(view_func)
-    def _wrapped_view(request, *args, **kwargs):
-        """Method to wrap the view passed in"""
-        # If user has not logged in, or if they have logged in and already agreed to the terms, let the view through
+    def _wrapped_view(request: HttpRequest, *args, **kwargs) -> HttpResponse:
         if (
             not request.user.is_authenticated
             or not TermsAndConditions.get_active_terms_not_agreed_to(request.user)
         ):
             return view_func(request, *args, **kwargs)
 
-        # Otherwise, redirect to terms accept
-        current_path = request.path
-        login_url_parts = list(urlparse(ACCEPT_TERMS_PATH))
-        querystring = QueryDict(login_url_parts[4], mutable=True)
-        querystring["returnTo"] = current_path
-        login_url_parts[4] = querystring.urlencode(safe="/")
-        return HttpResponseRedirect(urlunparse(login_url_parts))
+        # get_full_path, not path: the middleware carries the querystring
+        # across too, and the user should land back on the same filtered page.
+        return redirect_to_terms_accept(request.get_full_path())
 
     return _wrapped_view

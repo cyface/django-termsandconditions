@@ -1,2 +1,1 @@
-"""Django Terms and Conditions Module"""
-default_app_config = "termsandconditions.apps.TermsAndConditionsConfig"
+"""Django app that asks users to accept a site's terms and conditions."""

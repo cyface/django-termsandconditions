@@ -1,13 +1,17 @@
-<header data-role="header" data-position="fixed">
-    <div data-role="navbar">
+<header>
+    <nav aria-label="Main">
         <ul>
+            <li><a href="{% url 'tc_demo_home_page' %}">Home</a></li>
             {% if user.is_authenticated %}
-                <li><a href="{% url 'tc_demo_home_page' %}" data-icon="home">Home</a></li>
-                <li><a href="{% url 'logout' %}" data-icon="delete">Sign Out</a></li>
+                <li>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="link-button">Sign Out</button>
+                    </form>
+                </li>
             {% else %}
-                <li><a href="{% url 'tc_demo_home_page' %}" data-icon="home">Home</a></li>
-                <li><a href="{% url 'login' %}" data-icon="user">Sign In</a></li>
+                <li><a href="{% url 'login' %}">Sign In</a></li>
             {% endif %}
         </ul>
-    </div>
+    </nav>
 </header>

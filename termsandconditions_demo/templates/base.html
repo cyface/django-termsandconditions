@@ -1,57 +1,36 @@
-{% load static %}
-<!DOCTYPE html>
+{% load static %}<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="initial-scale=1.0"/>
-    <link rel="icon" href="{% static 'images/favicon.ico' %}"/>
-    <link rel="stylesheet" href="{% static 'css/termsandconditions.css' %}"/>
-    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
-
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'images/favicon.ico' %}">
     <title>{% block headtitle %}Django Terms and Conditions{% endblock %}</title>
-
-    {% block metatags %}
+    {% block styles %}
+        <link rel="stylesheet" href="{% static 'css/termsandconditions.css' %}">
     {% endblock %}
-    {% if debug %}
-        <script type="text/javascript">
-            var isDebug = true;
-        </script>
-    {% else %}
-        <script type="text/javascript">
-            var isDebug = false;
-        </script>
-    {% endif %}
-
-    <script>
-        /* Fix Facebook Appending Hash */
-        if (window.location.hash == "#_=_")
-            window.location.hash = "";
-    </script>
+    {% block metatags %}{% endblock %}
     {% block head %}{% endblock %}
 </head>
-<body {% block body_class %}{% endblock %}>
-<section {% block page_role %}data-role="page"{% endblock %}>
+<body class="{% block body_class %}{% endblock %}">
 
-    {% block header %}{% include "header.html" %}{% endblock %}
+{% block header %}{% include "header.html" %}{% endblock %}
 
+<main>
     {% block messages %}
         {% if messages %}
-            <div class="ui-bar ui-bar-e">
+            <ul class="messages">
                 {% for message in messages %}
-                    <h3>{{ message }}</h3>
+                    <li class="message {{ message.tags }}">{{ message }}</li>
                 {% endfor %}
-            </div>
+            </ul>
         {% endif %}
     {% endblock %}
 
     {% block content %}<p>No Content Defined</p>{% endblock %}
+</main>
 
-    {% block footer %}{% include "footer.html" %}{% endblock %}
+{% block footer %}{% include "footer.html" %}{% endblock %}
 
-    {% block bottom_js %}{% endblock %}
-</section>
+{% block bottom_js %}{% endblock %}
 </body>
 </html>

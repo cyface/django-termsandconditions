@@ -1,23 +1,42 @@
-"""Django Models for TermsAndConditions App"""
-
-from django.db import models
-from django.conf import settings
-from django.core.cache import cache
-from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
-from django.urls import reverse
+"""Django models for the termsandconditions app."""
 
 import logging
 
-LOGGER = logging.getLogger(name="termsandconditions")
+from django.conf import settings
+from django.core.cache import cache
+from django.db import models
+from django.db.models import QuerySet
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
-DEFAULT_TERMS_SLUG = getattr(settings, "DEFAULT_TERMS_SLUG", "site-terms")
-TERMS_CACHE_SECONDS = getattr(settings, "TERMS_CACHE_SECONDS", 30)
-TERMS_EXCLUDE_USERS_WITH_PERM = getattr(settings, "TERMS_EXCLUDE_USERS_WITH_PERM", None)
+from .conf import app_settings
+from .utils import (
+    ACTIVE_TERMS_IDS_CACHE_KEY,
+    ACTIVE_TERMS_LIST_CACHE_KEY,
+    active_terms_cache_key,
+    not_agreed_terms_cache_key,
+)
+
+LOGGER = logging.getLogger(__name__)
+
+#: Cached in place of an absent terms object.  ``cache.get`` cannot tell a
+#: cached ``None`` from a miss, so a slug with no active version needs a
+#: sentinel of its own to be cached at all.
+NO_ACTIVE_TERMS = "tandc.no-active-terms"
+
+
+def get_default_terms_slug() -> str:
+    """Default for :attr:`TermsAndConditions.slug`.
+
+    A callable so ``DEFAULT_TERMS_SLUG`` is read per row rather than frozen
+    into the migration when this module is first imported.
+    """
+    return app_settings.DEFAULT_TERMS_SLUG
 
 
 class UserTermsAndConditions(models.Model):
-    """Holds mapping between TermsAndConditions and Users"""
+    """Records that a user accepted a particular version of some terms."""
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -39,25 +58,30 @@ class UserTermsAndConditions(models.Model):
     )
 
     class Meta:
-        """Model Meta Information"""
-
         get_latest_by = "date_accepted"
         verbose_name = _("User Terms and Conditions")
         verbose_name_plural = _("User Terms and Conditions")
-        unique_together = (
-            "user",
-            "terms",
-        )
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "terms"],
+                name="termsandconditions_unique_user_terms",
+            ),
+        ]
 
-    def __str__(self):
-        return f"{self.user.get_username()}:{self.terms.slug}-{self.terms.version_number}"
+    def __str__(self) -> str:
+        return (
+            f"{self.user.get_username()}:{self.terms.slug}-{self.terms.version_number}"
+        )
 
 
 class TermsAndConditions(models.Model):
-    """Holds Versions of TermsAndConditions
-    Active one for a given slug is: date_active is not Null and is latest not in future"""
+    """One version of one set of terms.
 
-    slug = models.SlugField(default=DEFAULT_TERMS_SLUG)
+    For a given slug the active version is the most recent one whose
+    ``date_active`` is set and is not in the future.
+    """
+
+    slug = models.SlugField(default=get_default_terms_slug)
     name = models.TextField(max_length=255, verbose_name=_("name"))
     users = models.ManyToManyField(
         settings.AUTH_USER_MODEL, through=UserTermsAndConditions, blank=True
@@ -84,28 +108,29 @@ class TermsAndConditions(models.Model):
     date_created = models.DateTimeField(blank=True, auto_now_add=True)
 
     class Meta:
-        """Model Meta Information"""
-
-        ordering = [
-            "-date_active",
-        ]
+        ordering = ["-date_active"]
         get_latest_by = "date_active"
         verbose_name = _("Terms and Conditions")
         verbose_name_plural = _("Terms and Conditions")
 
-    def __str__(self):  # pragma: nocover
+    def __str__(self) -> str:  # pragma: nocover
         return f"{self.slug}-{self.version_number:.2f}"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse(
             "tc_view_specific_version_page", args=[self.slug, self.version_number]
         )
 
     @staticmethod
-    def get_active(slug=DEFAULT_TERMS_SLUG):
-        """Finds the latest of a particular terms and conditions"""
+    def get_active(slug: str | None = None) -> "TermsAndConditions | None":
+        """Return the active version of the terms identified by ``slug``."""
+        slug = slug or app_settings.DEFAULT_TERMS_SLUG
+        cache_key = active_terms_cache_key(slug)
 
-        active_terms = cache.get("tandc.active_terms_" + slug)
+        active_terms = cache.get(cache_key)
+        if active_terms == NO_ACTIVE_TERMS:
+            return None
+
         if active_terms is None:
             try:
                 active_terms = TermsAndConditions.objects.filter(
@@ -113,88 +138,95 @@ class TermsAndConditions(models.Model):
                     date_active__lte=timezone.now(),
                     slug=slug,
                 ).latest("date_active")
-                cache.set(
-                    "tandc.active_terms_" + slug, active_terms, TERMS_CACHE_SECONDS
+            except TermsAndConditions.DoesNotExist:
+                # The slug is client input on the view and accept URLs, so a
+                # miss is a bad request rather than a server fault: logging it
+                # at ERROR hands an anonymous visitor a way to fill the log.
+                # Caching the miss keeps those requests off the database too.
+                LOGGER.debug(
+                    "Requested terms and conditions that do not exist: %s", slug
                 )
-            except TermsAndConditions.DoesNotExist:  # pragma: nocover
-                LOGGER.error(
-                    "Requested Terms and Conditions that Have Not Been Created."
-                )
+                cache.set(cache_key, NO_ACTIVE_TERMS, app_settings.TERMS_CACHE_SECONDS)
                 return None
+            cache.set(cache_key, active_terms, app_settings.TERMS_CACHE_SECONDS)
 
         return active_terms
 
     @staticmethod
-    def get_active_terms_ids():
-        """Returns a list of the IDs of of all terms and conditions"""
-
-        active_terms_ids = cache.get("tandc.active_terms_ids")
+    def get_active_terms_ids() -> list[int]:
+        """Return the id of the active version of every set of terms, by slug."""
+        active_terms_ids = cache.get(ACTIVE_TERMS_IDS_CACHE_KEY)
         if active_terms_ids is None:
-            active_terms_dict = {}
-            active_terms_ids = []
-
-            active_terms_set = TermsAndConditions.objects.filter(
-                date_active__isnull=False, date_active__lte=timezone.now()
-            ).order_by("date_active")
-            for active_terms in active_terms_set:
-                active_terms_dict[active_terms.slug] = active_terms.id
-
-            active_terms_dict = dict(sorted(active_terms_dict.items()))
-
-            for terms in active_terms_dict:
-                active_terms_ids.append(active_terms_dict[terms])
-
-            cache.set("tandc.active_terms_ids", active_terms_ids, TERMS_CACHE_SECONDS)
+            # Ordering by date_active means later versions overwrite earlier
+            # ones, leaving the currently active id for each slug.
+            latest_id_by_slug = dict(
+                TermsAndConditions.objects.filter(
+                    date_active__isnull=False, date_active__lte=timezone.now()
+                )
+                .order_by("date_active")
+                .values_list("slug", "id")
+            )
+            active_terms_ids = [
+                latest_id_by_slug[slug] for slug in sorted(latest_id_by_slug)
+            ]
+            cache.set(
+                ACTIVE_TERMS_IDS_CACHE_KEY,
+                active_terms_ids,
+                app_settings.TERMS_CACHE_SECONDS,
+            )
 
         return active_terms_ids
 
     @staticmethod
-    def get_active_terms_list():
-        """Returns all the latest active terms and conditions"""
-
-        active_terms_list = cache.get("tandc.active_terms_list")
+    def get_active_terms_list() -> QuerySet["TermsAndConditions"]:
+        """Return the active version of every set of terms."""
+        active_terms_list = cache.get(ACTIVE_TERMS_LIST_CACHE_KEY)
         if active_terms_list is None:
             active_terms_list = TermsAndConditions.objects.filter(
                 id__in=TermsAndConditions.get_active_terms_ids()
             ).order_by("slug")
-            cache.set("tandc.active_terms_list", active_terms_list, TERMS_CACHE_SECONDS)
+            cache.set(
+                ACTIVE_TERMS_LIST_CACHE_KEY,
+                active_terms_list,
+                app_settings.TERMS_CACHE_SECONDS,
+            )
 
         return active_terms_list
 
     @staticmethod
-    def get_active_terms_not_agreed_to(user):
-        """Checks to see if a specified user has agreed to all the latest terms and conditions"""
+    def get_active_terms_not_agreed_to(user) -> QuerySet["TermsAndConditions"] | list:
+        """Return the active terms ``user`` has not accepted yet.
 
+        Anonymous users are treated as having accepted nothing.  Users excluded
+        by ``TERMS_EXCLUDE_USERS_WITH_PERM`` or ``TERMS_EXCLUDE_SUPERUSERS``
+        get an empty list.
+        """
         if not user.is_authenticated:
             return TermsAndConditions.get_active_terms_list()
 
-        if TERMS_EXCLUDE_USERS_WITH_PERM is not None:
-            if user.has_perm(TERMS_EXCLUDE_USERS_WITH_PERM) and not user.is_superuser:
-                # Django's has_perm() returns True if is_superuser, we don't want that
-                return []
-
-        TERMS_EXCLUDE_SUPERUSERS = getattr(settings, "TERMS_EXCLUDE_SUPERUSERS", None)
-        if TERMS_EXCLUDE_SUPERUSERS and user.is_superuser:
+        # has_perm() is True for any permission when is_superuser, so
+        # superusers are only excluded via TERMS_EXCLUDE_SUPERUSERS below.
+        exclude_perm = app_settings.TERMS_EXCLUDE_USERS_WITH_PERM
+        if (
+            exclude_perm is not None
+            and not user.is_superuser
+            and user.has_perm(exclude_perm)
+        ):
             return []
 
-        not_agreed_terms = cache.get("tandc.not_agreed_terms_" + user.get_username())
-        if not_agreed_terms is None:
-            try:
-                LOGGER.debug("Not Agreed Terms")
-                not_agreed_terms = (
-                    TermsAndConditions.get_active_terms_list()
-                    .exclude(
-                        userterms__in=UserTermsAndConditions.objects.filter(user=user)
-                    )
-                    .order_by("slug")
-                )
+        if app_settings.TERMS_EXCLUDE_SUPERUSERS and user.is_superuser:
+            return []
 
-                cache.set(
-                    "tandc.not_agreed_terms_" + user.get_username(),
-                    not_agreed_terms,
-                    TERMS_CACHE_SECONDS,
-                )
-            except (TypeError, UserTermsAndConditions.DoesNotExist):
-                return []
+        cache_key = not_agreed_terms_cache_key(
+            user.pk, TermsAndConditions.get_active_terms_ids()
+        )
+        not_agreed_terms = cache.get(cache_key)
+        if not_agreed_terms is None:
+            not_agreed_terms = (
+                TermsAndConditions.get_active_terms_list()
+                .exclude(userterms__in=UserTermsAndConditions.objects.filter(user=user))
+                .order_by("slug")
+            )
+            cache.set(cache_key, not_agreed_terms, app_settings.TERMS_CACHE_SECONDS)
 
         return not_agreed_terms

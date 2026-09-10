@@ -1,44 +1,47 @@
-"""Django forms for the termsandconditions application"""
+"""Forms for the termsandconditions app."""
 
 from django import forms
-from django.db.models import QuerySet
 
-from termsandconditions.models import TermsAndConditions
+from .models import TermsAndConditions
 
 
-class UserTermsAndConditionsModelForm(forms.Form):
-    """Form used when accepting Terms and Conditions - returnTo is used to catch where to end up."""
+class UserTermsAndConditionsForm(forms.Form):
+    """Carries the terms being accepted and where to send the user afterwards.
+
+    ``terms`` is validated against the terms currently in force.  That is what
+    stops a user posting the id of a version whose ``date_active`` has not
+    arrived yet: recording that acceptance would mean they were never asked for
+    it once it went live.  A superseded version is refused for the same reason,
+    since accepting one does not satisfy the gate either.
+    """
 
     returnTo = forms.CharField(required=False, initial="/", widget=forms.HiddenInput())
     terms = forms.ModelMultipleChoiceField(
-        TermsAndConditions.objects.none(),
+        queryset=TermsAndConditions.objects.none(),
         widget=forms.MultipleHiddenInput,
     )
 
-    def __init__(self, *args, **kwargs):
-        kwargs.pop("instance", None)
-
-        terms_list = kwargs.get("initial", {}).get("terms", None)
-
-        if terms_list is None:  # pragma: nocover
-            terms_list = TermsAndConditions.get_active_terms_list()
-
-        if terms_list is QuerySet:
-            self.terms = forms.ModelMultipleChoiceField(
-                terms_list, widget=forms.MultipleHiddenInput
-            )
-        else:
-            self.terms = terms_list
-
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        # Set here rather than on the field: evaluating it at import time would
+        # query the database before the app registry is ready, and which terms
+        # are active changes as versions go live.
+        self.fields["terms"].queryset = TermsAndConditions.get_active_terms_list()
 
 
 class EmailTermsForm(forms.Form):
-    """Form used to collect email address to send terms and conditions to."""
+    """Collects the address to email a copy of the terms to.
+
+    ``terms`` is multi-valued because ``/terms/email/`` offers to send every set
+    of terms the user has outstanding, not just one.  Any version may be sent,
+    active or not — ``/terms/email/<slug>/<version>/`` exists to mail a
+    specific one, and sending a copy grants nothing.
+    """
 
     email_subject = forms.CharField(widget=forms.HiddenInput())
     email_address = forms.EmailField()
     returnTo = forms.CharField(required=False, initial="/", widget=forms.HiddenInput())
-    terms = forms.ModelChoiceField(
-        queryset=TermsAndConditions.objects.all(), widget=forms.HiddenInput()
+    terms = forms.ModelMultipleChoiceField(
+        queryset=TermsAndConditions.objects.all(),
+        widget=forms.MultipleHiddenInput,
     )

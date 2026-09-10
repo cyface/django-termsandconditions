@@ -1,34 +1,34 @@
-"""
-    Master URL Pattern List for the application.  Most of the patterns here should be top-level
-    pass-offs to sub-modules, who will have their own urls.py defining actions within.
+"""URLs for the termsandconditions app.
+
+Include these under a prefix of your choosing, for example::
+
+    (path("terms/", include("termsandconditions.urls")),)
 """
 
-from django.contrib import admin
 from django.urls import path, register_converter
 from django.views.decorators.cache import never_cache
 
 from .views import AcceptTermsView, EmailTermsView, TermsActiveView, TermsView
 
-admin.autodiscover()
-
 
 class TermsVersionConverter:
-    """
-    Registers Django URL path converter for Terms Version Numbers
-    """
+    """Matches a terms version number such as ``1`` or ``2.50``."""
 
     regex = "[0-9.]+"
 
-    def to_python(self, value):
+    def to_python(self, value: str) -> str:
         return value
 
-    def to_url(self, value):
+    def to_url(self, value: str) -> str:
         return value
 
 
 register_converter(TermsVersionConverter, "termsversion")
 
-urlpatterns = (
+# Every view here renders per-user content, a CSRF token, or both, so none of
+# them may be held in a shared cache: never_cache on each rather than relying on
+# SessionMiddleware happening to set Vary: Cookie.
+urlpatterns = [
     # View Unaccepted Terms
     path("", never_cache(TermsView.as_view()), name="tc_view_page"),
     # View Specific Active Terms
@@ -54,25 +54,25 @@ urlpatterns = (
         name="tc_print_page",
     ),
     # Accept Terms
-    path("accept/", AcceptTermsView.as_view(), name="tc_accept_page"),
+    path("accept/", never_cache(AcceptTermsView.as_view()), name="tc_accept_page"),
     # Accept Specific Terms
     path(
         "accept/<slug:slug>/",
-        AcceptTermsView.as_view(),
+        never_cache(AcceptTermsView.as_view()),
         name="tc_accept_specific_page",
     ),
     # Accept Specific Terms Version
     path(
         "accept/<slug:slug>/<termsversion:version>/",
-        AcceptTermsView.as_view(),
+        never_cache(AcceptTermsView.as_view()),
         name="tc_accept_specific_version_page",
     ),
     # Email Terms
-    path("email/", EmailTermsView.as_view(), name="tc_email_page"),
+    path("email/", never_cache(EmailTermsView.as_view()), name="tc_email_page"),
     # Email Specific Terms Version
     path(
         "email/<slug:slug>/<termsversion:version>/",
         never_cache(EmailTermsView.as_view()),
         name="tc_specific_version_page",
     ),
-)
+]

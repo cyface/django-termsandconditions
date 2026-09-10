@@ -2,13 +2,9 @@
 
 {% block headtitle %}Secure Area{% endblock %}
 
-{% block body_class %}{% endblock %}
-
-{% block head %}{% endblock %}
-
 {% block content %}
-    <section title="Welcome" data-role="content">
-        <h2>Welcome to the SECOND secure area.</h2>
+    <section aria-label="Second secure area">
+        <h1>Welcome to the SECOND secure area.</h1>
 
         <p>Return to the <a href="{% url 'tc_demo_secure_page' %}">main secure page.</a></p>
     </section>

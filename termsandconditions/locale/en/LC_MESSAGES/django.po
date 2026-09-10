@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-19 21:03+0500\n"
+"POT-Creation-Date: 2026-09-10 09:18-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,37 +18,78 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: admin.py:13 apps.py:15 templates/termsandconditions/tc_accept_terms.html:13
+#: apps.py:10 models.py:108 models.py:109
+#: templates/termsandconditions/tc_accept_terms.html:13
 #: templates/termsandconditions/tc_email_terms_form.html:8
 #: templates/termsandconditions/tc_view_terms.html:13
 msgid "Terms and Conditions"
 msgstr ""
 
-#: models.py:25
+#: models.py:40
+msgid "user"
+msgstr ""
+
+#: models.py:46
+msgid "terms"
+msgstr ""
+
+#: models.py:49
 msgid "IP Address"
 msgstr ""
 
-#: models.py:26
+#: models.py:52
 msgid "Date Accepted"
 msgstr ""
 
-#: models.py:31 models.py:32
+#: models.py:57 models.py:58
 msgid "User Terms and Conditions"
 msgstr ""
 
-#: models.py:48
+#: models.py:80
+msgid "name"
+msgstr ""
+
+#: models.py:88
+msgid "version number"
+msgstr ""
+
+#: models.py:90
+msgid "text"
+msgstr ""
+
+#: models.py:94
 msgid "Provide users with some info about what's changed and why"
 msgstr ""
 
-#: models.py:50
+#: models.py:95
+msgid "info"
+msgstr ""
+
+#: models.py:100
 msgid "Leave Null To Never Make Active"
 msgstr ""
 
-#: templates/termsandconditions/snippets/termsandconditions.html:16
+#: models.py:101
+msgid "date active"
+msgstr ""
+
+#: templates/termsandconditions/snippets/termsandconditions.html:11
+msgid "Our Terms and Conditions Have Changed"
+msgstr ""
+
+#: templates/termsandconditions/snippets/termsandconditions.html:13
 msgid "Close"
 msgstr ""
 
-#: templates/termsandconditions/snippets/termsandconditions.html:29
+#: templates/termsandconditions/snippets/termsandconditions.html:17
+msgid "Changes have been made to our"
+msgstr ""
+
+#: templates/termsandconditions/snippets/termsandconditions.html:23
+msgid "Please, review and accept the changes to prevent future interruptions."
+msgstr ""
+
+#: templates/termsandconditions/snippets/termsandconditions.html:26
 msgid "ACCEPT ALL"
 msgstr ""
 
@@ -68,21 +109,21 @@ msgstr ""
 msgid "Full Text"
 msgstr ""
 
-#: templates/termsandconditions/tc_accept_terms.html:31
-#: templates/termsandconditions/tc_view_terms.html:21
+#: templates/termsandconditions/tc_accept_terms.html:32
+#: templates/termsandconditions/tc_view_terms.html:22
 msgid "Print"
 msgstr ""
 
-#: templates/termsandconditions/tc_accept_terms.html:37
+#: templates/termsandconditions/tc_accept_terms.html:40
 msgid "Accept"
 msgstr ""
 
-#: templates/termsandconditions/tc_accept_terms.html:37
+#: templates/termsandconditions/tc_accept_terms.html:40
 msgid "All"
 msgstr ""
 
 #: templates/termsandconditions/tc_email_terms.html:5
-#: templates/termsandconditions/tc_print_terms.html:29
+#: templates/termsandconditions/tc_print_terms.html:25
 msgid "Version"
 msgstr ""
 
@@ -98,11 +139,11 @@ msgstr ""
 msgid "Email To:"
 msgstr ""
 
-#: templates/termsandconditions/tc_email_terms_form.html:14
+#: templates/termsandconditions/tc_email_terms_form.html:15
 msgid "You Requested:"
 msgstr ""
 
-#: templates/termsandconditions/tc_email_terms_form.html:15
+#: templates/termsandconditions/tc_email_terms_form.html:16
 msgid "Send"
 msgstr ""
 
@@ -114,18 +155,26 @@ msgstr ""
 msgid "View Terms and Conditions"
 msgstr ""
 
-#: views.py:171
+#: templates/termsandconditions/tc_view_terms.html:24
+msgid "No terms defined."
+msgstr ""
+
+#: templates/termsandconditions/tc_view_terms.html:27
+msgid "No terms for you to accept."
+msgstr ""
+
+#: views.py:156
 msgid "Terms"
 msgstr ""
 
-#: views.py:176
+#: views.py:163
 msgid "Terms and Conditions Sent."
 msgstr ""
 
-#: views.py:178
+#: views.py:169
 msgid "An Error Occurred Sending Your Message."
 msgstr ""
 
-#: views.py:187
+#: views.py:177
 msgid "Invalid Email Address."
 msgstr ""

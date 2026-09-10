@@ -2,23 +2,20 @@
 
 {% block headtitle %}Django Terms and Conditions Demo - Home{% endblock %}
 
-{% block body_class %}{% endblock %}
-
-{% block head %}{% endblock %}
-
 {% block header %}{% endblock %}
 
 {% block content %}
-    <section title="Welcome" data-role="content">
+    <section aria-label="Welcome">
         {% if not user.is_authenticated %}
-            <h3>Click the button below to get started.</h3>
+            <h1>Django Terms and Conditions Demo</h1>
 
             <p>You'll be asked to accept the site terms and conditions.</p>
 
-            <a href="{% url 'tc_demo_secure_page' %}" data-role="button" data-ajax="false">Get Started</a>
+            <p><a class="button" href="{% url 'tc_demo_secure_page' %}">Get Started</a></p>
         {% else %}
-            <h2>Thank you for signing in, {{ user.username }}.</h2>
-            <a href="{% url 'tc_demo_secure_page' %}" data-role="button" data-ajax="false">Return to Secure Area</a>
+            <h1>Thank you for signing in, {{ user.username }}.</h1>
+
+            <p><a class="button" href="{% url 'tc_demo_secure_page' %}">Return to Secure Area</a></p>
         {% endif %}
     </section>
 {% endblock %}

@@ -1,3 +1,8 @@
+/* Explicit, because position: fixed would otherwise beat the UA rule. */
+#termsandconditions[hidden] {
+    display: none;
+}
+
 #termsandconditions {
     position: fixed;
     bottom: 0;
@@ -31,11 +36,16 @@
 #termsandconditions #toc-header .toc-close {
     position: absolute;
     top: 50%;
-    margin-top: -14px;
+    transform: translateY(-50%);
     right: 15px;
     color: #ffffff;
     font-size: 20px;
     font-weight: 600;
+    background: none;
+    border: 0;
+    padding: 0;
+    line-height: 1;
+    cursor: pointer;
 }
 
 #termsandconditions #toc-header .toc-close:hover {

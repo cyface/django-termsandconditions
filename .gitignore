@@ -9,7 +9,6 @@
 *_build
 .coverage
 .DS_Store
-.idea
 .project
 .pydevproject
 .pydevproject.bak
@@ -33,3 +32,9 @@ static_root/*
 *.venv*
 venv*
 /site/
+__pycache__/
+.ruff_cache/
+coverage.xml
+htmlcov/
+dist/
+.python-version

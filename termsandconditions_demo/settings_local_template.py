@@ -1,44 +1,32 @@
-"""Local Django Settings, Copy This File As settings_local.py and Make Local Changes"""
+"""Local settings. Copy to settings_local.py and edit; that file is gitignored."""
 
 from .settings import *
 
-# Local Overrides Here
-# Local DB settings. (Postgres)
-DATABASES = {
-    #    'default': {
-    #        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #        'NAME': 'termsandconditions',
-    #        'USER': 'termsandconditions',
-    #        'PASSWORD': '',
-    #        'HOST': '127.0.0.1',
-    #        'PORT': '', # Set to empty string for default.
-    #        'SUPPORTS_TRANSACTIONS': 'true',
-    #    },
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": PROJECT_ROOT + "/termsandconditions.db",
-        "SUPPORTS_TRANSACTIONS": "false",
-    }
-}
+# Point at Postgres instead of the bundled SQLite file.
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "termsandconditions",
+#         "USER": "termsandconditions",
+#         "PASSWORD": "",
+#         "HOST": "127.0.0.1",
+#         "PORT": "",
+#     },
+# }
 
-# Cache Settings
 CACHES = {
     "default": {
-        "BACKEND": "dummy:///",
-        "LOCATION": "",
-        "OPTIONS": {"PASSWORD": ""},
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "termsandconditions",
     },
 }
-CACHE_MIDDLEWARE_SECONDS = 30
-CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
-CACHE_MIDDLEWARE_KEY_PREFIX = "tc"
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = "12345"
+SECRET_KEY = "django-insecure-local-development-key"
 
-# Email Settings
-EMAIL_HOST = "a real smtp server"
-EMAIL_HOST_USER = "your_mailbox_username"
-EMAIL_HOST_PASSWORD = "your_mailbox_password"
-DEFAULT_FROM_EMAIL = "a real email address"
-SERVER_EMAIL = "a real email address"
+# Real SMTP settings, if you want to exercise the email-terms view for real.
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = "smtp.example.com"
+# EMAIL_HOST_USER = "your_mailbox_username"
+# EMAIL_HOST_PASSWORD = "your_mailbox_password"
+# DEFAULT_FROM_EMAIL = "terms@example.com"
+# SERVER_EMAIL = "terms@example.com"
