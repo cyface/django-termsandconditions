@@ -9,7 +9,6 @@
 *_build
 .coverage
 .DS_Store
-.idea
 .project
 .pydevproject
 .pydevproject.bak
