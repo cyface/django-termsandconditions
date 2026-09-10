@@ -78,6 +78,28 @@ class AcceptTermsView(GetTermsViewMixin, FormView):
     form_class = UserTermsAndConditionsForm
     template_name = "termsandconditions/tc_accept_terms.html"
 
+    def get_terms(self, kwargs: dict) -> Sequence["TermsAndConditions | None"]:
+        """Only terms that are in force can be accepted.
+
+        ``/accept/<slug>/<version>/`` names an exact version, which may be one
+        that is superseded or not yet live.  The form refuses both — accepting
+        a superseded version satisfies nothing, and accepting a future one
+        would mean never being asked for it once it went live — so the page
+        must not offer a button that cannot work.  Viewing, printing and
+        emailing any version stay unrestricted; only accepting is narrowed.
+        """
+        terms_list = super().get_terms(kwargs)
+        active_ids = set(TermsAndConditions.get_active_terms_ids())
+
+        for terms in terms_list:
+            if terms is not None and terms.pk not in active_ids:
+                raise Http404(
+                    f"Terms {terms.slug!r} version {terms.version_number} "
+                    "are not currently in force."
+                )
+
+        return terms_list
+
     def get_initial(self) -> dict:
         return {
             "terms": self.get_terms(self.kwargs),

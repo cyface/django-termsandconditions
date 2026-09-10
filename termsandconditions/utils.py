@@ -1,5 +1,7 @@
 """Helpers shared by the middleware, decorator and views."""
 
+from collections.abc import Iterable
+from hashlib import sha256
 from typing import Any
 from urllib.parse import urlparse, urlunparse
 
@@ -30,13 +32,23 @@ def active_terms_cache_key(slug: str) -> str:
     return f"tandc.active_terms_{slug}"
 
 
-def not_agreed_terms_cache_key(user_pk: Any) -> str:
+def not_agreed_terms_cache_key(user_pk: Any, active_terms_ids: Iterable[int]) -> str:
     """Cache key holding the terms the user with ``user_pk`` has yet to agree to.
 
     Keyed on the primary key rather than the username: the username has to be
     fetched, and it may contain spaces or non-ASCII, which memcached rejects.
+
+    The ids of the terms in force are folded in, because that is what the
+    cached answer depends on.  A terms change therefore retires every user's
+    entry at once, with nothing to enumerate: sweeping them one user at a time
+    costs a scan of the acceptance table on every save, and still misses anyone
+    who has accepted nothing and so appears in no row of it.  ``get_active_terms_ids``
+    orders by slug, so the digest is stable, and an evicted id cache recomputes
+    to the same value rather than to a new one.
     """
-    return f"tandc.not_agreed_terms_{user_pk}"
+    joined_ids = ",".join(str(pk) for pk in active_terms_ids)
+    digest = sha256(joined_ids.encode()).hexdigest()[:12]
+    return f"tandc.not_agreed_terms_{digest}_{user_pk}"
 
 
 #: Cache key holding the ids of every active terms object.

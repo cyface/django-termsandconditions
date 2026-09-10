@@ -38,15 +38,14 @@ INSTALLED_APPS = [
     "termsandconditions",
 ]
 
-# Ordered as Django documents it. UpdateCacheMiddleware really does belong
-# above SecurityMiddleware; the terms redirect goes after AuthenticationMiddleware
-# because it reads request.user.
+# Ordered as Django's "Middleware ordering" reference lists it. The terms
+# redirect goes after AuthenticationMiddleware because it reads request.user.
 MIDDLEWARE = [
-    "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.gzip.GZipMiddleware",
-    "django.middleware.http.ConditionalGetMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.http.ConditionalGetMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",

@@ -23,21 +23,22 @@ def user_terms_updated(sender, instance, **kwargs) -> None:
     LOGGER.debug("User T&C updated signal handler")
     # user_id, not instance.user: dereferencing the FK would fetch the row, and
     # this fires once per record when acceptances are pruned in bulk.
-    cache.delete(not_agreed_terms_cache_key(instance.user_id))
+    cache.delete(
+        not_agreed_terms_cache_key(
+            instance.user_id, TermsAndConditions.get_active_terms_ids()
+        )
+    )
 
 
 @receiver([post_delete, post_save], sender=TermsAndConditions)
 def terms_updated(sender, instance, **kwargs) -> None:
-    """Drop every cached view of the terms, plus per-user acceptance."""
+    """Drop every cached view of the terms.
+
+    Per-user acceptance lists need no sweep of their own: their keys carry the
+    ids of the terms in force, so clearing those here retires all of them at
+    once, including for users who have accepted nothing and therefore appear
+    in no acceptance row.
+    """
     LOGGER.debug("T&C updated signal handler")
     cache.delete_many([ACTIVE_TERMS_IDS_CACHE_KEY, ACTIVE_TERMS_LIST_CACHE_KEY])
     cache.delete(active_terms_cache_key(instance.slug))
-
-    # New or changed terms can invalidate anyone's acceptance, so clear the
-    # cache for every user who has ever accepted something.
-    user_pks = (
-        UserTermsAndConditions.objects.values_list("user_id", flat=True)
-        .order_by()
-        .distinct()
-    )
-    cache.delete_many([not_agreed_terms_cache_key(pk) for pk in user_pks])

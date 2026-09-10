@@ -217,6 +217,25 @@ class CacheInvalidationTests(TermsTestCase):
             1.0, TermsAndConditions.get_active("house-rules").version_number
         )
 
+    def test_a_new_terms_invalidates_a_user_who_has_accepted_nothing(self):
+        # This user appears in no acceptance row, so there is nothing for a
+        # per-user sweep to enumerate. The key carries the active ids instead.
+        self.assertEqual(
+            2, len(TermsAndConditions.get_active_terms_not_agreed_to(self.user1))
+        )
+
+        TermsAndConditions.objects.create(
+            slug="house-rules",
+            name="House Rules",
+            text="Be nice",
+            version_number=1.0,
+            date_active="2012-01-01T00:00:00+00:00",
+        )
+
+        self.assertEqual(
+            3, len(TermsAndConditions.get_active_terms_not_agreed_to(self.user1))
+        )
+
 
 class SignalQueryCountTests(TermsTestCase):
     def test_pruning_acceptances_does_not_fetch_each_user(self):
@@ -232,3 +251,22 @@ class SignalQueryCountTests(TermsTestCase):
             if 'FROM "auth_user"' in query["sql"]
         ]
         self.assertEqual([], user_selects)
+
+    def test_a_terms_change_does_not_sweep_the_acceptance_table(self):
+        for user in (self.user1, self.user2, self.user3):
+            UserTermsAndConditions.objects.create(user=user, terms=self.terms2)
+
+        with CaptureQueriesContext(connection) as captured:
+            TermsAndConditions.objects.create(
+                slug="house-rules",
+                name="House Rules",
+                version_number=1.0,
+                date_active="2012-01-01T00:00:00+00:00",
+            )
+
+        acceptance_reads = [
+            query["sql"]
+            for query in captured.captured_queries
+            if "usertermsandconditions" in query["sql"].lower()
+        ]
+        self.assertEqual([], acceptance_reads)

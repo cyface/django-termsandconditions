@@ -48,8 +48,14 @@ up to current Django and Python practice, and a migration ships with it.
   single-valued `ModelChoiceField` that the view fed a list, so the form could
   not validate anything a browser submitted (see *Fixed*). The emailed body
   template now iterates `terms_list` rather than rendering a single `terms`.
-- **`not_agreed_terms_cache_key()` takes a user primary key**, not a username.
-  Cached acceptance keys from 2.x are simply missed and rebuilt.
+- **`not_agreed_terms_cache_key()` takes a user primary key and the active
+  terms ids**, not a username. Cached acceptance keys from 2.x are simply
+  missed and rebuilt.
+- **Accepting a version that is not in force is a 404.**
+  `/terms/accept/<slug>/<version>/` used to render an Accept button for any
+  version named, including superseded ones and ones dated in the future.
+  Viewing, printing and emailing any version are unchanged — only accepting is
+  narrowed to what is currently active.
 - **Requesting an unknown terms version now returns 404** instead of raising
   `TermsAndConditions.DoesNotExist` (a 500). An unknown *slug* still renders
   the "No terms defined." page.
@@ -117,6 +123,14 @@ up to current Django and Python practice, and a migration ships with it.
   URLconf already was. Both render per-user content and a CSRF token, and only
   escaped a shared cache because `SessionMiddleware` happens to set
   `Vary: Cookie` — a property of unrelated middleware, not of the view.
+- **A terms change now invalidates every user's cached acceptance list.**
+  The handler swept the users named in the acceptance table, which missed
+  anyone who had accepted nothing — exactly the users with terms outstanding.
+  Their list stood until it expired, so for up to `TERMS_CACHE_SECONDS` after a
+  new version went live they were still being asked for the old one. The cache
+  key now carries the ids of the terms in force, so a change retires every
+  entry at once. That also drops the sweep itself: invalidation no longer scans
+  the acceptance table and issues one delete per user on every terms save.
 - **Invalidating the acceptance cache no longer fetches each user.** The
   `post_save`/`post_delete` handler dereferenced `instance.user` to build the
   cache key, costing one `auth_user` SELECT per row — in exactly the bulk path

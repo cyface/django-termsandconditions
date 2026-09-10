@@ -217,7 +217,9 @@ class TermsAndConditions(models.Model):
         if app_settings.TERMS_EXCLUDE_SUPERUSERS and user.is_superuser:
             return []
 
-        cache_key = not_agreed_terms_cache_key(user.pk)
+        cache_key = not_agreed_terms_cache_key(
+            user.pk, TermsAndConditions.get_active_terms_ids()
+        )
         not_agreed_terms = cache.get(cache_key)
         if not_agreed_terms is None:
             not_agreed_terms = (

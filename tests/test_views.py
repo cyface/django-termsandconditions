@@ -3,7 +3,6 @@
 import re
 
 from django.core import mail
-from django.core.cache import cache
 from django.test import override_settings
 from django.utils import timezone
 
@@ -99,13 +98,27 @@ class AcceptTermsViewTests(TermsTestCase):
 
         self.terms4.date_active = timezone.now()
         self.terms4.save()
-        # A user with no acceptance rows is not in the set terms_updated walks,
-        # so their outstanding list stands until TERMS_CACHE_SECONDS is up.
-        # Clearing stands in for that wait.
-        cache.clear()
 
         outstanding = TermsAndConditions.get_active_terms_not_agreed_to(self.user1)
         self.assertIn(self.terms4, outstanding)
+
+    def test_a_version_that_is_not_active_yet_is_not_offered(self):
+        # The page must not render an Accept button the POST would refuse.
+        self.client.login(username="user1", password="user1password")
+        response = self.client.get("/terms/accept/contrib-terms/2.0/")
+        self.assertEqual(404, response.status_code)
+
+    def test_a_superseded_version_is_not_offered(self):
+        self.client.login(username="user1", password="user1password")
+        response = self.client.get("/terms/accept/site-terms/1.0/")
+        self.assertEqual(404, response.status_code)
+
+    def test_a_superseded_version_can_still_be_viewed_and_printed(self):
+        # Only accepting is narrowed to what is in force.
+        for url in ("/terms/view/site-terms/1.0/", "/terms/print/site-terms/1.0/"):
+            with self.subTest(url=url):
+                response = self.client.get(url)
+                self.assertContains(response, self.terms1.text)
 
     def test_a_superseded_version_cannot_be_accepted(self):
         # terms1 is site-terms 1.0, replaced by terms2 at 2.0.
