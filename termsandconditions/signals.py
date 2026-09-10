@@ -2,7 +2,6 @@
 
 import logging
 
-from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
@@ -22,7 +21,9 @@ LOGGER = logging.getLogger(__name__)
 def user_terms_updated(sender, instance, **kwargs) -> None:
     """Drop the acceptance cache for the user whose record changed."""
     LOGGER.debug("User T&C updated signal handler")
-    cache.delete(not_agreed_terms_cache_key(instance.user.get_username()))
+    # user_id, not instance.user: dereferencing the FK would fetch the row, and
+    # this fires once per record when acceptances are pruned in bulk.
+    cache.delete(not_agreed_terms_cache_key(instance.user_id))
 
 
 @receiver([post_delete, post_save], sender=TermsAndConditions)
@@ -34,10 +35,9 @@ def terms_updated(sender, instance, **kwargs) -> None:
 
     # New or changed terms can invalidate anyone's acceptance, so clear the
     # cache for every user who has ever accepted something.
-    username_field = get_user_model().USERNAME_FIELD
-    usernames = (
-        UserTermsAndConditions.objects.values_list(f"user__{username_field}", flat=True)
+    user_pks = (
+        UserTermsAndConditions.objects.values_list("user_id", flat=True)
         .order_by()
         .distinct()
     )
-    cache.delete_many([not_agreed_terms_cache_key(name) for name in usernames])
+    cache.delete_many([not_agreed_terms_cache_key(pk) for pk in user_pks])

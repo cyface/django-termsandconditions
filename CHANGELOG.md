@@ -31,9 +31,25 @@ up to current Django and Python practice, and a migration ships with it.
   `DEFAULT_TERMS_SLUG` and the other module-level constants in `models.py`,
   `middleware.py` and `templatetags/terms_tags.py` are gone. This makes
   `override_settings` work in downstream tests. `is_path_protected` and
-  `ACCEPT_TERMS_PATH` are still importable from `termsandconditions.middleware`.
+  `ACCEPT_TERMS_PATH` are still importable from `termsandconditions.middleware`
+  — the latter through a module `__getattr__`, so it is resolved on access
+  rather than frozen at import.
 - **`TermsAndConditionsRedirectMiddleware` is a plain callable middleware**, no
-  longer built on `MiddlewareMixin`. No configuration change is needed.
+  longer built on `MiddlewareMixin`. It declares `sync_capable` and
+  `async_capable`, so an ASGI stack still runs the middleware below it natively.
+  No configuration change is needed.
+- **`TERMS_EXCLUDE_URL_LIST` now defaults to `{"/"}`.** It used to ship
+  `{"/", "/termsrequired/", "/logout/", "/securetoo/"}` — two paths that exist
+  only in this repo's demo project, and a logout URL that is not where
+  `django.contrib.auth.urls` actually lands. **If you relied on that default to
+  keep your logout page reachable, add your real logout path to the setting**,
+  or a user with outstanding terms will not be able to sign out.
+- **`EmailTermsForm.terms` is a `ModelMultipleChoiceField`.** It was a
+  single-valued `ModelChoiceField` that the view fed a list, so the form could
+  not validate anything a browser submitted (see *Fixed*). The emailed body
+  template now iterates `terms_list` rather than rendering a single `terms`.
+- **`not_agreed_terms_cache_key()` takes a user primary key**, not a username.
+  Cached acceptance keys from 2.x are simply missed and rebuilt.
 - **Requesting an unknown terms version now returns 404** instead of raising
   `TermsAndConditions.DoesNotExist` (a 500). An unknown *slug* still renders
   the "No terms defined." page.
@@ -41,6 +57,11 @@ up to current Django and Python practice, and a migration ships with it.
   has been a no-op since Django 3.2.
 - **The demo app no longer uses jQuery Mobile.** Its templates are plain
   semantic HTML with a small local stylesheet and no CDN requests.
+- **The demo project enables `CsrfViewMiddleware`.** Its middleware list has
+  never had it, while every template renders `{% csrf_token %}` and sign-out is
+  now a POST — so the token was validated by nothing. `settings.py` is the file
+  the README points readers at to crib from, so it now also lists middleware in
+  the order Django documents.
 
 ### Added
 
@@ -52,11 +73,56 @@ up to current Django and Python practice, and a migration ships with it.
 - The admin gained search, filtering, date drill-down and `list_select_related`
   on both models.
 - `remove_old_version_acceptance` now reports how many records it deleted.
-- Test suite grew from 31 to 81 tests and moved to a top-level `tests/` package
-  (so it is no longer shipped in the wheel).
+- Test suite grew from 31 to 112 tests and moved to a top-level `tests/` package
+  (so it is no longer shipped in the wheel). Statement and branch coverage of
+  `termsandconditions/` is 100%.
 
 ### Fixed
 
+- **A version dated in the future can no longer be accepted early.** The accept
+  view recorded any `TermsAndConditions` primary key the client posted. Posting
+  the id of a version whose `date_active` had not arrived created an acceptance
+  row, and when that version went live the user was never shown it — the
+  outstanding-terms query excluded it as already accepted, and the middleware
+  never redirected. Primary keys are sequential integers, so this took no more
+  than guessing one. The view now validates through
+  `UserTermsAndConditionsForm`, whose `terms` field accepts only the terms
+  currently in force; a superseded version is refused for the same reason.
+- **The accept page no longer returns a 500 for an unknown slug.**
+  `/terms/accept/<unknown-slug>/` resolved to `[None]` and the template built a
+  print link from it, raising `NoReverseMatch`. It renders the "No terms
+  defined." empty state, as the view page already did.
+- **The email form can be submitted.** `EmailTermsView` put a list into the
+  initial data of a single-valued `ModelChoiceField`, so the hidden input
+  rendered a Python repr (`[<TermsAndConditions: site-terms-1.00>]`, or
+  `<QuerySet [...]>` on `/terms/email/`) and every submission a browser made
+  failed validation with "Invalid Email Address." No terms email could be sent
+  at all. The heading and subject line were built from the same mismatch and
+  showed the repr too.
+- **An unknown slug no longer logs at ERROR or re-queries.** The slug is client
+  input on the view and accept URLs, so a loop over made-up ones filled the log
+  — and any handler behind it, `mail_admins` included — and hit the database
+  every time. It logs at DEBUG, and the miss is cached for
+  `TERMS_CACHE_SECONDS`.
+- **A path-exclusion setting written as a string no longer disables the terms
+  check.** `TERMS_EXCLUDE_URL_PREFIX_LIST = "/admin"` was iterated character by
+  character; every path starts with `/`, so every request was excluded and the
+  gate was off site-wide, silently. A string is now read as the one path it
+  names. The same applies to `TERMS_EXCLUDE_URL_LIST` and
+  `TERMS_EXCLUDE_URL_CONTAINS_LIST`.
+- **`terms_required` keeps the querystring.** It redirected with `request.path`,
+  so a user sent from `/report/?range=90d` landed back on `/report/` after
+  accepting. It uses `request.get_full_path()`, matching the middleware.
+- **The accept and email pages are `never_cache`.** Every other route in the
+  URLconf already was. Both render per-user content and a CSRF token, and only
+  escaped a shared cache because `SessionMiddleware` happens to set
+  `Vary: Cookie` — a property of unrelated middleware, not of the view.
+- **Invalidating the acceptance cache no longer fetches each user.** The
+  `post_save`/`post_delete` handler dereferenced `instance.user` to build the
+  cache key, costing one `auth_user` SELECT per row — in exactly the bulk path
+  `remove_old_version_acceptance` uses. It reads `instance.user_id`, which also
+  keeps usernames containing spaces or non-ASCII out of the cache key, where
+  memcached rejects them.
 - **The outstanding-terms lookup no longer fails open.** It caught `TypeError`
   and `UserTermsAndConditions.DoesNotExist` and returned `[]` on either, which
   reads as "this user has accepted everything" and quietly waves them past the

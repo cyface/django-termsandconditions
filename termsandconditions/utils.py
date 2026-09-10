@@ -1,5 +1,6 @@
 """Helpers shared by the middleware, decorator and views."""
 
+from typing import Any
 from urllib.parse import urlparse, urlunparse
 
 from django.http import HttpResponseRedirect, QueryDict
@@ -29,9 +30,13 @@ def active_terms_cache_key(slug: str) -> str:
     return f"tandc.active_terms_{slug}"
 
 
-def not_agreed_terms_cache_key(username: str) -> str:
-    """Cache key holding the terms ``username`` has yet to agree to."""
-    return f"tandc.not_agreed_terms_{username}"
+def not_agreed_terms_cache_key(user_pk: Any) -> str:
+    """Cache key holding the terms the user with ``user_pk`` has yet to agree to.
+
+    Keyed on the primary key rather than the username: the username has to be
+    fetched, and it may contain spaces or non-ASCII, which memcached rejects.
+    """
+    return f"tandc.not_agreed_terms_{user_pk}"
 
 
 #: Cache key holding the ids of every active terms object.

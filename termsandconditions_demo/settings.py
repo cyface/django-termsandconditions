@@ -38,17 +38,21 @@ INSTALLED_APPS = [
     "termsandconditions",
 ]
 
+# Ordered as Django documents it. UpdateCacheMiddleware really does belong
+# above SecurityMiddleware; the terms redirect goes after AuthenticationMiddleware
+# because it reads request.user.
 MIDDLEWARE = [
     "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.middleware.gzip.GZipMiddleware",
     "django.middleware.http.ConditionalGetMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "termsandconditions.middleware.TermsAndConditionsRedirectMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "termsandconditions.middleware.TermsAndConditionsRedirectMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.cache.FetchFromCacheMiddleware",
 ]
 
@@ -124,6 +128,9 @@ LOGIN_REDIRECT_URL = "/"
 DEFAULT_TERMS_SLUG = "site-terms"
 ACCEPT_TERMS_PATH = "/terms/accept/"
 TERMS_EXCLUDE_URL_PREFIX_LIST = {"/admin", "/terms"}
+# The app defaults to just {"/"}: which of a project's own paths have to stay
+# reachable to someone with terms outstanding is a project decision. Logout is
+# the one every project needs, at whatever URL it mounted django.contrib.auth.
 TERMS_EXCLUDE_URL_LIST = {"/", "/termsrequired/", "/accounts/logout/", "/securetoo/"}
 # Useful with i18n, where a language code can be prepended to your URLs.
 TERMS_EXCLUDE_URL_CONTAINS_LIST = set()

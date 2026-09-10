@@ -15,6 +15,10 @@ class TermsTestCase(TestCase):
     ``site-terms`` is active at 2.0, ``contrib-terms`` at 1.5 (its 2.0 is
     dated in the future).  ``user3`` holds the skip permission; ``su`` is a
     superuser without it.
+
+    Primary keys are left to the database.  Assigning them here would leave the
+    Postgres sequence at 1, so the first ``objects.create()`` in a test that
+    does not name an id collides with this fixture data.
     """
 
     def setUp(self) -> None:
@@ -30,7 +34,6 @@ class TermsTestCase(TestCase):
         )
 
         self.terms1 = TermsAndConditions.objects.create(
-            id=1,
             slug="site-terms",
             name="Site Terms",
             text="Site Terms and Conditions 1",
@@ -38,7 +41,6 @@ class TermsTestCase(TestCase):
             date_active="2012-01-01T00:00:00+00:00",
         )
         self.terms2 = TermsAndConditions.objects.create(
-            id=2,
             slug="site-terms",
             name="Site Terms",
             text="Site Terms and Conditions 2",
@@ -46,7 +48,6 @@ class TermsTestCase(TestCase):
             date_active="2012-01-05T00:00:00+00:00",
         )
         self.terms3 = TermsAndConditions.objects.create(
-            id=3,
             slug="contrib-terms",
             name="Contributor Terms",
             text="Contributor Terms and Conditions 1.5",
@@ -54,7 +55,6 @@ class TermsTestCase(TestCase):
             date_active="2012-01-01T00:00:00+00:00",
         )
         self.terms4 = TermsAndConditions.objects.create(
-            id=4,
             slug="contrib-terms",
             name="Contributor Terms",
             text="Contributor Terms and Conditions 2",

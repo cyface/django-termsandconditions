@@ -20,6 +20,11 @@ from .utils import (
 
 LOGGER = logging.getLogger(__name__)
 
+#: Cached in place of an absent terms object.  ``cache.get`` cannot tell a
+#: cached ``None`` from a miss, so a slug with no active version needs a
+#: sentinel of its own to be cached at all.
+NO_ACTIVE_TERMS = "tandc.no-active-terms"
+
 
 def get_default_terms_slug() -> str:
     """Default for :attr:`TermsAndConditions.slug`.
@@ -123,6 +128,9 @@ class TermsAndConditions(models.Model):
         cache_key = active_terms_cache_key(slug)
 
         active_terms = cache.get(cache_key)
+        if active_terms == NO_ACTIVE_TERMS:
+            return None
+
         if active_terms is None:
             try:
                 active_terms = TermsAndConditions.objects.filter(
@@ -131,9 +139,14 @@ class TermsAndConditions(models.Model):
                     slug=slug,
                 ).latest("date_active")
             except TermsAndConditions.DoesNotExist:
-                LOGGER.error(
+                # The slug is client input on the view and accept URLs, so a
+                # miss is a bad request rather than a server fault: logging it
+                # at ERROR hands an anonymous visitor a way to fill the log.
+                # Caching the miss keeps those requests off the database too.
+                LOGGER.debug(
                     "Requested terms and conditions that do not exist: %s", slug
                 )
+                cache.set(cache_key, NO_ACTIVE_TERMS, app_settings.TERMS_CACHE_SECONDS)
                 return None
             cache.set(cache_key, active_terms, app_settings.TERMS_CACHE_SECONDS)
 
@@ -204,7 +217,7 @@ class TermsAndConditions(models.Model):
         if app_settings.TERMS_EXCLUDE_SUPERUSERS and user.is_superuser:
             return []
 
-        cache_key = not_agreed_terms_cache_key(user.get_username())
+        cache_key = not_agreed_terms_cache_key(user.pk)
         not_agreed_terms = cache.get(cache_key)
         if not_agreed_terms is None:
             not_agreed_terms = (

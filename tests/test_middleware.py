@@ -1,8 +1,15 @@
 """Tests for the redirect middleware and its path exclusion rules."""
 
-from django.test import SimpleTestCase, override_settings
+from django.http import HttpResponse
+from django.test import RequestFactory, SimpleTestCase, override_settings
 
-from termsandconditions.middleware import is_path_protected
+from asgiref.sync import iscoroutinefunction
+
+from termsandconditions import middleware as middleware_module
+from termsandconditions.middleware import (
+    TermsAndConditionsRedirectMiddleware,
+    is_path_protected,
+)
 from termsandconditions.models import TermsAndConditions, UserTermsAndConditions
 
 from .factories import TermsTestCase
@@ -84,3 +91,78 @@ class IsPathProtectedTests(SimpleTestCase):
     def test_empty_exclusion_lists_protect_everything_else(self):
         self.assertTrue(is_path_protected("/admin/"))
         self.assertFalse(is_path_protected("/terms/accept/"))
+
+    @override_settings(TERMS_EXCLUDE_URL_PREFIX_LIST="/admin")
+    def test_a_prefix_setting_written_as_a_string_still_gates_the_site(self):
+        # Iterating "/admin" yields single characters, and every path starts
+        # with "/", so this used to exclude every URL on the site.
+        self.assertFalse(is_path_protected("/admin/auth/user/"))
+        self.assertTrue(is_path_protected("/secure/"))
+
+    @override_settings(TERMS_EXCLUDE_URL_LIST="/secure/")
+    def test_an_exact_path_setting_written_as_a_string_is_honoured(self):
+        self.assertFalse(is_path_protected("/secure/"))
+        self.assertTrue(is_path_protected("/other/"))
+
+    @override_settings(TERMS_EXCLUDE_URL_CONTAINS_LIST="/i18n/")
+    def test_a_fragment_setting_written_as_a_string_is_honoured(self):
+        self.assertFalse(is_path_protected("/en/i18n/setlang/"))
+        self.assertTrue(is_path_protected("/en/secure/"))
+
+
+class MiddlewareModuleTests(SimpleTestCase):
+    def test_accept_terms_path_is_still_importable_from_here(self):
+        # It was a module-level constant before 3.0 and is imported from this
+        # module downstream.
+        from termsandconditions.middleware import ACCEPT_TERMS_PATH
+
+        self.assertEqual("/terms/accept/", ACCEPT_TERMS_PATH)
+
+    @override_settings(ACCEPT_TERMS_PATH="/elsewhere/")
+    def test_the_re_export_is_resolved_on_access(self):
+        self.assertEqual("/elsewhere/", middleware_module.ACCEPT_TERMS_PATH)
+
+    def test_an_unknown_module_attribute_still_raises(self):
+        with self.assertRaises(AttributeError):
+            _ = middleware_module.NOT_A_REAL_NAME
+
+
+class AsyncMiddlewareTests(TermsTestCase):
+    """The middleware must not force an ASGI stack back onto the thread pool."""
+
+    def test_it_declares_both_capabilities(self):
+        self.assertTrue(TermsAndConditionsRedirectMiddleware.sync_capable)
+        self.assertTrue(TermsAndConditionsRedirectMiddleware.async_capable)
+
+    def test_an_async_get_response_yields_a_coroutine_middleware(self):
+        async def get_response(request):
+            return HttpResponse("ok")
+
+        self.assertTrue(
+            iscoroutinefunction(TermsAndConditionsRedirectMiddleware(get_response))
+        )
+
+    async def test_outstanding_terms_redirect_on_the_async_path(self):
+        async def get_response(request):
+            return HttpResponse("view ran")
+
+        middleware = TermsAndConditionsRedirectMiddleware(get_response)
+        request = RequestFactory().get("/secure/")
+        request.user = self.user1
+
+        response = await middleware(request)
+
+        self.assertEqual(302, response.status_code)
+        self.assertIn("/terms/accept/", response["Location"])
+
+    async def test_the_view_runs_on_the_async_path_when_nothing_is_outstanding(self):
+        async def get_response(request):
+            return HttpResponse("view ran")
+
+        middleware = TermsAndConditionsRedirectMiddleware(get_response)
+        request = RequestFactory().get("/secure/")
+        request.user = self.user3  # holds the skip permission
+
+        response = await middleware(request)
+
+        self.assertEqual(b"view ran", response.content)

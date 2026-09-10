@@ -1,7 +1,8 @@
 """Tests for the TermsAndConditions and UserTermsAndConditions models."""
 
-from django.db import IntegrityError, transaction
+from django.db import IntegrityError, connection, transaction
 from django.test import override_settings
+from django.test.utils import CaptureQueriesContext
 
 from termsandconditions.models import TermsAndConditions, UserTermsAndConditions
 
@@ -15,7 +16,10 @@ class TermsAndConditionsModelTests(TermsTestCase):
         self.assertQuerySetEqual(active_list, [self.terms3, self.terms2])
 
     def test_get_active_terms_ids(self):
-        self.assertEqual([3, 2], TermsAndConditions.get_active_terms_ids())
+        self.assertEqual(
+            [self.terms3.pk, self.terms2.pk],
+            TermsAndConditions.get_active_terms_ids(),
+        )
 
     def test_get_active_picks_latest_past_version(self):
         self.assertEqual(
@@ -171,10 +175,16 @@ class CacheInvalidationTests(TermsTestCase):
         self.assertEqual(2.0, terms.version_number)
 
     def test_active_terms_ids_are_served_from_cache_on_the_second_call(self):
-        self.assertEqual([3, 2], TermsAndConditions.get_active_terms_ids())
+        self.assertEqual(
+            [self.terms3.pk, self.terms2.pk],
+            TermsAndConditions.get_active_terms_ids(),
+        )
 
         with self.assertNumQueries(0):
-            self.assertEqual([3, 2], TermsAndConditions.get_active_terms_ids())
+            self.assertEqual(
+                [self.terms3.pk, self.terms2.pk],
+                TermsAndConditions.get_active_terms_ids(),
+            )
 
     @override_settings(TERMS_CACHE_SECONDS=0)
     def test_caching_can_be_disabled(self):
@@ -184,3 +194,41 @@ class CacheInvalidationTests(TermsTestCase):
 
         with self.assertNumQueries(1):
             TermsAndConditions.get_active("site-terms")
+
+    def test_an_unknown_slug_is_cached_rather_than_re_queried(self):
+        # The slug comes off the URL, so a loop over made-up ones would
+        # otherwise hit the database on every request.
+        self.assertIsNone(TermsAndConditions.get_active("no-such-slug"))
+
+        with self.assertNumQueries(0):
+            self.assertIsNone(TermsAndConditions.get_active("no-such-slug"))
+
+    def test_creating_the_terms_clears_the_cached_miss(self):
+        self.assertIsNone(TermsAndConditions.get_active("house-rules"))
+
+        TermsAndConditions.objects.create(
+            slug="house-rules",
+            name="House Rules",
+            version_number=1.0,
+            date_active="2012-01-01T00:00:00+00:00",
+        )
+
+        self.assertEqual(
+            1.0, TermsAndConditions.get_active("house-rules").version_number
+        )
+
+
+class SignalQueryCountTests(TermsTestCase):
+    def test_pruning_acceptances_does_not_fetch_each_user(self):
+        for user in (self.user1, self.user2, self.user3):
+            UserTermsAndConditions.objects.create(user=user, terms=self.terms1)
+
+        with CaptureQueriesContext(connection) as captured:
+            UserTermsAndConditions.objects.filter(terms=self.terms1).delete()
+
+        user_selects = [
+            query["sql"]
+            for query in captured.captured_queries
+            if 'FROM "auth_user"' in query["sql"]
+        ]
+        self.assertEqual([], user_selects)

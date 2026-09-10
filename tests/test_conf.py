@@ -26,3 +26,19 @@ class AppSettingsTests(SimpleTestCase):
 
     def test_dir_lists_every_known_setting(self):
         self.assertEqual(sorted(DEFAULTS), dir(app_settings))
+
+    @override_settings(TERMS_EXCLUDE_URL_PREFIX_LIST="/admin")
+    def test_a_path_setting_given_as_a_string_names_one_path(self):
+        self.assertEqual(
+            frozenset({"/admin"}), app_settings.TERMS_EXCLUDE_URL_PREFIX_LIST
+        )
+
+    @override_settings(TERMS_EXCLUDE_URL_PREFIX_LIST=["/admin", "/terms"])
+    def test_a_path_setting_given_as_a_collection_is_left_alone(self):
+        self.assertEqual(
+            ["/admin", "/terms"], app_settings.TERMS_EXCLUDE_URL_PREFIX_LIST
+        )
+
+    @override_settings(DEFAULT_TERMS_SLUG="a-string-setting")
+    def test_only_the_path_collections_are_coerced(self):
+        self.assertEqual("a-string-setting", app_settings.DEFAULT_TERMS_SLUG)

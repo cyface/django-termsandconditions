@@ -26,6 +26,8 @@ def terms_required(
         ):
             return view_func(request, *args, **kwargs)
 
-        return redirect_to_terms_accept(request.path)
+        # get_full_path, not path: the middleware carries the querystring
+        # across too, and the user should land back on the same filtered page.
+        return redirect_to_terms_accept(request.get_full_path())
 
     return _wrapped_view

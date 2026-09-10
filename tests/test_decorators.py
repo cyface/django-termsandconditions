@@ -15,6 +15,16 @@ class TermsRequiredTests(TermsTestCase):
         response = self.client.get("/termsrequired/", follow=True)
         self.assertRedirects(response, "/terms/accept/?returnTo=/termsrequired/")
 
+    def test_the_querystring_is_carried_across(self):
+        # The middleware keeps it, so the decorator must too, or the user
+        # lands back on an unfiltered page after accepting.
+        self.client.login(username="user1", password="user1password")
+        response = self.client.get("/termsrequired/?range=90d&team=eng")
+        self.assertEqual(
+            "/terms/accept/?returnTo=/termsrequired/%3Frange%3D90d%26team%3Deng",
+            response["Location"],
+        )
+
     def test_view_runs_once_every_terms_is_accepted(self):
         UserTermsAndConditions.objects.create(user=self.user1, terms=self.terms2)
         UserTermsAndConditions.objects.create(user=self.user1, terms=self.terms3)

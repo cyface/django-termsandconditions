@@ -109,25 +109,38 @@ MIDDLEWARE = [
 ]
 ```
 
-Some paths are excluded by default. Configure exclusions with:
+The admin, this app's own URLs and `/` are excluded by default. Configure
+exclusions with:
 
 ```python
 ACCEPT_TERMS_PATH = "/terms/accept/"
 TERMS_EXCLUDE_URL_PREFIX_LIST = {"/admin", "/terms"}
-TERMS_EXCLUDE_URL_LIST = {"/", "/termsrequired/", "/logout/", "/securetoo/"}
+TERMS_EXCLUDE_URL_LIST = {"/", "/accounts/logout/"}
 TERMS_EXCLUDE_URL_CONTAINS_LIST = set()
 ```
 
-`TERMS_EXCLUDE_URL_PREFIX_LIST` is a list of "starts with" strings;
-`TERMS_EXCLUDE_URL_LIST` is a list of exact paths; and
-`TERMS_EXCLUDE_URL_CONTAINS_LIST` is a list of fragments — useful for i18n,
+`TERMS_EXCLUDE_URL_PREFIX_LIST` is a set of "starts with" strings;
+`TERMS_EXCLUDE_URL_LIST` is a set of exact paths; and
+`TERMS_EXCLUDE_URL_CONTAINS_LIST` is a set of fragments — useful for i18n,
 where a language code can be prepended to your URLs.
+
+Add your logout URL to `TERMS_EXCLUDE_URL_LIST` at whatever path you mounted
+`django.contrib.auth.urls` on. There is no default for it, because there is no
+default place to mount it — and without the exclusion a user with outstanding
+terms cannot sign out.
+
+Each of these may be written as a plain string when you only have one path;
+it is read as the single path it names rather than as a sequence of
+characters.
 
 You can also exclude users holding a permission you define yourself:
 
 ```python
-TERMS_EXCLUDE_USERS_WITH_PERM = "MyModel.can_skip_terms"
+TERMS_EXCLUDE_USERS_WITH_PERM = "myapp.can_skip_terms"
 ```
+
+That is a permission string, so it is `"<app_label>.<codename>"` — the app the
+permission lives in, not the model it was declared on.
 
 This is useful for continuous login integration tests, or to exempt specific
 users. Superusers are *not* excluded by this, because Django's `has_perm()`
@@ -275,7 +288,7 @@ in tests. `termsandconditions.conf.DEFAULTS` is the canonical list.
 | `TERMS_EXCLUDE_SUPERUSERS` | `False` | Skip the check for superusers |
 | `TERMS_EXCLUDE_USERS_WITH_PERM` | `None` | Skip the check for holders of this permission |
 | `TERMS_EXCLUDE_URL_CONTAINS_LIST` | `frozenset()` | Path fragments to skip |
-| `TERMS_EXCLUDE_URL_LIST` | see `conf.py` | Exact paths to skip |
+| `TERMS_EXCLUDE_URL_LIST` | `{"/"}` | Exact paths to skip |
 | `TERMS_EXCLUDE_URL_PREFIX_LIST` | `{"/admin", "/terms"}` | Path prefixes to skip |
 | `TERMS_HTTP_PATH_FIELD` | `"PATH_INFO"` | `request.META` key the template tag reads |
 | `TERMS_IP_HEADER_NAME` | `"REMOTE_ADDR"` | `request.META` key holding the client IP |

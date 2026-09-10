@@ -84,24 +84,34 @@ class AcceptTermsView(GetTermsViewMixin, FormView):
             "returnTo": self.get_return_to(self.request.GET),
         }
 
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        # get_terms yields [None] for a slug with no active version. There is
+        # nothing to accept in that case, so the template shows the empty state
+        # and suppresses the form rather than rendering a print link with no
+        # slug or version to build the URL from.
+        context["terms_to_accept"] = [
+            terms for terms in context["form"].initial["terms"] if terms
+        ]
+        return context
+
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         return_url = self.get_return_to(request.POST)
 
         if not request.user.is_authenticated:
             return HttpResponseRedirect("/")
 
-        try:
-            terms_pks = [int(pk) for pk in request.POST.getlist("terms")]
-        except ValueError:
-            LOGGER.debug("Non-numeric terms id posted to accept view")
-            return HttpResponseRedirect(return_url)
-
-        if not terms_pks:  # pragma: nocover
+        form = self.get_form()
+        if not form.is_valid():
+            # The field accepts only the terms currently in force, so this is
+            # a posted id that is missing, malformed, superseded, or dated in
+            # the future. None of those should be recorded as an acceptance.
+            LOGGER.debug("Terms not accepted: %s", form.errors.as_json())
             return HttpResponseRedirect(return_url)
 
         ip_address = self.get_ip_address(request)
 
-        for terms in TermsAndConditions.objects.filter(pk__in=terms_pks):
+        for terms in form.cleaned_data["terms"]:
             try:
                 # Saved one at a time so the cache-clearing signals fire, and
                 # inside a savepoint so a duplicate does not poison an
@@ -140,14 +150,25 @@ class EmailTermsView(GetTermsViewMixin, FormView):
     form_class = EmailTermsForm
 
     def get_initial(self) -> dict:
+        # A slug with no active version yields [None]; drop it so the form
+        # renders no hidden input rather than one with an empty value.
         return {
-            "terms": self.get_terms(self.kwargs),
+            "terms": [terms for terms in self.get_terms(self.kwargs) if terms],
             "returnTo": self.get_return_to(self.request.GET),
         }
 
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        # One label for however many sets of terms the URL resolved to, used
+        # for both the heading and the default subject line.
+        context["terms_names"] = ", ".join(
+            terms.name for terms in context["form"].initial["terms"]
+        )
+        return context
+
     def form_valid(self, form: EmailTermsForm) -> HttpResponse:
         template = get_template("termsandconditions/tc_email_terms.html")
-        template_rendered = template.render({"terms": form.cleaned_data.get("terms")})
+        template_rendered = template.render({"terms_list": form.cleaned_data["terms"]})
 
         LOGGER.debug("Email terms body: %s", template_rendered)
 

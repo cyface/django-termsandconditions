@@ -6,13 +6,14 @@
 
 {% block content %}
     <section aria-label="{% translate 'Terms and Conditions' %}">
-        <h1>{% translate 'Email' %} {{ form.initial.terms.name|safe }}</h1>
+        <h1>{% translate 'Email' %} {{ terms_names }}</h1>
         <form action="{% url 'tc_email_page' %}" method="post" id="tc-email-form">
             {% csrf_token %}
             <label for="{{ form.email_address.id_for_label }}">{% translate 'Email To:' %}</label>{{ form.email_address }}
             {{ form.terms }}
+            {{ form.returnTo }}
             <input type="hidden" id="id_email_subject" name="email_subject"
-                   value="{% translate 'You Requested:' %} {{ form.initial.terms }}">
+                   value="{% translate 'You Requested:' %} {{ terms_names }}">
             <p><button type="submit">{% translate 'Send' %}</button></p>
         </form>
     </section>

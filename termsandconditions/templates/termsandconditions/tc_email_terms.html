@@ -1,7 +1,8 @@
 {% load i18n %}
-
+{% for terms in terms_list %}
 {{ terms.name|safe }}
 
 {% translate 'Version' %} {{ terms.version_number|safe }}
 
 {{ terms.text|safe }}
+{% endfor %}

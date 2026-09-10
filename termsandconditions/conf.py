@@ -28,11 +28,12 @@ DEFAULTS: dict[str, Any] = {
     "TERMS_EXCLUDE_SUPERUSERS": False,
     # Skip the check for users holding this permission (superusers excepted).
     "TERMS_EXCLUDE_USERS_WITH_PERM": None,
-    # Paths the middleware leaves alone.
+    # Paths the middleware leaves alone.  Only the prefixes this app owns are
+    # excluded by default; which of a project's own URLs need to stay reachable
+    # is a project decision, and the wrong guess here would gate a path the
+    # user needs (their logout view, say) behind terms they cannot leave.
     "TERMS_EXCLUDE_URL_CONTAINS_LIST": frozenset(),
-    "TERMS_EXCLUDE_URL_LIST": frozenset(
-        {"/", "/termsrequired/", "/logout/", "/securetoo/"}
-    ),
+    "TERMS_EXCLUDE_URL_LIST": frozenset({"/"}),
     "TERMS_EXCLUDE_URL_PREFIX_LIST": frozenset({"/admin", "/terms"}),
     # ``request.META`` key the template tag reads the current path from.
     "TERMS_HTTP_PATH_FIELD": "PATH_INFO",
@@ -45,6 +46,19 @@ DEFAULTS: dict[str, Any] = {
     "TERMS_STORE_IP_ADDRESS": True,
 }
 
+#: Settings holding a collection of paths.  Writing one as a bare string is an
+#: easy mistake — ``"/admin"`` rather than ``{"/admin"}`` — and iterating a
+#: string yields single characters.  Every path starts with "/", so the
+#: middleware would match every request and switch the terms gate off site
+#: wide.  A string is read as the single path it names instead.
+PATH_COLLECTION_SETTINGS = frozenset(
+    {
+        "TERMS_EXCLUDE_URL_CONTAINS_LIST",
+        "TERMS_EXCLUDE_URL_LIST",
+        "TERMS_EXCLUDE_URL_PREFIX_LIST",
+    }
+)
+
 
 class AppSettings:
     """Attribute access over ``DEFAULTS``, deferring to ``django.conf.settings``."""
@@ -56,7 +70,11 @@ class AppSettings:
             raise AttributeError(
                 f"{name!r} is not a django-termsandconditions setting"
             ) from None
-        return getattr(settings, name, default)
+
+        value = getattr(settings, name, default)
+        if name in PATH_COLLECTION_SETTINGS and isinstance(value, str):
+            return frozenset({value})
+        return value
 
     def __dir__(self) -> list[str]:
         return sorted(DEFAULTS)
